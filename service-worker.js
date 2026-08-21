@@ -1,0 +1,33 @@
+const CACHE_NAME = "dosis-vet-cache-v3";
+const ARCHIVOS = [
+  "./",
+  "./index.html",
+  "./styles.css",
+  "./app.js",
+  "./data.js",
+  "./storage.js",
+  "./manifest.json",
+  "./icons/icon.svg"
+];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ARCHIVOS))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((claves) =>
+      Promise.all(claves.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cacheado) => cacheado || fetch(event.request))
+  );
+});
