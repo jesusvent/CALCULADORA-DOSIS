@@ -1149,23 +1149,129 @@ function calcularPersonalizada() {
 // ============================================================
 // Bibliografía (PubMed) — solo enlaces, sin extracción automática
 // ============================================================
-function urlPubMed(principioActivo, especie, indicacion) {
+// PubMed indexa literatura casi toda en inglés: buscar con el término de indicación en
+// español (ej. "Vómito") no encuentra prácticamente nada aunque existan decenas de artículos
+// en inglés sobre "vomiting". Este diccionario traduce cada indicación de DRUGS a 1-2
+// sinónimos en inglés para construir una búsqueda (X OR Y) más amplia. Si una indicación no
+// está aquí, se omite del término en vez de usarla en español (mejor buscar algo más general
+// que quedarse sin resultados).
+const INDICACION_PUBMED_EN = {
+  "Alergia": ["allergy"],
+  "Analgesia (CRI)": ["analgesia constant rate infusion"],
+  "Analgesia (dosis subanestésicas)": ["subanesthetic analgesia"],
+  "Analgesia leve": ["mild pain analgesia"],
+  "Analgesia perioperatoria": ["perioperative analgesia"],
+  "Analgesia postquirúrgica": ["postoperative analgesia"],
+  "Anestesia (co-inducción)": ["co-induction anesthesia"],
+  "Anestesia (inducción)": ["anesthesia induction"],
+  "Anestesia local": ["local anesthesia"],
+  "Ansiedad": ["anxiety"],
+  "Ansiedad/estrés en consulta": ["situational anxiety", "fear"],
+  "Arritmia supraventricular": ["supraventricular arrhythmia"],
+  "Arritmia ventricular": ["ventricular arrhythmia"],
+  "Bloqueo regional": ["regional anesthesia", "nerve block"],
+  "Bradicardia": ["bradycardia"],
+  "Cardiomiopatía": ["cardiomyopathy"],
+  "Coadyuvante anticonvulsivo": ["adjunct anticonvulsant"],
+  "Convulsiones": ["seizures", "epilepsy"],
+  "Dermatitis atópica": ["atopic dermatitis"],
+  "Dermatofitosis": ["dermatophytosis", "ringworm"],
+  "Desparasitación externa e interna": ["endoparasite", "ectoparasite"],
+  "Desparasitación interna (tenias)": ["tapeworm", "cestode"],
+  "Desparasitación interna": ["deworming", "anthelmintic"],
+  "Diabetes mellitus": ["diabetes mellitus"],
+  "Diarrea": ["diarrhea"],
+  "Dolor crónico": ["chronic pain"],
+  "Dolor cólico/espasmódico": ["colic", "abdominal spasm"],
+  "Dolor neuropático": ["neuropathic pain"],
+  "Dolor por osteoartritis": ["osteoarthritis pain"],
+  "Dolor postquirúrgico": ["postoperative pain"],
+  "Dolor": ["pain"],
+  "Edema": ["edema"],
+  "Ehrlichiosis": ["ehrlichiosis"],
+  "Emergencia/RCP": ["cardiopulmonary resuscitation"],
+  "Emergencia/sobredosis": ["overdose", "toxicity"],
+  "Enfermedad inmunomediada": ["immune-mediated disease"],
+  "Enfermedad renal crónica": ["chronic kidney disease"],
+  "Enfermedad respiratoria": ["respiratory disease"],
+  "Epilepsia": ["epilepsy", "seizures"],
+  "Esofagitis": ["esophagitis"],
+  "Estreñimiento/megacolon (gato)": ["constipation", "megacolon"],
+  "Fiebre": ["fever"],
+  "Gastritis": ["gastritis"],
+  "Gastroenteritis hemorrágica grave": ["hemorrhagic gastroenteritis"],
+  "Giardiasis": ["giardiasis"],
+  "Hiperadrenocorticismo (Cushing)": ["hyperadrenocorticism", "Cushing"],
+  "Hipertensión arterial sistémica": ["systemic hypertension"],
+  "Hipertiroidismo felino": ["feline hyperthyroidism"],
+  "Hipomotilidad gastrointestinal": ["gastrointestinal hypomotility", "prokinetic"],
+  "Hipotiroidismo": ["hypothyroidism"],
+  "Inducción del vómito (perro)": ["emesis induction"],
+  "Infección bacteriana anaerobia": ["anaerobic bacterial infection"],
+  "Infección bacteriana": ["bacterial infection"],
+  "Infección cutánea": ["skin infection", "pyoderma"],
+  "Infección dental": ["dental infection"],
+  "Infección fúngica": ["fungal infection"],
+  "Infección respiratoria": ["respiratory infection"],
+  "Infección urinaria": ["urinary tract infection"],
+  "Infección ósea": ["osteomyelitis"],
+  "Inflamación": ["inflammation"],
+  "Insuficiencia cardíaca congestiva": ["congestive heart failure"],
+  "Intoxicación por rodenticidas anticoagulantes": ["anticoagulant rodenticide toxicosis"],
+  "Malassezia": ["malassezia dermatitis"],
+  "Neumonía": ["pneumonia"],
+  "Náuseas": ["nausea"],
+  "Osteoartritis": ["osteoarthritis"],
+  "Piotórax": ["pyothorax"],
+  "Premedicación anticolinérgica": ["anticholinergic premedication"],
+  "Premedicación": ["anesthetic premedication"],
+  "Prevención cinetosis": ["motion sickness"],
+  "Prevención de dirofilariosis": ["heartworm prevention"],
+  "Prevención de tromboembolismo (cardiomiopatía felina)": ["thromboembolism prevention", "cardiomyopathy"],
+  "Profilaxis quirúrgica": ["surgical prophylaxis"],
+  "Proteinuria renal": ["renal proteinuria"],
+  "Proteinuria": ["proteinuria"],
+  "Prurito": ["pruritus", "itching"],
+  "Reacción alérgica": ["allergic reaction"],
+  "Reflujo": ["reflux"],
+  "Reversión de benzodiazepinas (midazolam/diazepam)": ["flumazenil reversal"],
+  "Reversión de opioides": ["naloxone reversal"],
+  "Reversión de sedación con dexmedetomidina/medetomidina": ["atipamezole reversal"],
+  "Sarna demodécica/sarcóptica": ["demodicosis", "sarcoptic mange"],
+  "Sedación": ["sedation"],
+  "Sepsis/bacteriemia": ["sepsis", "bacteremia"],
+  "Shock": ["shock"],
+  "Vómito": ["vomiting", "emesis"],
+  "Íleo/reflujo": ["ileus", "reflux"],
+  "Úlcera gástrica": ["gastric ulcer"]
+};
+
+// Construye un término de búsqueda amplio para PubMed: nombre genérico Y nombres comerciales
+// (unidos con OR, ya que muchos artículos citan solo la marca) AND especie, y opcionalmente
+// AND la indicación ya traducida al inglés. Se evita encadenar muchos conceptos obligatorios
+// a la vez (cada AND adicional reduce drásticamente los resultados), por eso NO se exige
+// además la palabra "dose"/"dosage": basta con el fármaco + la especie (+ la indicación).
+function urlPubMed(farmaco, especie, indicacion) {
+  const nombres = [farmaco.principioActivo, ...(farmaco.nombresComerciales || [])].filter(Boolean);
+  const nombreTerm = nombres.length > 1 ? `(${nombres.join(" OR ")})` : nombres[0];
   const especieEn = especie === "gato" ? "(cat OR feline)" : "(dog OR canine)";
-  const term = `${principioActivo} AND ${especieEn} AND ${indicacion} AND dose`;
-  return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(term);
+  const partes = [nombreTerm, especieEn];
+  const sinonimos = indicacion ? INDICACION_PUBMED_EN[indicacion] : null;
+  if (sinonimos && sinonimos.length) partes.push(`(${sinonimos.join(" OR ")})`);
+  return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(partes.join(" AND "));
 }
 
 function renderBibliografia(farmaco) {
   const especieLabel = paciente.especie === "gato" ? "gato" : "perro";
-  const indicaciones = farmaco.indicaciones && farmaco.indicaciones.length ? farmaco.indicaciones : ["uso clínico"];
+  const indicaciones = farmaco.indicaciones && farmaco.indicaciones.length ? farmaco.indicaciones : [];
   let html = "";
   for (const ind of indicaciones) {
-    html += `<a class="boton-pubmed" target="_blank" rel="noopener" href="${urlPubMed(farmaco.principioActivo, paciente.especie, ind)}">
+    html += `<a class="boton-pubmed" target="_blank" rel="noopener" href="${urlPubMed(farmaco, paciente.especie, ind)}">
       🔎 ${escapeHtml(ind)} en ${especieLabel} — buscar en PubMed
     </a>`;
   }
-  html += `<a class="boton-pubmed boton-pubmed-general" target="_blank" rel="noopener" href="${urlPubMed(farmaco.principioActivo, paciente.especie, "dosage")}">
-      🔎 Búsqueda general de dosis en ${especieLabel} — PubMed
+  html += `<a class="boton-pubmed boton-pubmed-general" target="_blank" rel="noopener" href="${urlPubMed(farmaco, paciente.especie, null)}">
+      🔎 Búsqueda general en ${especieLabel} — PubMed
     </a>`;
   bibliografiaBotonesEl.innerHTML = html;
 }
@@ -1289,13 +1395,19 @@ function principioActivoCorto(farmaco) {
 
 // Descarta de un listado de CIMAVET los medicamentos que no estén indicados ni para perros ni
 // para gatos (premezclas para pollos, productos para caballos/rumiantes, etc.), ya que esta
-// calculadora es solo para pequeños animales. Se filtra según la especie del paciente activo.
-// Si NINGÚN resultado indica esa especie de forma explícita (dato incompleto en CIMAVET), se
+// calculadora es solo para pequeños animales. OJO: se mantiene un producto si está indicado
+// para CUALQUIERA de las dos especies (perro o gato), no solo la del paciente activo — por
+// ejemplo Cerenia en comprimidos solo está autorizado para perros, pero un veterinario viendo
+// una ficha de gato puede querer verlo igualmente (p. ej. para valorar un uso off-label). Solo
+// se excluyen presentaciones que sean exclusivamente para otras especies (ganado, aves, etc.).
+// Si NINGÚN resultado indica perro/gato de forma explícita (dato incompleto en CIMAVET), se
 // devuelven todos sin filtrar en vez de vaciar la lista por completo.
 function filtrarCimavetPorEspecie(resultados) {
-  const especieNombre = paciente.especie === "gato" ? "gatos" : "perros";
   const filtrados = resultados.filter((m) =>
-    (m.especies || []).some((e) => normalizar(e.nombre).includes(especieNombre))
+    (m.especies || []).some((e) => {
+      const n = normalizar(e.nombre);
+      return n.includes("perro") || n.includes("gato");
+    })
   );
   return filtrados.length ? filtrados : resultados;
 }
