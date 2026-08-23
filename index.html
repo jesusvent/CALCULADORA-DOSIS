@@ -20,6 +20,7 @@
     <nav class="tabs-principales">
       <button class="tab-principal activa" data-vista="calculadora">Calculadora</button>
       <button class="tab-principal" data-vista="protocolos">Protocolos</button>
+      <button class="tab-principal" data-vista="cri">CRI</button>
       <button class="tab-principal" data-vista="cimavet">Buscador CIMAVET</button>
       <button class="tab-principal" data-vista="misfarmacos">Mi base de datos</button>
     </nav>
@@ -249,6 +250,101 @@
       </div>
 
       <div id="protocolos-lista"></div>
+    </section>
+
+    <!-- ================= VISTA: CRI (INFUSIÓN A RITMO CONSTANTE) ================= -->
+    <section id="vista-cri" class="vista oculto">
+      <div class="tarjeta">
+        <h2 class="titulo-tarjeta">CRI — Infusión a ritmo constante</h2>
+        <p class="ayuda">Usa el peso del paciente activo (pestaña Calculadora). Elige la calculadora según qué dato ya tengas fijado: la mezcla ya preparada, o el ritmo de la bomba/perfusor.</p>
+        <p class="aviso-inline oculto" id="cri-aviso-peso">Introduce el peso del paciente en la pestaña Calculadora para poder calcular.</p>
+      </div>
+
+      <div class="tarjeta">
+        <h3 class="titulo-tarjeta">Ya tengo la mezcla preparada → calcular el ritmo de la bomba</h3>
+        <p class="ayuda">Ej. "diluyo 5 ml de un vial de 20 mg/ml en una bolsa de 500 ml" → indica la concentración del vial, cuánto extraes de él, y el volumen final total de la mezcla.</p>
+        <div class="campo">
+          <label for="cri-a-nombre">Fármaco (opcional, para el resumen del paciente)</label>
+          <input type="text" id="cri-a-nombre" placeholder="Ej. Ketamina CRI" />
+        </div>
+        <div class="fila">
+          <div class="campo">
+            <label for="cri-a-unidad-farmaco">Unidad del fármaco</label>
+            <select id="cri-a-unidad-farmaco">
+              <option value="mg">mg</option>
+              <option value="UI">UI</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="cri-a-conc-vial">Concentración del vial (por ml)</label>
+            <input type="number" id="cri-a-conc-vial" step="any" min="0" placeholder="Ej. 100" />
+          </div>
+        </div>
+        <div class="fila">
+          <div class="campo">
+            <label for="cri-a-vol-extraido">Volumen extraído del vial (ml)</label>
+            <input type="number" id="cri-a-vol-extraido" step="any" min="0" placeholder="Ej. 5" />
+          </div>
+          <div class="campo">
+            <label for="cri-a-vol-total">Volumen TOTAL de la mezcla final (ml)</label>
+            <input type="number" id="cri-a-vol-total" step="any" min="0" placeholder="Ej. 500" />
+          </div>
+        </div>
+        <div class="fila">
+          <div class="campo">
+            <label for="cri-a-dosis-valor">Dosis deseada</label>
+            <input type="number" id="cri-a-dosis-valor" step="any" min="0" placeholder="Ej. 5" />
+          </div>
+          <div class="campo">
+            <label for="cri-a-dosis-unidad">Unidad de la dosis</label>
+            <select id="cri-a-dosis-unidad"></select>
+          </div>
+        </div>
+        <div id="cri-a-resultado" class="resultado-card oculto"></div>
+      </div>
+
+      <div class="tarjeta">
+        <h3 class="titulo-tarjeta">El ritmo de la bomba ya está fijado → calcular cuánto fármaco añadir</h3>
+        <p class="ayuda">Ej. "va a 10 ml/h en una bolsa de 250 ml de suero" → indica ese ritmo y ese volumen, y te digo cuánto fármaco tienes que añadir a la bolsa.</p>
+        <div class="campo">
+          <label for="cri-b-nombre">Fármaco (opcional, para el resumen del paciente)</label>
+          <input type="text" id="cri-b-nombre" placeholder="Ej. Furosemida CRI" />
+        </div>
+        <div class="fila">
+          <div class="campo">
+            <label for="cri-b-unidad-farmaco">Unidad del fármaco</label>
+            <select id="cri-b-unidad-farmaco">
+              <option value="mg">mg</option>
+              <option value="UI">UI</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="cri-b-conc-vial">Concentración del vial (por ml, opcional)</label>
+            <input type="number" id="cri-b-conc-vial" step="any" min="0" placeholder="Ej. 60" />
+          </div>
+        </div>
+        <div class="fila">
+          <div class="campo">
+            <label for="cri-b-ritmo">Ritmo de la bomba/perfusor (ml/h)</label>
+            <input type="number" id="cri-b-ritmo" step="any" min="0" placeholder="Ej. 10" />
+          </div>
+          <div class="campo">
+            <label for="cri-b-vol-total">Volumen total de la bolsa/jeringa (ml)</label>
+            <input type="number" id="cri-b-vol-total" step="any" min="0" placeholder="Ej. 250" />
+          </div>
+        </div>
+        <div class="fila">
+          <div class="campo">
+            <label for="cri-b-dosis-valor">Dosis deseada</label>
+            <input type="number" id="cri-b-dosis-valor" step="any" min="0" placeholder="Ej. 4" />
+          </div>
+          <div class="campo">
+            <label for="cri-b-dosis-unidad">Unidad de la dosis</label>
+            <select id="cri-b-dosis-unidad"></select>
+          </div>
+        </div>
+        <div id="cri-b-resultado" class="resultado-card oculto"></div>
+      </div>
     </section>
 
     <!-- ================= VISTA: BUSCADOR CIMAVET ================= -->

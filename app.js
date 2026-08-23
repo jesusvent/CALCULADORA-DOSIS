@@ -188,6 +188,7 @@ document.querySelectorAll(".tab-principal").forEach((btn) => {
     document.getElementById("vista-" + btn.dataset.vista).classList.remove("oculto");
     if (btn.dataset.vista === "protocolos") renderProtocolos();
     if (btn.dataset.vista === "misfarmacos") renderMisFarmacos();
+    if (btn.dataset.vista === "cri") actualizarCri();
   });
 });
 
@@ -220,6 +221,7 @@ function actualizarPaciente() {
   paciente.especie = pacienteEspecieSelect.value;
   paciente.peso = parseFloat(pacientePesoInput.value) || null;
   if (farmacoActivo) actualizarFichaFarmaco();
+  actualizarCri();
 }
 
 const nuevoPacienteBoton = document.getElementById("nuevo-paciente-boton");
@@ -2569,6 +2571,185 @@ cpGuardar.addEventListener("click", async () => {
   cerrarFormularioProtocolo();
   renderProtocolos();
 });
+
+// ============================================================
+// CRI — Infusión a ritmo constante (Constant Rate Infusion)
+// Dos calculadoras independientes que comparten la misma fórmula:
+//   dosis total por minuto (mg o UI) = dosis por kg y minuto × peso
+//   ml/h = (dosis total por minuto × 60) / concentración de la mezcla (por ml)
+// La única diferencia es qué dato se conoce (la concentración ya preparada, o el
+// ritmo de la bomba ya fijado) y cuál se despeja.
+// ============================================================
+
+// Factor para convertir cada unidad de dosis a "por kg y por minuto" (misma familia,
+// mg o UI, que la unidad del fármaco elegida). Todas las unidades mg-family se muestran
+// si se elige "mg"; las UI-family, si se elige "UI".
+const CRI_UNIDADES_DOSIS = {
+  mg: [
+    { value: "mcgkgmin", label: "µg/kg/min", factor: 1 / 1000 },
+    { value: "mcgkgh", label: "µg/kg/h", factor: 1 / 1000 / 60 },
+    { value: "mgkgmin", label: "mg/kg/min", factor: 1 },
+    { value: "mgkgh", label: "mg/kg/h", factor: 1 / 60 },
+    { value: "mgkgdia", label: "mg/kg/día", factor: 1 / 1440 }
+  ],
+  UI: [
+    { value: "uikgh", label: "UI/kg/h", factor: 1 / 60 },
+    { value: "uikgdia", label: "UI/kg/día", factor: 1 / 1440 }
+  ]
+};
+
+function poblarUnidadesDosisCri(selectUnidadFarmaco, selectDosisUnidad) {
+  const opciones = CRI_UNIDADES_DOSIS[selectUnidadFarmaco.value] || CRI_UNIDADES_DOSIS.mg;
+  const valorPrevio = selectDosisUnidad.value;
+  selectDosisUnidad.innerHTML = opciones.map((o) => `<option value="${o.value}">${o.label}</option>`).join("");
+  if (opciones.some((o) => o.value === valorPrevio)) selectDosisUnidad.value = valorPrevio;
+}
+
+function factorDosisCri(unidadFarmaco, dosisUnidadValue) {
+  const opciones = CRI_UNIDADES_DOSIS[unidadFarmaco] || CRI_UNIDADES_DOSIS.mg;
+  const opcion = opciones.find((o) => o.value === dosisUnidadValue);
+  return opcion ? opcion.factor : null;
+}
+
+const criAvisoPesoEl = document.getElementById("cri-aviso-peso");
+
+const criANombreInput = document.getElementById("cri-a-nombre");
+const criAUnidadFarmacoSelect = document.getElementById("cri-a-unidad-farmaco");
+const criAConcVialInput = document.getElementById("cri-a-conc-vial");
+const criAVolExtraidoInput = document.getElementById("cri-a-vol-extraido");
+const criAVolTotalInput = document.getElementById("cri-a-vol-total");
+const criADosisValorInput = document.getElementById("cri-a-dosis-valor");
+const criADosisUnidadSelect = document.getElementById("cri-a-dosis-unidad");
+const criAResultadoEl = document.getElementById("cri-a-resultado");
+
+const criBNombreInput = document.getElementById("cri-b-nombre");
+const criBUnidadFarmacoSelect = document.getElementById("cri-b-unidad-farmaco");
+const criBConcVialInput = document.getElementById("cri-b-conc-vial");
+const criBRitmoInput = document.getElementById("cri-b-ritmo");
+const criBVolTotalInput = document.getElementById("cri-b-vol-total");
+const criBDosisValorInput = document.getElementById("cri-b-dosis-valor");
+const criBDosisUnidadSelect = document.getElementById("cri-b-dosis-unidad");
+const criBResultadoEl = document.getElementById("cri-b-resultado");
+
+poblarUnidadesDosisCri(criAUnidadFarmacoSelect, criADosisUnidadSelect);
+poblarUnidadesDosisCri(criBUnidadFarmacoSelect, criBDosisUnidadSelect);
+criAUnidadFarmacoSelect.addEventListener("change", () => { poblarUnidadesDosisCri(criAUnidadFarmacoSelect, criADosisUnidadSelect); calcularCriA(); });
+criBUnidadFarmacoSelect.addEventListener("change", () => { poblarUnidadesDosisCri(criBUnidadFarmacoSelect, criBDosisUnidadSelect); calcularCriB(); });
+
+[criAConcVialInput, criAVolExtraidoInput, criAVolTotalInput, criADosisValorInput, criADosisUnidadSelect].forEach((el) => {
+  el.addEventListener("input", calcularCriA);
+  el.addEventListener("change", calcularCriA);
+});
+[criBConcVialInput, criBRitmoInput, criBVolTotalInput, criBDosisValorInput, criBDosisUnidadSelect].forEach((el) => {
+  el.addEventListener("input", calcularCriB);
+  el.addEventListener("change", calcularCriB);
+});
+
+function actualizarCri() {
+  criAvisoPesoEl.classList.toggle("oculto", !!(paciente.peso && paciente.peso > 0));
+  calcularCriA();
+  calcularCriB();
+}
+
+// Calculadora A: mezcla ya preparada (concentración conocida) -> ritmo de la bomba (ml/h)
+function calcularCriA() {
+  const peso = paciente.peso;
+  const unidadFarmaco = criAUnidadFarmacoSelect.value;
+  const concVial = parseFloat(criAConcVialInput.value);
+  const volExtraido = parseFloat(criAVolExtraidoInput.value);
+  const volTotal = parseFloat(criAVolTotalInput.value);
+  const dosisValor = parseFloat(criADosisValorInput.value);
+  const factor = factorDosisCri(unidadFarmaco, criADosisUnidadSelect.value);
+
+  if (!peso || !concVial || !volExtraido || !volTotal || !dosisValor || !factor) {
+    criAResultadoEl.classList.add("oculto");
+    criAResultadoEl.innerHTML = "";
+    return;
+  }
+
+  const cantidadAnadida = concVial * volExtraido;
+  const concentracionFinal = cantidadAnadida / volTotal;
+  const dosisPorKgMin = dosisValor * factor;
+  const dosisTotalPorMin = dosisPorKgMin * peso;
+  const ritmoMlH = (dosisTotalPorMin * 60) / concentracionFinal;
+
+  if (!isFinite(ritmoMlH) || ritmoMlH <= 0) {
+    criAResultadoEl.classList.add("oculto");
+    criAResultadoEl.innerHTML = "";
+    return;
+  }
+
+  criAResultadoEl.classList.remove("oculto");
+  criAResultadoEl.innerHTML = `
+    <div class="resultado-dosis">${formatNum(ritmoMlH)} ml/h</div>
+    <div class="resultado-detalle">
+      <span>Mezcla: ${formatNum(cantidadAnadida)} ${unidadFarmaco} en ${formatNum(volTotal)} ml → ${formatNum(concentracionFinal)} ${unidadFarmaco}/ml</span>
+    </div>
+    <div class="resultado-volumen">Programa la bomba/perfusor a <strong>${formatNum(ritmoMlH)} ml/h</strong> para un paciente de ${formatNum(peso)} kg.</div>
+    <button class="boton-anadir" id="cri-a-anadir-boton">+ Añadir al paciente</button>
+  `;
+  document.getElementById("cri-a-anadir-boton").addEventListener("click", () => {
+    añadirAlPaciente({
+      principioActivo: criANombreInput.value.trim() || "CRI",
+      principioActivoReal: criANombreInput.value.trim() || null,
+      categoria: "CRI (infusión a ritmo constante)",
+      dosisTexto: `${formatNum(ritmoMlH)} ml/h`,
+      detalle: `Mezcla ${formatNum(cantidadAnadida)} ${unidadFarmaco} en ${formatNum(volTotal)} ml (${formatNum(concentracionFinal)} ${unidadFarmaco}/ml) · dosis ${dosisValor} ${criADosisUnidadSelect.selectedOptions[0].textContent}`,
+      origen: "CRI"
+    });
+  });
+}
+
+// Calculadora B: ritmo de bomba ya fijado -> cuánto fármaco añadir a la bolsa/jeringa
+function calcularCriB() {
+  const peso = paciente.peso;
+  const unidadFarmaco = criBUnidadFarmacoSelect.value;
+  const ritmoMlH = parseFloat(criBRitmoInput.value);
+  const volTotal = parseFloat(criBVolTotalInput.value);
+  const dosisValor = parseFloat(criBDosisValorInput.value);
+  const concVial = parseFloat(criBConcVialInput.value); // opcional
+  const factor = factorDosisCri(unidadFarmaco, criBDosisUnidadSelect.value);
+
+  if (!peso || !ritmoMlH || !volTotal || !dosisValor || !factor) {
+    criBResultadoEl.classList.add("oculto");
+    criBResultadoEl.innerHTML = "";
+    return;
+  }
+
+  const dosisPorKgMin = dosisValor * factor;
+  const dosisTotalPorMin = dosisPorKgMin * peso;
+  const concentracionNecesaria = (dosisTotalPorMin * 60) / ritmoMlH; // por ml
+  const cantidadAnadir = concentracionNecesaria * volTotal;
+  const duracionHoras = volTotal / ritmoMlH;
+
+  if (!isFinite(cantidadAnadir) || cantidadAnadir <= 0) {
+    criBResultadoEl.classList.add("oculto");
+    criBResultadoEl.innerHTML = "";
+    return;
+  }
+
+  const volDelVialTexto = concVial ? ` (= ${formatNum(cantidadAnadir / concVial)} ml del vial de ${formatNum(concVial)} ${unidadFarmaco}/ml)` : "";
+
+  criBResultadoEl.classList.remove("oculto");
+  criBResultadoEl.innerHTML = `
+    <div class="resultado-dosis">${formatNum(cantidadAnadir)} ${unidadFarmaco}</div>
+    <div class="resultado-detalle">
+      <span>Añadir a los ${formatNum(volTotal)} ml de la bolsa/jeringa${volDelVialTexto}</span>
+    </div>
+    <div class="resultado-volumen">A ${formatNum(ritmoMlH)} ml/h, la mezcla dura ${formatNum(duracionHoras)} h para un paciente de ${formatNum(peso)} kg.</div>
+    <button class="boton-anadir" id="cri-b-anadir-boton">+ Añadir al paciente</button>
+  `;
+  document.getElementById("cri-b-anadir-boton").addEventListener("click", () => {
+    añadirAlPaciente({
+      principioActivo: criBNombreInput.value.trim() || "CRI",
+      principioActivoReal: criBNombreInput.value.trim() || null,
+      categoria: "CRI (infusión a ritmo constante)",
+      dosisTexto: `${formatNum(cantidadAnadir)} ${unidadFarmaco}${volDelVialTexto}`,
+      detalle: `Añadido a ${formatNum(volTotal)} ml, a pasar a ${formatNum(ritmoMlH)} ml/h · dosis ${dosisValor} ${criBDosisUnidadSelect.selectedOptions[0].textContent}`,
+      origen: "CRI"
+    });
+  });
+}
 
 // ============================================================
 // Mi base de datos: fármacos personalizados con dosis por patología

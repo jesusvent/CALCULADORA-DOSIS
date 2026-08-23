@@ -1,3 +1,5 @@
 # Documentos de referencia internos (no los usa la app en tiempo de ejecución;
 # el listado de productos recomendados contiene acuerdos internos del hospital).
 fuentes/
+*.doc
+*.docx
