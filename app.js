@@ -437,7 +437,20 @@ function seleccionarFarmaco(farmaco) {
 
   seccionFarmaco.classList.remove("oculto");
   actualizarFichaFarmaco();
-  cargarComercialesParaTexto(principioActivoCorto(farmaco));
+
+  // Un fármaco personalizado con una composición reconocible (ej. "200 mg/ml") ya trae su
+  // propia concentración indicada por el usuario: se usa directamente esa, sin lanzar una
+  // búsqueda en CIMAVET/CIMA que podría no encontrar nada (o encontrar varias presentaciones
+  // ambiguas de otros productos) y dejar la sensación de que "vuelve a pedir la composición".
+  const presentacionPersonalizada = farmaco.esPersonalizado ? extraerPresentacionDeComposicion(farmaco.composicion) : null;
+  if (presentacionPersonalizada) {
+    aplicarPresentacion(presentacionPersonalizada);
+    concentracionCimavetEstadoEl.textContent = `Concentración tomada de la composición indicada: ${etiquetaPresentacion(presentacionPersonalizada)}.`;
+    resetComercialSelect("Fármaco personalizado — concentración ya indicada arriba");
+    cimavetFarmacoResultadoEl.innerHTML = `<p class="ayuda">Fármaco personalizado con concentración propia. Si quieres comparar con productos comerciales reales, consulta la pestaña "Buscador CIMAVET y CIMA".</p>`;
+  } else {
+    cargarComercialesParaTexto(principioActivoCorto(farmaco));
+  }
 }
 
 function actualizarFichaFarmaco() {
@@ -1619,6 +1632,22 @@ function extraerPresentacionDeTexto(nombre) {
   const m = PATRON_CONCENTRACION_LIQUIDA.exec(nombre || "");
   if (!m) return null;
   return { tipo: "liquido", ...normalizarConcentracionLiquida(m) };
+}
+
+// Extrae la presentación (líquida o en comprimido/cápsula) directamente del campo
+// "Composición" de un fármaco personalizado (Mi base de datos), ej. "200 mg/ml" o
+// "Amoxicilina trihidrato 250 mg/comprimido". A diferencia de extraerPresentacionDeTexto
+// (solo líquidos, pensada para nombres de producto de CIMAVET/CIMA), aquí también se
+// reconoce la forma sólida si el texto la menciona explícitamente.
+function extraerPresentacionDeComposicion(composicion) {
+  if (!composicion) return null;
+  const mLiquido = PATRON_CONCENTRACION_LIQUIDA.exec(composicion);
+  if (mLiquido) return { tipo: "liquido", ...normalizarConcentracionLiquida(mLiquido) };
+  if (/comprimid|c[aá]psula|tableta/i.test(composicion)) {
+    const mSolido = PATRON_MG_COMPRIMIDO.exec(composicion);
+    if (mSolido) return { tipo: "solido", valor: parseFloat(mSolido[1].replace(",", ".")), unidad: "mg/comprimido" };
+  }
+  return null;
 }
 
 // Presentación de un componente de protocolo: usa la guardada si existe y, si no,
