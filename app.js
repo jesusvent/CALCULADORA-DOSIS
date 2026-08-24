@@ -1215,6 +1215,88 @@ function calcularPersonalizada() {
 // sinónimos en inglés para construir una búsqueda (X OR Y) más amplia. Si una indicación no
 // está aquí, se omite del término en vez de usarla en español (mejor buscar algo más general
 // que quedarse sin resultados).
+// Igual que INDICACION_PUBMED_EN pero para el nombre del principio activo (campo
+// "principioActivo" de DRUGS): sin esto, buscar literalmente "Amoxicilina/Ácido
+// clavulánico" o "Furosemida" en PubMed (literatura casi toda en inglés) apenas
+// encuentra nada. Si un principio activo no está aquí, se usa tal cual (funciona
+// razonablemente para nombres que ya coinciden o son muy parecidos en ambos idiomas,
+// ej. "Meloxicam", "Tramadol").
+const PRINCIPIO_ACTIVO_PUBMED_EN = {
+  "Acepromazina": "acepromazine",
+  "Alfaxalona": "alfaxalone",
+  "Amlodipino": "amlodipine",
+  "Amoxicilina": "amoxicillin",
+  "Amoxicilina/Ácido clavulánico": "amoxicillin/clavulanate",
+  "Ampicilina": "ampicillin",
+  "Atipamezol": "atipamezole",
+  "Atropina": "atropine",
+  "Azitromicina": "azithromycin",
+  "Benazepril": "benazepril",
+  "Bromuro de potasio": "potassium bromide",
+  "Bupivacaína": "bupivacaine",
+  "Buprenorfina": "buprenorphine",
+  "Butorfanol": "butorphanol",
+  "Carprofeno": "carprofen",
+  "Cefadroxilo": "cefadroxil",
+  "Cefalexina": "cefalexin OR cephalexin",
+  "Cefazolina": "cefazolin",
+  "Cefovecina": "cefovecin",
+  "Cefpodoxima": "cefpodoxime",
+  "Cisaprida": "cisapride",
+  "Clindamicina": "clindamycin",
+  "Clorfeniramina": "chlorpheniramine",
+  "Dexametasona": "dexamethasone",
+  "Dexmedetomidina": "dexmedetomidine",
+  "Difenhidramina": "diphenhydramine",
+  "Digoxina": "digoxin",
+  "Dipropionato de imidocarb": "imidocarb dipropionate",
+  "Doxiciclina": "doxycycline",
+  "Enrofloxacina": "enrofloxacin",
+  "Espironolactona": "spironolactone",
+  "Famotidina": "famotidine",
+  "Fenbendazol": "fenbendazole",
+  "Fenobarbital": "phenobarbital",
+  "Fitomenadiona (Vitamina K1)": "phytomenadione OR phytonadione (vitamin K1)",
+  "Flumazenilo": "flumazenil",
+  "Furazolidona": "furazolidone",
+  "Furosemida": "furosemide",
+  "Gabapentina": "gabapentin",
+  "Insulina glargina": "insulin glargine",
+  "Itraconazol": "itraconazole",
+  "Ivermectina": "ivermectin",
+  "Ketamina": "ketamine",
+  "Levotiroxina": "levothyroxine",
+  "Lidocaína": "lidocaine",
+  "Marbofloxacina": "marbofloxacin",
+  "Medetomidina": "medetomidine",
+  "Metadona": "methadone",
+  "Metamizol": "metamizole OR dipyrone",
+  "Metilprednisolona": "methylprednisolone",
+  "Metimazol": "methimazole",
+  "Metoclopramida": "metoclopramide",
+  "Metronidazol": "metronidazole",
+  "Milbemicina oxima": "milbemycin oxime",
+  "Naloxona": "naloxone",
+  "Nitazoxanida": "nitazoxanide",
+  "Omeprazol": "omeprazole",
+  "Ondansetrón": "ondansetron",
+  "Oxitetraciclina": "oxytetracycline",
+  "Pimobendán": "pimobendan",
+  "Pradofloxacina": "pradofloxacin",
+  "Prednisolona": "prednisolone",
+  "Ronidazol": "ronidazole",
+  "Selamectina": "selamectin",
+  "Sucralfato": "sucralfate",
+  "Telmisartán": "telmisartan",
+  "Terbinafina": "terbinafine",
+  "Tilosina": "tylosin",
+  "Trilostano": "trilostane",
+  "Trimetoprim/Sulfadiazina + Pirimetamina": "trimethoprim/sulfadiazine AND pyrimethamine",
+  "Trimetoprim/Sulfametoxazol": "trimethoprim/sulfamethoxazole",
+  "Xilazina": "xylazine",
+  "Zonisamida": "zonisamide"
+};
+
 const INDICACION_PUBMED_EN = {
   "Alergia": ["allergy"],
   "Analgesia (CRI)": ["analgesia constant rate infusion"],
@@ -1312,7 +1394,14 @@ const INDICACION_PUBMED_EN = {
 // a la vez (cada AND adicional reduce drásticamente los resultados), por eso NO se exige
 // además la palabra "dose"/"dosage": basta con el fármaco + la especie (+ la indicación).
 function urlPubMed(farmaco, especie, indicacion) {
-  const nombres = [farmaco.principioActivo, ...(farmaco.nombresComerciales || [])].filter(Boolean);
+  // El nombre en español apenas encuentra nada en PubMed (literatura casi toda en inglés):
+  // se traduce si está en el diccionario, y si no, se usa tal cual (funciona igual para
+  // nombres ya parecidos en ambos idiomas). Los nombres comerciales a veces llevan una
+  // anotación entre paréntesis (ej. "Augmentin (uso humano)") que NO debe ir en la búsqueda:
+  // sus paréntesis literales rompen el anidamiento de la consulta y la vacían por completo.
+  const principioActivoEn = PRINCIPIO_ACTIVO_PUBMED_EN[farmaco.principioActivo] || farmaco.principioActivo;
+  const comercialesLimpios = (farmaco.nombresComerciales || []).map((n) => n.replace(/\s*\([^)]*\)\s*$/, "").trim()).filter(Boolean);
+  const nombres = [principioActivoEn, ...comercialesLimpios];
   const nombreTerm = nombres.length > 1 ? `(${nombres.join(" OR ")})` : nombres[0];
   const especieEn = especie === "gato" ? "(cat OR feline)" : "(dog OR canine)";
   const partes = [nombreTerm, especieEn];
@@ -2055,6 +2144,30 @@ function calcularComponenteProtocolo(componente) {
   return { nombre, datos, dosisTexto, min, max };
 }
 
+// Convierte un componente de protocolo predefinido (que puede ser un id de DRUGS en forma de
+// string, o ya un objeto con su propia dosis) a un objeto editable completo, para poder
+// copiarlo al editor de protocolos personalizados ("Copiar y editar"). Si ya es un objeto, se
+// devuelve tal cual. Si es un string, resuelve su dosis desde DRUGS usando la especie "perro"
+// si el protocolo la incluye (si no, la primera especie del protocolo con datos).
+function convertirComponenteAEditable(componenteRaw, especiesProtocolo) {
+  if (typeof componenteRaw !== "string") return componenteRaw;
+  const farmaco = DRUGS.find((d) => d.id === componenteRaw);
+  if (!farmaco) return { nombre: componenteRaw, dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "", frecuencia: "", notas: "" };
+  const especie = especiesProtocolo.includes("perro") ? "perro" : especiesProtocolo.find((e) => farmaco.especies[e]);
+  const datos = farmaco.especies[especie];
+  return {
+    nombre: farmaco.principioActivo,
+    principioActivoReal: farmaco.principioActivo,
+    categoria: farmaco.categoria,
+    dosisMin: datos ? datos.dosisMin : null,
+    dosisMax: datos ? datos.dosisMax : null,
+    unidad: datos ? datos.unidad : "mg/kg",
+    via: datos ? datos.via : "",
+    frecuencia: datos ? datos.frecuencia : "",
+    notas: (datos ? datos.notas || "" : "") + (especiesProtocolo.length > 1 && datos ? ` (dosis de referencia: ${especie})` : "")
+  };
+}
+
 function etiquetaEspecies(especies) {
   if (especies.includes("perro") && especies.includes("gato")) return "Perro y gato";
   if (especies.includes("perro")) return "Perro";
@@ -2111,11 +2224,12 @@ function renderTarjetaProtocolo(protocolo) {
         ${protocolo.notas ? `<p class="notas">${escapeHtml(protocolo.notas)}</p>` : ""}
         <div class="aviso-inline">⚠ Este protocolo está definido solo para <strong>${escapeHtml(etiquetaEspecies(protocolo.especies))}</strong>. No se puede calcular para el paciente actual (${especieActualTexto}).</div>
         <button class="boton-primario boton-protocolo" disabled>+ Añadir todos al paciente</button>
-        ${esPersonalizado ? `
         <div class="fila-botones-form">
-          <button type="button" class="boton-secundario boton-editar-protocolo" data-id="${protocolo.id}">Editar</button>
-          <button type="button" class="boton-secundario boton-eliminar-protocolo" data-id="${protocolo.id}">Eliminar</button>
-        </div>` : ""}
+          ${esPersonalizado
+            ? `<button type="button" class="boton-secundario boton-editar-protocolo" data-id="${protocolo.id}">Editar</button>
+               <button type="button" class="boton-secundario boton-eliminar-protocolo" data-id="${protocolo.id}">Eliminar</button>`
+            : `<button type="button" class="boton-secundario boton-copiar-protocolo" data-id="${protocolo.id}">📋 Copiar y editar</button>`}
+        </div>
       </div>
     `;
   }
@@ -2188,11 +2302,12 @@ function renderTarjetaProtocolo(protocolo) {
       ${paciente.peso
         ? (faltaAlgunaConcentracion ? `<p class="ayuda">Indica la concentración de los fármacos que lo necesiten para poder añadirlos.</p>` : "")
         : `<p class="aviso-inline">Introduce el peso del paciente en la pestaña Calculadora para poder añadir este protocolo.</p>`}
-      ${esPersonalizado ? `
       <div class="fila-botones-form">
-        <button type="button" class="boton-secundario boton-editar-protocolo" data-id="${protocolo.id}">Editar</button>
-        <button type="button" class="boton-secundario boton-eliminar-protocolo" data-id="${protocolo.id}">Eliminar</button>
-      </div>` : ""}
+        ${esPersonalizado
+          ? `<button type="button" class="boton-secundario boton-editar-protocolo" data-id="${protocolo.id}">Editar</button>
+             <button type="button" class="boton-secundario boton-eliminar-protocolo" data-id="${protocolo.id}">Eliminar</button>`
+          : `<button type="button" class="boton-secundario boton-copiar-protocolo" data-id="${protocolo.id}">📋 Copiar y editar</button>`}
+      </div>
     </div>
   `;
 }
@@ -2252,6 +2367,24 @@ function renderProtocolos() {
   });
   protocolosListaEl.querySelectorAll(".boton-editar-protocolo").forEach((btn) => {
     btn.addEventListener("click", () => abrirFormularioProtocolo(customProtocols.find((p) => p.id === btn.dataset.id)));
+  });
+  // Un protocolo predefinido no se edita en el sitio (es el mismo para todos los
+  // dispositivos): "Copiar y editar" abre el editor de protocolos personalizados con sus
+  // mismos fármacos y dosis ya rellenados, para guardarlo como copia propia y modificable
+  // (añadir/quitar/cambiar fármacos) sin tocar el protocolo original.
+  protocolosListaEl.querySelectorAll(".boton-copiar-protocolo").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const protocolo = PROTOCOLS.find((p) => p.id === btn.dataset.id);
+      if (!protocolo) return;
+      abrirFormularioProtocolo({
+        nombre: "Copia de " + protocolo.nombre,
+        indicacion: protocolo.indicacion,
+        especies: protocolo.especies,
+        notas: protocolo.notas,
+        componentes: protocolo.componentes.map((c) => convertirComponenteAEditable(c, protocolo.especies))
+      });
+      editandoProtocoloId = null; // se guarda como protocolo personalizado nuevo, no sobrescribe el original
+    });
   });
   protocolosListaEl.querySelectorAll(".boton-eliminar-protocolo").forEach((btn) => {
     btn.addEventListener("click", async () => {
