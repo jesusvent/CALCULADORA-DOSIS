@@ -1,4 +1,4 @@
-const CACHE_NAME = "dosis-vet-cache-v3";
+const CACHE_NAME = "dosis-vet-cache-v4";
 const ARCHIVOS = [
   "./",
   "./index.html",
