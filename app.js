@@ -1727,25 +1727,58 @@ cimavetBusquedaInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") ejecutarBusquedaCimavetGeneral();
 });
 
+// A diferencia del buscador de producto dentro de un protocolo (donde CIMA es solo un
+// respaldo si CIMAVET no tiene nada, para no distraer con marcas humanas irrelevantes), esta
+// pestaña de búsqueda general consulta SIEMPRE las dos fuentes a la vez y muestra ambas por
+// separado: aquí el objetivo es explorar qué existe, veterinario y humano, no solo calcular.
 async function ejecutarBusquedaCimavetGeneral() {
   const query = cimavetBusquedaInput.value.trim();
   if (!query) return;
-  cimavetResultadoGeneralEl.innerHTML = `<p class="placeholder">Buscando en CIMAVET...</p>`;
-  try {
-    const data = await buscarCimavet(query, 50);
-    const resultados = data.resultados || [];
-    if (!resultados.length) {
-      await buscarEnCimaComoRespaldo(query, cimavetResultadoGeneralEl);
-      return;
+  cimavetResultadoGeneralEl.innerHTML = `<p class="placeholder">Buscando en CIMAVET y CIMA...</p>`;
+
+  const [cimavetRes, cimaRes] = await Promise.all([
+    buscarCimavet(query, 50).catch((err) => ({ error: err })),
+    buscarCima(query).catch((err) => ({ error: err }))
+  ]);
+  const errorVet = cimavetRes && cimavetRes.error;
+  const errorHum = cimaRes && cimaRes.error;
+  const resultadosVet = errorVet ? [] : (cimavetRes.resultados || []);
+  const resultadosHum = errorHum ? [] : (cimaRes.resultados || []);
+
+  if (!resultadosVet.length && !resultadosHum.length) {
+    if (errorVet && errorHum) {
+      cimavetResultadoGeneralEl.innerHTML = `<p class="aviso-inline">⚠ No se ha podido conectar ni con CIMAVET ni con CIMA ahora mismo. Comprueba tu conexión a internet e inténtalo de nuevo.</p>`;
+    } else {
+      cimavetResultadoGeneralEl.innerHTML = `<p class="placeholder">"${escapeHtml(query)}" no se ha encontrado ni como medicamento veterinario (CIMAVET) ni como medicamento de uso humano (CIMA).</p>`;
     }
-    let html = `<p class="ayuda">${data.totalFilas} resultado(s) encontrados en el catálogo oficial` +
-      (data.totalFilas > resultados.length ? `, mostrando los primeros ${resultados.length}. Refina la búsqueda para acotar más.` : ".") +
-      `</p>`;
-    html += resultados.map(filaCimavetHtml).join("");
-    cimavetResultadoGeneralEl.innerHTML = html;
-  } catch (err) {
-    cimavetResultadoGeneralEl.innerHTML = `<p class="aviso-inline">⚠ No se ha podido conectar con CIMAVET ahora mismo (${escapeHtml(err.message)}).</p>`;
+    return;
   }
+
+  let html = "";
+  html += `<h3 class="subtitulo-seccion">CIMAVET — medicamentos veterinarios</h3>`;
+  if (errorVet) {
+    html += `<p class="aviso-inline">⚠ No se ha podido conectar con CIMAVET ahora mismo.</p>`;
+  } else if (resultadosVet.length) {
+    html += `<p class="ayuda">${cimavetRes.totalFilas} resultado(s) encontrados en el catálogo oficial` +
+      (cimavetRes.totalFilas > resultadosVet.length ? `, mostrando los primeros ${resultadosVet.length}. Refina la búsqueda para acotar más.` : ".") +
+      `</p>`;
+    html += resultadosVet.map(filaCimavetHtml).join("");
+  } else {
+    html += `<p class="placeholder">Sin resultados en CIMAVET para "${escapeHtml(query)}".</p>`;
+  }
+
+  html += `<h3 class="subtitulo-seccion">CIMA — medicamentos de uso humano</h3>`;
+  if (errorHum) {
+    html += `<p class="aviso-inline">⚠ No se ha podido conectar con CIMA ahora mismo.</p>`;
+  } else if (resultadosHum.length) {
+    html += `<p class="aviso-inline">⚠ Uso en animales fuera de ficha técnica (off-label), bajo prescripción y responsabilidad del veterinario.</p>`;
+    html += `<p class="ayuda">${resultadosHum.length} resultado(s)` + (resultadosHum.length > 30 ? `, mostrando los primeros 30.` : ".") + `</p>`;
+    html += resultadosHum.slice(0, 30).map(filaCimaHtml).join("");
+  } else {
+    html += `<p class="placeholder">Sin resultados en CIMA para "${escapeHtml(query)}".</p>`;
+  }
+
+  cimavetResultadoGeneralEl.innerHTML = html;
 }
 
 // ============================================================
