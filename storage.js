@@ -2,7 +2,7 @@
 // Todo queda guardado únicamente en este dispositivo/navegador (no hay servidor).
 
 const DB_NAME = "vetDosisDB";
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 let dbPromise = null;
 
 function abrirDB() {
@@ -26,6 +26,12 @@ function abrirDB() {
         // clínica, para que aparezcan primero al buscar un producto concreto. id = marca
         // normalizada (minúsculas, sin acentos), para poder comparar sin ambigüedad.
         db.createObjectStore("favoritosHospital", { keyPath: "id" });
+      }
+      if (!db.objectStoreNames.contains("favoritosCri")) {
+        // Productos concretos de CIMAVET/CIMA marcados como favoritos desde la pestaña CRI,
+        // para pedir siempre el mismo producto a la farmacia. id = nombre del producto
+        // normalizado (minúsculas, sin acentos).
+        db.createObjectStore("favoritosCri", { keyPath: "id" });
       }
     };
     req.onsuccess = (e) => {

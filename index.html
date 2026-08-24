@@ -50,6 +50,7 @@
           <label for="paciente-peso">Peso (kg)</label>
           <input type="number" id="paciente-peso" min="0" step="0.1" placeholder="Ej. 12.5" />
         </div>
+        <p class="ayuda" id="paciente-superficie-corporal"></p>
       </div>
 
       <div class="tarjeta">
@@ -263,9 +264,11 @@
       <div class="tarjeta">
         <h3 class="titulo-tarjeta">Ya tengo la mezcla preparada → calcular el ritmo de la bomba</h3>
         <p class="ayuda">Ej. "diluyo 5 ml de un vial de 20 mg/ml en una bolsa de 500 ml" → indica la concentración del vial, cuánto extraes de él, y el volumen final total de la mezcla.</p>
-        <div class="campo">
-          <label for="cri-a-nombre">Fármaco (opcional, para el resumen del paciente)</label>
-          <input type="text" id="cri-a-nombre" placeholder="Ej. Ketamina CRI" />
+        <div class="campo campo-busqueda">
+          <label for="cri-a-nombre">Fármaco (nombre comercial o principio activo)</label>
+          <input type="text" id="cri-a-nombre" placeholder="Busca en tu base de datos, CIMAVET o CIMA..." autocomplete="off" />
+          <ul class="cri-sugerencias sugerencias oculto" id="cri-a-sugerencias"></ul>
+          <p class="ayuda" id="cri-a-concentracion-estado"></p>
         </div>
         <div class="fila">
           <div class="campo">
@@ -306,9 +309,11 @@
       <div class="tarjeta">
         <h3 class="titulo-tarjeta">El ritmo de la bomba ya está fijado → calcular cuánto fármaco añadir</h3>
         <p class="ayuda">Ej. "va a 10 ml/h en una bolsa de 250 ml de suero" → indica ese ritmo y ese volumen, y te digo cuánto fármaco tienes que añadir a la bolsa.</p>
-        <div class="campo">
-          <label for="cri-b-nombre">Fármaco (opcional, para el resumen del paciente)</label>
-          <input type="text" id="cri-b-nombre" placeholder="Ej. Furosemida CRI" />
+        <div class="campo campo-busqueda">
+          <label for="cri-b-nombre">Fármaco (nombre comercial o principio activo)</label>
+          <input type="text" id="cri-b-nombre" placeholder="Busca en tu base de datos, CIMAVET o CIMA..." autocomplete="off" />
+          <ul class="cri-sugerencias sugerencias oculto" id="cri-b-sugerencias"></ul>
+          <p class="ayuda" id="cri-b-concentracion-estado"></p>
         </div>
         <div class="fila">
           <div class="campo">

@@ -115,6 +115,7 @@ let usoEspecificoActivo = null; // { nombre, datos } seleccionado en el desplega
 const pacienteNombreInput = document.getElementById("paciente-nombre");
 const pacienteEspecieSelect = document.getElementById("paciente-especie");
 const pacientePesoInput = document.getElementById("paciente-peso");
+const pacienteSuperficieCorporalEl = document.getElementById("paciente-superficie-corporal");
 
 const inputBusqueda = document.getElementById("busqueda");
 const listaSugerencias = document.getElementById("sugerencias");
@@ -216,11 +217,30 @@ document.querySelectorAll(".subtab").forEach((btn) => {
   el.addEventListener("change", actualizarPaciente);
 });
 
+// Superficie corporal (m²) por la fórmula de Meeh, la habitual en oncología veterinaria para
+// dosificar quimioterapia (mg/m², no mg/kg, ya que la relación peso-superficie no es lineal):
+// BSA (m²) = K × peso(g)^(2/3) / 10000, con K=10.1 en perro y K=10.0 en gato (Kirk's Current
+// Veterinary Therapy). Expresado directamente con el peso en kg: BSA = (K/100) × peso(kg)^(2/3).
+function calcularSuperficieCorporal(pesoKg, especie) {
+  const k = especie === "gato" ? 10.0 : 10.1;
+  return (k / 100) * Math.pow(pesoKg, 2 / 3);
+}
+
+function actualizarSuperficieCorporal() {
+  if (!paciente.peso || paciente.peso <= 0) {
+    pacienteSuperficieCorporalEl.textContent = "";
+    return;
+  }
+  const m2 = calcularSuperficieCorporal(paciente.peso, paciente.especie);
+  pacienteSuperficieCorporalEl.textContent = `Superficie corporal: ${formatNum(m2)} m² (fórmula de Meeh — para dosificar quimioterapia en mg/m², no incluida en esta calculadora por seguridad; consulta el protocolo específico).`;
+}
+
 function actualizarPaciente() {
   paciente.nombre = pacienteNombreInput.value.trim();
   paciente.especie = pacienteEspecieSelect.value;
   paciente.peso = parseFloat(pacientePesoInput.value) || null;
   if (farmacoActivo) actualizarFichaFarmaco();
+  actualizarSuperficieCorporal();
   actualizarCri();
 }
 
@@ -245,6 +265,7 @@ function nuevoPaciente() {
   pacienteNombreInput.value = "";
   pacienteEspecieSelect.value = "perro";
   pacientePesoInput.value = "";
+  actualizarSuperficieCorporal();
 
   // Búsqueda de fármaco activa
   cerrarBusquedaFarmaco();
@@ -499,6 +520,30 @@ function toggleFavoritoHospital(marca) {
   } else {
     favoritosHospital.add(key);
     dbPut("favoritosHospital", { id: key, marca }).catch(() => {});
+  }
+}
+
+// ---- Favoritos de CRI: productos concretos de CIMAVET/CIMA marcados desde la pestaña CRI,
+// para pedir siempre el mismo a la farmacia. Mismo patrón que favoritosHospital de arriba. ----
+let favoritosCri = new Set();
+
+async function cargarFavoritosCri() {
+  const filas = await dbGetAll("favoritosCri");
+  favoritosCri = new Set(filas.map((f) => f.id));
+}
+
+function esFavoritoCri(nombre) {
+  return favoritosCri.has(normalizar(nombre));
+}
+
+function toggleFavoritoCri(nombre) {
+  const key = normalizar(nombre);
+  if (favoritosCri.has(key)) {
+    favoritosCri.delete(key);
+    dbDelete("favoritosCri", key).catch(() => {});
+  } else {
+    favoritosCri.add(key);
+    dbPut("favoritosCri", { id: key, nombre }).catch(() => {});
   }
 }
 
@@ -1523,8 +1568,21 @@ comercialSelect.addEventListener("change", () => {
 });
 
 // ---- Detección automática de la presentación (mg/ml, UI/ml o mg/comprimido) a partir de CIMAVET ----
-const PATRON_CONCENTRACION_LIQUIDA = /(\d+(?:[.,]\d+)?)\s*(mg|UI)\s*\/\s*ml/i;
+// Incluye microgramos/mcg/µg (ej. "FENTADON 50 microgramos/ml..."), muy habituales en CRI
+// (fentanilo, dexmedetomidina...); se convierten a mg/ml para mantener un único sistema de
+// unidades de concentración en toda la app (igual que ya se hace con las dosis en mcg/kg).
+const PATRON_CONCENTRACION_LIQUIDA = /(\d+(?:[.,]\d+)?)\s*(mg|mcg|[uµ]g|microgramos?|UI)\s*\/\s*ml/i;
 const PATRON_MG_COMPRIMIDO = /(\d+(?:[.,]\d+)?)\s*mg\b/i;
+
+// A partir del match de PATRON_CONCENTRACION_LIQUIDA, devuelve { valor, unidad } ya
+// normalizado a mg/ml o UI/ml (convirtiendo microgramos/mcg/µg dividiendo entre 1000).
+function normalizarConcentracionLiquida(match) {
+  const valorBruto = parseFloat(match[1].replace(",", "."));
+  const unidadRaw = match[2].toLowerCase();
+  if (unidadRaw === "ui") return { valor: valorBruto, unidad: "UI/ml" };
+  if (unidadRaw === "mg") return { valor: valorBruto, unidad: "mg/ml" };
+  return { valor: valorBruto / 1000, unidad: "mg/ml" }; // mcg, µg, ug, microgramo(s)
+}
 
 // CIMAVET (veterinario) devuelve la forma farmacéutica en "formasFarmaceuticas" (array);
 // CIMA (uso humano) la devuelve en "formaFarmaceutica" (objeto único, sin "s"). Si solo se
@@ -1545,7 +1603,7 @@ function extraerPresentacionMed(med) {
   }
   const m = PATRON_CONCENTRACION_LIQUIDA.exec(nombre);
   if (!m) return null;
-  return { tipo: "liquido", valor: parseFloat(m[1].replace(",", ".")), unidad: m[2].toUpperCase() === "UI" ? "UI/ml" : "mg/ml" };
+  return { tipo: "liquido", ...normalizarConcentracionLiquida(m) };
 }
 
 function etiquetaPresentacion(p) {
@@ -1560,7 +1618,7 @@ function etiquetaPresentacion(p) {
 function extraerPresentacionDeTexto(nombre) {
   const m = PATRON_CONCENTRACION_LIQUIDA.exec(nombre || "");
   if (!m) return null;
-  return { tipo: "liquido", valor: parseFloat(m[1].replace(",", ".")), unidad: m[2].toUpperCase() === "UI" ? "UI/ml" : "mg/ml" };
+  return { tipo: "liquido", ...normalizarConcentracionLiquida(m) };
 }
 
 // Presentación de un componente de protocolo: usa la guardada si existe y, si no,
@@ -2465,11 +2523,17 @@ async function buscarProductoParaComponenteProtocolo(texto, key, contenedorEl) {
     // productos de caballos/rumiantes, etc.) para que no desplacen a los que sí interesan.
     cimavetResultados = filtrarCimavetPorEspecie(data.resultados || []).slice(0, 10);
   } catch (e) { /* si CIMAVET falla, seguimos con lo demás */ }
+
+  // CIMA (medicina humana) solo se consulta como respaldo si CIMAVET no tiene nada para este
+  // texto: la mayoría de fármacos SÍ están autorizados como veterinarios, y mezclar ambas
+  // fuentes siempre añade ruido (marcas humanas que no aportan nada si ya hay veterinarias).
   let cimaResultados = [];
-  try {
-    const data = await buscarCima(texto);
-    cimaResultados = (data.resultados || []).slice(0, 8);
-  } catch (e) { /* si CIMA falla, seguimos con lo demás */ }
+  if (!cimavetResultados.length) {
+    try {
+      const data = await buscarCima(texto);
+      cimaResultados = (data.resultados || []).slice(0, 8);
+    } catch (e) { /* si CIMA falla, seguimos con lo demás */ }
+  }
 
   if (input.value.trim() !== texto) return; // el usuario ha seguido escribiendo mientras tanto
 
@@ -2614,6 +2678,8 @@ function factorDosisCri(unidadFarmaco, dosisUnidadValue) {
 const criAvisoPesoEl = document.getElementById("cri-aviso-peso");
 
 const criANombreInput = document.getElementById("cri-a-nombre");
+const criASugerenciasEl = document.getElementById("cri-a-sugerencias");
+const criAConcentracionEstadoEl = document.getElementById("cri-a-concentracion-estado");
 const criAUnidadFarmacoSelect = document.getElementById("cri-a-unidad-farmaco");
 const criAConcVialInput = document.getElementById("cri-a-conc-vial");
 const criAVolExtraidoInput = document.getElementById("cri-a-vol-extraido");
@@ -2623,6 +2689,8 @@ const criADosisUnidadSelect = document.getElementById("cri-a-dosis-unidad");
 const criAResultadoEl = document.getElementById("cri-a-resultado");
 
 const criBNombreInput = document.getElementById("cri-b-nombre");
+const criBSugerenciasEl = document.getElementById("cri-b-sugerencias");
+const criBConcentracionEstadoEl = document.getElementById("cri-b-concentracion-estado");
 const criBUnidadFarmacoSelect = document.getElementById("cri-b-unidad-farmaco");
 const criBConcVialInput = document.getElementById("cri-b-conc-vial");
 const criBRitmoInput = document.getElementById("cri-b-ritmo");
@@ -2635,6 +2703,114 @@ poblarUnidadesDosisCri(criAUnidadFarmacoSelect, criADosisUnidadSelect);
 poblarUnidadesDosisCri(criBUnidadFarmacoSelect, criBDosisUnidadSelect);
 criAUnidadFarmacoSelect.addEventListener("change", () => { poblarUnidadesDosisCri(criAUnidadFarmacoSelect, criADosisUnidadSelect); calcularCriA(); });
 criBUnidadFarmacoSelect.addEventListener("change", () => { poblarUnidadesDosisCri(criBUnidadFarmacoSelect, criBDosisUnidadSelect); calcularCriB(); });
+
+// ---- Buscador de fármaco para CRI (CIMAVET primero, CIMA como respaldo si no hay nada) ----
+// La mayoría de fármacos usados en CRI (fentanilo, ketamina, dopamina, nitroprusiato...) son
+// de uso humano, así que aquí SIEMPRE tiene sentido buscar en CIMA aunque haya resultados en
+// CIMAVET (a diferencia del buscador de protocolos, donde CIMA es solo un respaldo puro).
+// Al elegir un producto se detecta su concentración líquida (mg/ml o UI/ml) automáticamente;
+// las presentaciones sólidas (comprimidos/cápsulas) no sirven para una infusión IV, así que
+// en ese caso se avisa en vez de rellenar nada.
+function crearBuscadorFarmacoCri(nombreInput, sugerenciasEl, estadoEl, unidadFarmacoSelect, dosisUnidadSelect, concVialInput, recalcular) {
+  let debounceTimer = null;
+  nombreInput.addEventListener("input", () => {
+    clearTimeout(debounceTimer);
+    const texto = nombreInput.value.trim();
+    estadoEl.textContent = "";
+    if (texto.length < 3) {
+      sugerenciasEl.innerHTML = "";
+      sugerenciasEl.classList.add("oculto");
+      return;
+    }
+    debounceTimer = setTimeout(() => buscarFarmacoParaCri(texto, { nombreInput, sugerenciasEl, estadoEl, unidadFarmacoSelect, dosisUnidadSelect, concVialInput, recalcular }), 400);
+  });
+  nombreInput.addEventListener("focus", () => {
+    if (sugerenciasEl.innerHTML && nombreInput.value.trim().length >= 3) sugerenciasEl.classList.remove("oculto");
+  });
+}
+
+async function buscarFarmacoParaCri(texto, ctx) {
+  const { nombreInput, sugerenciasEl, estadoEl, unidadFarmacoSelect, dosisUnidadSelect, concVialInput, recalcular } = ctx;
+  sugerenciasEl.innerHTML = `<li class="sugerencia-info">Buscando en CIMAVET y CIMA...</li>`;
+  sugerenciasEl.classList.remove("oculto");
+
+  let cimavetResultados = [];
+  try {
+    const data = await buscarCimavet(texto, 30);
+    cimavetResultados = filtrarCimavetPorEspecie(data.resultados || []).slice(0, 10);
+  } catch (e) { /* seguimos */ }
+
+  let cimaResultados = [];
+  try {
+    const data = await buscarCima(texto);
+    cimaResultados = (data.resultados || []).slice(0, 10);
+  } catch (e) { /* seguimos */ }
+
+  if (nombreInput.value.trim() !== texto) return; // el usuario ha seguido escribiendo mientras tanto
+
+  let items = [
+    ...cimavetResultados.map((m) => ({ nombre: m.nombre, fuente: "cimavet", detalle: m.labtitular || "", presentacion: extraerPresentacionMed(m) })),
+    ...cimaResultados.map((m) => ({ nombre: m.nombre, fuente: "cima", detalle: m.labtitular || "", presentacion: extraerPresentacionMed(m) }))
+  ];
+  items.sort((a, b) => (esFavoritoCri(b.nombre) ? 1 : 0) - (esFavoritoCri(a.nombre) ? 1 : 0));
+
+  if (!items.length) {
+    sugerenciasEl.innerHTML = `<li class="sugerencia-info">Sin resultados en CIMAVET ni CIMA para "${escapeHtml(texto)}".</li>`;
+    return;
+  }
+
+  sugerenciasEl.innerHTML = items.map((it, i) => {
+    const esLiquido = it.presentacion && it.presentacion.tipo === "liquido";
+    const esFav = esFavoritoCri(it.nombre);
+    return `
+    <li data-idx="${i}">
+      <button type="button" class="cri-favorito-boton${esFav ? " es-favorito" : ""}" data-nombre="${escapeHtml(it.nombre)}" title="${esFav ? "Quitar de favoritos" : "Marcar como favorito para pedir siempre este a la farmacia"}">${esFav ? "⭐" : "☆"}</button>
+      <span class="termino">${escapeHtml(it.nombre)}</span>
+      <span class="tipo-tag">${escapeHtml(etiquetaFuente(it.fuente))}</span>
+      ${it.detalle ? `<span class="submeta">${escapeHtml(it.detalle)}</span>` : ""}
+      ${esLiquido
+        ? `<span class="submeta">📐 ${escapeHtml(etiquetaPresentacion(it.presentacion))} — se rellenará solo</span>`
+        : `<span class="submeta">⚠ No es una presentación líquida detectada; para CRI hace falta el vial inyectable, indica la concentración a mano</span>`}
+    </li>`;
+  }).join("");
+
+  sugerenciasEl.querySelectorAll(".cri-favorito-boton").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleFavoritoCri(btn.dataset.nombre);
+      buscarFarmacoParaCri(texto, ctx); // re-pinta con el orden/estrella actualizados
+    });
+  });
+
+  sugerenciasEl.querySelectorAll("li[data-idx]").forEach((li) => {
+    li.addEventListener("click", (e) => {
+      if (e.target.closest(".cri-favorito-boton")) return;
+      const it = items[Number(li.dataset.idx)];
+      nombreInput.value = it.nombre;
+      sugerenciasEl.classList.add("oculto");
+      if (it.presentacion && it.presentacion.tipo === "liquido") {
+        unidadFarmacoSelect.value = it.presentacion.unidad === "UI/ml" ? "UI" : "mg";
+        poblarUnidadesDosisCri(unidadFarmacoSelect, dosisUnidadSelect);
+        concVialInput.value = it.presentacion.valor;
+        estadoEl.textContent = `📐 Concentración detectada: ${etiquetaPresentacion(it.presentacion)} (${it.nombre}).`;
+      } else {
+        estadoEl.textContent = `⚠ No se ha detectado una concentración líquida para "${it.nombre}"; indícala manualmente si conoces el vial inyectable.`;
+      }
+      recalcular();
+    });
+  });
+}
+
+crearBuscadorFarmacoCri(criANombreInput, criASugerenciasEl, criAConcentracionEstadoEl, criAUnidadFarmacoSelect, criADosisUnidadSelect, criAConcVialInput, calcularCriA);
+crearBuscadorFarmacoCri(criBNombreInput, criBSugerenciasEl, criBConcentracionEstadoEl, criBUnidadFarmacoSelect, criBDosisUnidadSelect, criBConcVialInput, calcularCriB);
+
+document.addEventListener("click", (e) => {
+  [criASugerenciasEl, criBSugerenciasEl].forEach((ul) => {
+    if (!ul.classList.contains("oculto") && !ul.contains(e.target) && e.target !== ul.previousElementSibling) {
+      ul.classList.add("oculto");
+    }
+  });
+});
 
 [criAConcVialInput, criAVolExtraidoInput, criAVolTotalInput, criADosisValorInput, criADosisUnidadSelect].forEach((el) => {
   el.addEventListener("input", calcularCriA);
@@ -2950,10 +3126,11 @@ const importarDatosInput = document.getElementById("importar-datos-input");
 const importarDatosEstadoEl = document.getElementById("importar-datos-estado");
 
 exportarDatosBoton.addEventListener("click", async () => {
-  const [drugs, protocolos, favoritos] = await Promise.all([
+  const [drugs, protocolos, favoritos, favoritosCriExport] = await Promise.all([
     dbGetAll("customDrugs"),
     dbGetAll("customProtocols"),
-    dbGetAll("favoritosHospital")
+    dbGetAll("favoritosHospital"),
+    dbGetAll("favoritosCri")
   ]);
   const backup = {
     tipo: "calculadora-dosis-backup",
@@ -2961,7 +3138,8 @@ exportarDatosBoton.addEventListener("click", async () => {
     exportadoEl: new Date().toISOString(),
     customDrugs: drugs,
     customProtocols: protocolos,
-    favoritosHospital: favoritos
+    favoritosHospital: favoritos,
+    favoritosCri: favoritosCriExport
   };
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -2973,7 +3151,7 @@ exportarDatosBoton.addEventListener("click", async () => {
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
-  importarDatosEstadoEl.textContent = `Exportado: ${drugs.length} fármaco(s), ${protocolos.length} protocolo(s) y ${favoritos.length} favorito(s).`;
+  importarDatosEstadoEl.textContent = `Exportado: ${drugs.length} fármaco(s), ${protocolos.length} protocolo(s), ${favoritos.length} favorito(s) del hospital y ${favoritosCriExport.length} favorito(s) de CRI.`;
 });
 
 importarDatosBoton.addEventListener("click", () => importarDatosInput.click());
@@ -2995,12 +3173,14 @@ importarDatosInput.addEventListener("change", async () => {
     for (const f of backup.customDrugs || []) await dbPut("customDrugs", f);
     for (const p of backup.customProtocols || []) await dbPut("customProtocols", p);
     for (const fav of backup.favoritosHospital || []) await dbPut("favoritosHospital", fav);
+    for (const fav of backup.favoritosCri || []) await dbPut("favoritosCri", fav);
     await cargarCustomDrugs();
     await cargarCustomProtocols();
     await cargarFavoritosHospital();
+    await cargarFavoritosCri();
     renderMisFarmacos();
     renderProtocolos();
-    importarDatosEstadoEl.textContent = `Importado: ${(backup.customDrugs || []).length} fármaco(s), ${(backup.customProtocols || []).length} protocolo(s) y ${(backup.favoritosHospital || []).length} favorito(s).`;
+    importarDatosEstadoEl.textContent = `Importado: ${(backup.customDrugs || []).length} fármaco(s), ${(backup.customProtocols || []).length} protocolo(s), ${(backup.favoritosHospital || []).length} favorito(s) del hospital y ${(backup.favoritosCri || []).length} favorito(s) de CRI.`;
   } catch (e) {
     importarDatosEstadoEl.textContent = "⚠ No se ha podido leer el archivo (¿es un backup exportado desde esta misma app?).";
   }
@@ -3034,3 +3214,4 @@ actualizarPaciente();
 cargarCustomDrugs().then(renderMisFarmacos);
 cargarCustomProtocols();
 cargarFavoritosHospital();
+cargarFavoritosCri();
