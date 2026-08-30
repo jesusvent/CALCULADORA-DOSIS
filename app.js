@@ -1545,23 +1545,26 @@ function principioActivoCorto(farmaco) {
   return farmaco.principioActivo.split("/")[0];
 }
 
-// Descarta de un listado de CIMAVET los medicamentos que no estén indicados ni para perros ni
-// para gatos (premezclas para pollos, productos para caballos/rumiantes/porcino, etc.), ya que
-// esta calculadora es solo para pequeños animales. OJO: se mantiene un producto si está indicado
-// para CUALQUIERA de las dos especies (perro o gato), no solo la del paciente activo — por
-// ejemplo Cerenia en comprimidos solo está autorizado para perros, pero un veterinario viendo
-// una ficha de gato puede querer verlo igualmente (p. ej. para valorar un uso off-label). Solo
-// se excluyen presentaciones que sean exclusivamente para otras especies (ganado, aves, etc.).
+// Descarta de un listado de CIMAVET los medicamentos que no sean EXCLUSIVAMENTE para perros
+// y/o gatos, ya que esta calculadora es solo para pequeños animales. Un producto se mantiene
+// si está indicado para perro, para gato, o para ambos — por ejemplo Cerenia en comprimidos
+// solo está autorizado para perros, pero un veterinario viendo una ficha de gato puede querer
+// verlo igualmente (p. ej. para valorar un uso off-label). En cambio se descarta en cuanto
+// mezcle CUALQUIER otra especie (ganado, aves, caballos...), aunque también liste perros: un
+// inyectable "para caballos, bovino, porcino y perros" (ej. combinados de metamizol) no es en
+// la práctica un producto de pequeños animales solo porque perros aparezca en la lista.
 // Si un principio activo (ej. paracetamol) solo existe en CIMAVET para otras especies, esta
 // función devuelve una lista VACÍA a propósito — quien la llama debe entonces buscar en CIMA
 // (medicina humana) como corresponde, no mostrar productos de otra especie como si valieran.
 function filtrarCimavetPorEspecie(resultados) {
-  return resultados.filter((m) =>
-    (m.especies || []).some((e) => {
+  return resultados.filter((m) => {
+    const especies = m.especies || [];
+    if (!especies.length) return false;
+    return especies.every((e) => {
       const n = normalizar(e.nombre);
       return n.includes("perro") || n.includes("gato");
-    })
-  );
+    });
+  });
 }
 
 // A diferencia de filtrarCimavetPorEspecie (que mantiene un resultado con que sea de perro O
