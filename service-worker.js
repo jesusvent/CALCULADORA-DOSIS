@@ -1,4 +1,4 @@
-const CACHE_NAME = "dosis-vet-cache-v5";
+const CACHE_NAME = "dosis-vet-cache-v6";
 const ARCHIVOS = [
   "./",
   "./index.html",
@@ -26,8 +26,20 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+// "Red primero, caché como respaldo": siempre que haya conexión se usa la versión más
+// reciente del servidor (y se guarda en caché para la próxima vez); solo si falla la
+// petición (sin conexión) se sirve la última copia guardada. Con la estrategia anterior
+// ("caché primero") cualquier actualización de la app se quedaba invisible para siempre
+// en cuanto un navegador ya tenía el service worker instalado, salvo que se cambiara a mano
+// el nombre de CACHE_NAME en cada despliegue — algo fácil de olvidar y que ya ha pasado.
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then((cacheado) => cacheado || fetch(event.request))
+    fetch(event.request)
+      .then((respuesta) => {
+        const copia = respuesta.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copia));
+        return respuesta;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
