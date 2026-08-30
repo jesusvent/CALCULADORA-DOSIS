@@ -319,13 +319,23 @@ inputBusqueda.addEventListener("input", () => {
 
 // Si el texto buscado no coincide con ningún fármaco (ni de la base de datos interna ni de
 // "Mi base de datos"), ofrece un atajo para darlo de alta ahí mismo con dosis por indicación.
+// Búsqueda genérica en PubMed a partir de un texto libre (para un fármaco que ni siquiera
+// está en CIMAVET/CIMA con nombre reconocible, o que aún no está en la base de datos de
+// dosis): sin indicación concreta, solo el nombre + la especie del paciente activo.
+function urlPubMedTexto(nombre, especie) {
+  const especieEn = especie === "gato" ? "(cat OR feline)" : "(dog OR canine)";
+  return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(`${nombre} AND ${especieEn}`);
+}
+
 function actualizarAvisoNoEnBd(valor, localResultados) {
   if (localResultados.length) {
     avisoNoEnBdEl.classList.add("oculto");
     return;
   }
   avisoNoEnBdEl.classList.remove("oculto");
-  avisoNoEnBdEl.innerHTML = `"${escapeHtml(valor)}" no está en tu base de datos de dosis. <button type="button" class="boton-enlace" id="anadir-no-en-bd-boton">+ Añadirlo a Mi base de datos</button>`;
+  avisoNoEnBdEl.innerHTML = `"${escapeHtml(valor)}" no está en tu base de datos de dosis. ` +
+    `<button type="button" class="boton-enlace" id="anadir-no-en-bd-boton">+ Añadirlo a Mi base de datos</button> · ` +
+    `<a class="boton-enlace" target="_blank" rel="noopener" href="${urlPubMedTexto(valor, paciente.especie)}">🔎 Buscar en PubMed</a>`;
   document.getElementById("anadir-no-en-bd-boton").addEventListener("click", () => {
     document.querySelector('.tab-principal[data-vista="misfarmacos"]').click();
     abrirFormulario();
@@ -1465,6 +1475,7 @@ function filaCimavetHtml(med) {
       <div class="cimavet-enlaces">
         ${ft ? `<a href="${ft.url}" target="_blank" rel="noopener">📄 Ficha técnica (posología del laboratorio)</a>` : ""}
         ${prospecto ? `<a href="${prospecto.url}" target="_blank" rel="noopener">📄 Prospecto</a>` : ""}
+        <a href="${urlPubMedTexto(principios || med.nombre, paciente.especie)}" target="_blank" rel="noopener">🔎 Buscar en PubMed</a>
       </div>
     </div>`;
 }
@@ -1518,6 +1529,7 @@ function filaCimaHtml(med) {
       <div class="cimavet-enlaces">
         ${ft ? `<a href="${ft.url}" target="_blank" rel="noopener">📄 Ficha técnica</a>` : ""}
         ${prospecto ? `<a href="${prospecto.url}" target="_blank" rel="noopener">📄 Prospecto</a>` : ""}
+        <a href="${urlPubMedTexto((med.vtm ? med.vtm.nombre : null) || med.nombre, paciente.especie)}" target="_blank" rel="noopener">🔎 Buscar en PubMed</a>
       </div>
     </div>`;
 }
