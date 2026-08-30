@@ -1786,6 +1786,72 @@ const PROTOCOLS = [
     componentes: [
       { nombre: "Epoetina (EPO)", principioActivoReal: "Eritropoyetina", categoria: "Estimulante de la eritropoyesis", dosisMin: 100, dosisMax: 100, unidad: "UI/kg", via: "SC", frecuencia: "3 veces por semana", notas: "" }
     ]
+  },
+  {
+    id: "sedacion-ecocardiografia-perro-acepromazina-butorfanol",
+    nombre: "Sedación ecocardiografía perros: acepromacina + butorfanol",
+    indicacion: "Técnicas de diagnóstico",
+    especies: ["perro"],
+    notas: "Protocolo real de la clínica.",
+    componentes: [
+      { nombre: "Acepromazina", principioActivoReal: "Acepromazina", categoria: "Tranquilizante fenotiazínico", dosisMin: 0.03, dosisMax: 0.03, unidad: "mg/kg", via: "IM/IV", frecuencia: "dosis única", notas: "" },
+      { nombre: "Butorfanol", principioActivoReal: "Butorfanol", categoria: "Opioide agonista-antagonista", dosisMin: 0.1, dosisMax: 0.2, unidad: "mg/kg", via: "IM/IV", frecuencia: "dosis única", notas: "" }
+    ]
+  },
+  {
+    id: "sedacion-ecocardiografia-perro-acepromazina-buprenorfina",
+    nombre: "Sedación ecocardiografía perros: acepromacina + buprenorfina",
+    indicacion: "Técnicas de diagnóstico",
+    especies: ["perro"],
+    notas: "Protocolo real de la clínica.",
+    componentes: [
+      { nombre: "Acepromazina", principioActivoReal: "Acepromazina", categoria: "Tranquilizante fenotiazínico", dosisMin: 0.03, dosisMax: 0.03, unidad: "mg/kg", via: "IM/IV", frecuencia: "dosis única", notas: "" },
+      { nombre: "Buprenorfina", principioActivoReal: "Buprenorfina", categoria: "Analgésico opioide", dosisMin: 0.0075, dosisMax: 0.0075, unidad: "mg/kg", via: "IM/IV", frecuencia: "dosis única", notas: "" }
+    ]
+  },
+  {
+    id: "sedacion-ecocardiografia-gato-acepromazina-butorfanol",
+    nombre: "Sedación ecocardiografía gatos: acepromacina + butorfanol",
+    indicacion: "Técnicas de diagnóstico",
+    especies: ["gato"],
+    notas: "Protocolo real de la clínica.",
+    componentes: [
+      { nombre: "Acepromazina", principioActivoReal: "Acepromazina", categoria: "Tranquilizante fenotiazínico", dosisMin: 0.05, dosisMax: 0.05, unidad: "mg/kg", via: "IM/IV", frecuencia: "dosis única", notas: "" },
+      { nombre: "Butorfanol", principioActivoReal: "Butorfanol", categoria: "Opioide agonista-antagonista", dosisMin: 0.25, dosisMax: 0.25, unidad: "mg/kg", via: "IM/IV", frecuencia: "dosis única", notas: "" }
+    ]
+  },
+  {
+    id: "sedacion-ecocardiografia-gato-midazolam-ketamina",
+    nombre: "Sedación ecocardiografía gatos difíciles: midazolam + ketamina",
+    indicacion: "Técnicas de diagnóstico",
+    especies: ["gato"],
+    notas: "Protocolo real de la clínica, para gatos muy agresivos/difíciles de manejar.",
+    componentes: [
+      { nombre: "Midazolam", principioActivoReal: "Midazolam", categoria: "Ansiolítico (benzodiazepina)", dosisMin: 0.2, dosisMax: 0.2, unidad: "mg/kg", via: "IM/IV", frecuencia: "dosis única", notas: "" },
+      { nombre: "Ketamina", principioActivoReal: "Ketamina", categoria: "Anestésico disociativo", dosisMin: 5, dosisMax: 5, unidad: "mg/kg", via: "IM/IV", frecuencia: "dosis única", notas: "" }
+    ]
+  },
+  {
+    id: "sedacion-ecocardiografia-gato-alfaxan-butorfanol",
+    nombre: "Sedación ecocardiografía gatos: alfaxalona + butorfanol",
+    indicacion: "Técnicas de diagnóstico",
+    especies: ["gato"],
+    notas: "Protocolo real de la clínica.",
+    componentes: [
+      { nombre: "Alfaxalona", principioActivoReal: "Alfaxalona", categoria: "Anestésico neuroesteroide", dosisMin: 1, dosisMax: 1, unidad: "mg/kg", via: "IM", frecuencia: "dosis única", notas: "" },
+      { nombre: "Butorfanol", principioActivoReal: "Butorfanol", categoria: "Opioide agonista-antagonista", dosisMin: 0.3, dosisMax: 0.3, unidad: "mg/kg", via: "IM", frecuencia: "dosis única", notas: "" }
+    ]
+  },
+  {
+    id: "sedacion-ecocardiografia-gato-diazepam-alfaxalona",
+    nombre: "Sedación ecocardiografía gatos: diazepam + alfaxalona",
+    indicacion: "Técnicas de diagnóstico",
+    especies: ["gato"],
+    notas: "Protocolo real de la clínica.",
+    componentes: [
+      { nombre: "Diazepam", principioActivoReal: "Diazepam", categoria: "Anticonvulsivante (benzodiazepina)", dosisMin: 0.3, dosisMax: 0.3, unidad: "mg/kg", via: "IV", frecuencia: "dosis única", notas: "" },
+      { nombre: "Alfaxalona", principioActivoReal: "Alfaxalona", categoria: "Anestésico neuroesteroide", dosisMin: 1, dosisMax: 3, unidad: "mg/kg", via: "IV", frecuencia: "dosis única", notas: "" }
+    ]
   }
 ];
 
