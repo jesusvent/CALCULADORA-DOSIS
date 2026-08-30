@@ -1564,6 +1564,17 @@ function filtrarCimavetPorEspecie(resultados) {
   );
 }
 
+// A diferencia de filtrarCimavetPorEspecie (que mantiene un resultado con que sea de perro O
+// gato, para no esconder p. ej. Cerenia comprimidos —solo perro— viendo la ficha de un gato),
+// esta comprueba si hay AL MENOS UNO específico para la especie del paciente ACTIVO. Sirve
+// para decidir si, aun habiendo productos veterinarios de la especie "hermana", conviene
+// complementar con CIMA: p. ej. metamizol solo existe en CIMAVET combinado para perros (nunca
+// gatos), así que para un gato hay que ofrecer también las alternativas humanas.
+function hayResultadoParaEspecieActiva(resultados) {
+  const especieNombre = paciente.especie === "gato" ? "gato" : "perro";
+  return resultados.some((m) => (m.especies || []).some((e) => normalizar(e.nombre).includes(especieNombre)));
+}
+
 async function cargarCimavetParaFarmaco(farmaco) {
   cimavetFarmacoResultadoEl.innerHTML = `<p class="placeholder">Buscando en CIMAVET...</p>`;
   try {
@@ -1583,6 +1594,23 @@ async function cargarCimavetParaFarmaco(farmaco) {
       ? `<p class="ayuda">${resultados.length} presentaciones autorizadas encontradas.</p>`
       : `<p class="ayuda">Mostrando ${mostrar.length} de ${resultados.length} presentaciones autorizadas para "${escapeHtml(principioActivoCorto(farmaco))}", filtradas para perro/gato.</p>`;
     html += mostrar.map(filaCimavetHtml).join("");
+
+    // Hay productos veterinarios, pero ninguno autorizado expresamente para la especie del
+    // paciente activo (ej. metamizol: combinados solo para perros, nunca para gatos). Se
+    // complementa con las alternativas humanas de CIMA en vez de dar por buena la de la otra especie.
+    if (!hayResultadoParaEspecieActiva(mostrar)) {
+      const especieNombre = paciente.especie === "gato" ? "gatos" : "perros";
+      html += `<p class="aviso-inline">⚠ Ninguna de estas presentaciones está autorizada expresamente para ${especieNombre}. También puedes valorar estas alternativas de uso humano (CIMA), fuera de ficha técnica y bajo tu responsabilidad:</p>`;
+      try {
+        const cimaData = await buscarCima(principioActivoCorto(farmaco));
+        const cimaResultados = cimaData.resultados || [];
+        html += cimaResultados.length
+          ? cimaResultados.map(filaCimaHtml).join("")
+          : `<p class="placeholder">Sin resultados en CIMA.</p>`;
+      } catch (e) {
+        html += `<p class="aviso-inline">⚠ No se ha podido conectar con CIMA ahora mismo.</p>`;
+      }
+    }
     cimavetFarmacoResultadoEl.innerHTML = html;
   } catch (err) {
     cimavetFarmacoResultadoEl.innerHTML = `<p class="aviso-inline">⚠ No se ha podido conectar con CIMAVET ahora mismo (${escapeHtml(err.message)}). Comprueba tu conexión a internet e inténtalo de nuevo.</p>`;
@@ -1630,6 +1658,25 @@ async function cargarComercialesParaTexto(texto) {
     comercialSelect._resultados = resultados;
     comercialDetalleEl.innerHTML = "";
     actualizarConcentracionesDetectadas(resultados);
+
+    // Hay productos veterinarios, pero ninguno autorizado expresamente para la especie del
+    // paciente activo (ej. metamizol: combinados solo para perros, nunca para gatos). Se
+    // complementa con las alternativas humanas de CIMA en vez de dar por buena la de la otra especie.
+    if (!hayResultadoParaEspecieActiva(resultados)) {
+      const especieNombre = paciente.especie === "gato" ? "gatos" : "perros";
+      let html = `<p class="aviso-inline">⚠ Ninguna presentación de CIMAVET está autorizada expresamente para ${especieNombre}. También puedes valorar estas alternativas de uso humano (CIMA), fuera de ficha técnica y bajo tu responsabilidad:</p>`;
+      try {
+        const cimaData = await buscarCima(texto);
+        if (requestId !== comercialesRequestId) return;
+        const cimaResultados = cimaData.resultados || [];
+        html += cimaResultados.length
+          ? cimaResultados.map(filaCimaHtml).join("")
+          : `<p class="placeholder">Sin resultados en CIMA.</p>`;
+      } catch (e) {
+        html += `<p class="aviso-inline">⚠ No se ha podido conectar con CIMA ahora mismo.</p>`;
+      }
+      comercialDetalleEl.innerHTML = html;
+    }
   } catch (err) {
     if (requestId !== comercialesRequestId) return;
     resetComercialSelect("Error al conectar con CIMAVET");
