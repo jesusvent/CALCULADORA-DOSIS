@@ -1526,12 +1526,15 @@ async function buscarEnCimaComoRespaldo(texto, contenedorEl) {
   contenedorEl.innerHTML = `<p class="placeholder">No autorizado como veterinario. Buscando en CIMA (medicina humana)...</p>`;
   try {
     const data = await buscarCima(texto);
-    const resultados = (data.resultados || []).slice(0, 20);
+    // Sin límite arbitrario: para principios activos muy comunes (ej. paracetamol) CIMA puede
+    // devolver cientos de marcas/combinaciones, y un corte a los primeros 20-30 (orden
+    // básicamente alfabético) escondía casi todas las marcas habituales sin ningún criterio.
+    const resultados = data.resultados || [];
     if (!resultados.length) {
       contenedorEl.innerHTML = `<p class="placeholder">"${escapeHtml(texto)}" no se ha encontrado ni como medicamento veterinario (CIMAVET) ni como medicamento de uso humano (CIMA).</p>`;
       return;
     }
-    contenedorEl.innerHTML = `<p class="aviso-inline">⚠ "${escapeHtml(texto)}" no es un medicamento veterinario autorizado en España, pero sí existe como medicamento de uso humano en CIMA. Su uso en animales sería fuera de ficha técnica (off-label), bajo prescripción y responsabilidad del veterinario.</p>` +
+    contenedorEl.innerHTML = `<p class="aviso-inline">⚠ "${escapeHtml(texto)}" no es un medicamento veterinario autorizado en España, pero sí existe como medicamento de uso humano en CIMA (${resultados.length} resultado(s)). Su uso en animales sería fuera de ficha técnica (off-label), bajo prescripción y responsabilidad del veterinario.</p>` +
       resultados.map(filaCimaHtml).join("");
   } catch (err) {
     contenedorEl.innerHTML += `<p class="aviso-inline">⚠ No se ha podido conectar con CIMA (${escapeHtml(err.message)}).</p>`;
@@ -1543,50 +1546,43 @@ function principioActivoCorto(farmaco) {
 }
 
 // Descarta de un listado de CIMAVET los medicamentos que no estén indicados ni para perros ni
-// para gatos (premezclas para pollos, productos para caballos/rumiantes, etc.), ya que esta
-// calculadora es solo para pequeños animales. OJO: se mantiene un producto si está indicado
+// para gatos (premezclas para pollos, productos para caballos/rumiantes/porcino, etc.), ya que
+// esta calculadora es solo para pequeños animales. OJO: se mantiene un producto si está indicado
 // para CUALQUIERA de las dos especies (perro o gato), no solo la del paciente activo — por
 // ejemplo Cerenia en comprimidos solo está autorizado para perros, pero un veterinario viendo
 // una ficha de gato puede querer verlo igualmente (p. ej. para valorar un uso off-label). Solo
 // se excluyen presentaciones que sean exclusivamente para otras especies (ganado, aves, etc.).
-// Si NINGÚN resultado indica perro/gato de forma explícita (dato incompleto en CIMAVET), se
-// devuelven todos sin filtrar en vez de vaciar la lista por completo.
+// Si un principio activo (ej. paracetamol) solo existe en CIMAVET para otras especies, esta
+// función devuelve una lista VACÍA a propósito — quien la llama debe entonces buscar en CIMA
+// (medicina humana) como corresponde, no mostrar productos de otra especie como si valieran.
 function filtrarCimavetPorEspecie(resultados) {
-  const filtrados = resultados.filter((m) =>
+  return resultados.filter((m) =>
     (m.especies || []).some((e) => {
       const n = normalizar(e.nombre);
       return n.includes("perro") || n.includes("gato");
     })
   );
-  return filtrados.length ? filtrados : resultados;
 }
 
 async function cargarCimavetParaFarmaco(farmaco) {
   cimavetFarmacoResultadoEl.innerHTML = `<p class="placeholder">Buscando en CIMAVET...</p>`;
   try {
     const data = await buscarCimavet(principioActivoCorto(farmaco), 100);
-    let resultados = data.resultados || [];
-
-    const especieNombre = paciente.especie === "gato" ? "gatos" : "perros";
-    const filtrados = resultados.filter((m) =>
-      (m.especies || []).some((e) => normalizar(e.nombre).includes(especieNombre))
-    );
+    const resultados = data.resultados || [];
+    // Filtrar por especie ANTES de decidir si hay resultados: si CIMAVET solo tiene
+    // presentaciones para otra especie (ej. paracetamol solo para porcino), esto debe
+    // tratarse como "sin resultados para perro/gato" y buscar en CIMA, no mostrarlas igual.
     const mostrar = filtrarCimavetPorEspecie(resultados);
 
-    let html = "";
-    if (!resultados.length) {
+    if (!mostrar.length) {
       await buscarEnCimaComoRespaldo(principioActivoCorto(farmaco), cimavetFarmacoResultadoEl);
       return;
-    } else {
-      if (filtrados.length && filtrados.length !== resultados.length) {
-        html += `<p class="ayuda">Mostrando ${filtrados.length} de ${resultados.length} presentaciones autorizadas para "${escapeHtml(principioActivoCorto(farmaco))}", filtradas para ${especieNombre}.</p>`;
-      } else if (!filtrados.length) {
-        html += `<p class="ayuda">Ninguna presentación indica expresamente "${especieNombre}"; se muestran las ${resultados.length} presentaciones encontradas.</p>`;
-      } else {
-        html += `<p class="ayuda">${resultados.length} presentaciones autorizadas encontradas.</p>`;
-      }
-      html += mostrar.map(filaCimavetHtml).join("");
     }
+
+    let html = mostrar.length === resultados.length
+      ? `<p class="ayuda">${resultados.length} presentaciones autorizadas encontradas.</p>`
+      : `<p class="ayuda">Mostrando ${mostrar.length} de ${resultados.length} presentaciones autorizadas para "${escapeHtml(principioActivoCorto(farmaco))}", filtradas para perro/gato.</p>`;
+    html += mostrar.map(filaCimavetHtml).join("");
     cimavetFarmacoResultadoEl.innerHTML = html;
   } catch (err) {
     cimavetFarmacoResultadoEl.innerHTML = `<p class="aviso-inline">⚠ No se ha podido conectar con CIMAVET ahora mismo (${escapeHtml(err.message)}). Comprueba tu conexión a internet e inténtalo de nuevo.</p>`;
@@ -1615,14 +1611,16 @@ async function cargarComercialesParaTexto(texto) {
   try {
     const data = await buscarCimavet(texto, 150);
     if (requestId !== comercialesRequestId) return; // ha llegado una búsqueda más reciente entretanto
-    let resultados = data.resultados || [];
+    // Filtrar por especie ANTES de decidir si hay resultados: si CIMAVET solo tiene
+    // presentaciones para otra especie (ej. paracetamol solo para porcino), esto debe
+    // tratarse como "sin resultados para perro/gato" y buscar en CIMA, no mostrarlas igual.
+    let resultados = filtrarCimavetPorEspecie(data.resultados || []);
     if (!resultados.length) {
       resetComercialSelect("Sin resultados en CIMAVET (no autorizado como veterinario)");
       actualizarConcentracionesDetectadas([]);
       await buscarEnCimaComoRespaldo(texto, comercialDetalleEl);
       return;
     }
-    resultados = filtrarCimavetPorEspecie(resultados);
     const principioActivoParaFavoritos = farmacoActivo ? farmacoActivo.principioActivo : texto;
     const { lista: resultadosOrdenados, esFavorito } = marcarYOrdenarFavoritos(resultados, principioActivoParaFavoritos);
     resultados = resultadosOrdenados;
@@ -1890,8 +1888,8 @@ async function ejecutarBusquedaCimavetGeneral() {
     html += `<p class="aviso-inline">⚠ No se ha podido conectar con CIMA ahora mismo.</p>`;
   } else if (resultadosHum.length) {
     html += `<p class="aviso-inline">⚠ Uso en animales fuera de ficha técnica (off-label), bajo prescripción y responsabilidad del veterinario.</p>`;
-    html += `<p class="ayuda">${resultadosHum.length} resultado(s)` + (resultadosHum.length > 30 ? `, mostrando los primeros 30.` : ".") + `</p>`;
-    html += resultadosHum.slice(0, 30).map(filaCimaHtml).join("");
+    html += `<p class="ayuda">${resultadosHum.length} resultado(s).</p>`;
+    html += resultadosHum.map(filaCimaHtml).join("");
   } else {
     html += `<p class="placeholder">Sin resultados en CIMA para "${escapeHtml(query)}".</p>`;
   }
