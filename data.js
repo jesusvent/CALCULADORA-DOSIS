@@ -143,7 +143,8 @@ const DRUGS = [
     categoria: "Antagonista del calcio (antiarrítmico/antihipertensivo)",
     indicaciones: ["Arritmia supraventricular", "Cardiomiopatía"],
     especies: {
-      perro: { dosisMin: 0.5, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Vía IV: 0,05-0,25 mg/kg." }
+      perro: { dosisMin: 0.5, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Vía IV: 0,05-0,25 mg/kg." },
+      gato:  { dosisMin: 1.75, dosisMax: 3.75, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", dosisMaxima: 15, notas: "Fuente: vademecum cardio (documento interno de la clínica). Dosis citada como fija de 7,5-15 mg/gato cada 8 h (formulaciones de liberación sostenida se dosifican por animal, no por peso); el rango mg/kg mostrado es una aproximación para un gato típico, limitada a los 15 mg/gato citados como máximo." }
     }
   },
   {
@@ -185,7 +186,8 @@ const DRUGS = [
     categoria: "Vasodilatador arterial",
     indicaciones: ["Insuficiencia cardíaca congestiva", "Hipertensión arterial sistémica"],
     especies: {
-      perro: { dosisMin: 0.5, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Vigilar hipotensión, sobre todo si se combina con IECA/diurético; iniciar con la dosis más baja." }
+      perro: { dosisMin: 0.5, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Vigilar hipotensión, sobre todo si se combina con IECA/diurético; iniciar con la dosis más baja." },
+      gato:  { dosisMin: 0.6, dosisMax: 2.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", dosisMaxima: 10, notas: "Fuente: vademecum cardio (documento interno de la clínica). Dosis citada como fija de 2,5-10 mg/gato cada 12 h; el rango mg/kg mostrado es una aproximación para un gato típico, limitada a los 10 mg/gato citados como máximo." }
     }
   },
   {
@@ -237,7 +239,7 @@ const DRUGS = [
     indicaciones: ["Arritmia supraventricular", "Arritmia ventricular", "Cardiomiopatía"],
     especies: {
       perro: { dosisMin: 0.1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Vía IV: 0,01-0,1 mg/kg lento. Introducir gradualmente; puede empeorar una insuficiencia cardíaca descompensada." },
-      gato:  { dosisMin: 0.01, dosisMax: 0.1, unidad: "mg/kg", via: "IV", frecuencia: "lento, según necesidad", notas: "La pauta oral en gatos suele ser una dosis fija por animal (no calculable por peso en esta app); consultar fuente adicional para esa pauta." }
+      gato:  { dosisMin: 0.01, dosisMax: 0.1, unidad: "mg/kg", via: "IV", frecuencia: "lento, según necesidad", notas: "La pauta oral en gatos suele ser una dosis fija por animal. Fuente: vademecum cardio (documento interno de la clínica): 2,5-10 mg/gato VO (frecuencia no especificada en la fuente; confirmar antes de pautar)." }
     }
   },
   {
@@ -536,6 +538,27 @@ const DRUGS = [
     }
   },
   {
+    id: "atenolol",
+    principioActivo: "Atenolol",
+    nombresComerciales: ["Tenormin (uso humano)"],
+    categoria: "Betabloqueante cardioselectivo",
+    indicaciones: ["Arritmia supraventricular", "Cardiomiopatía", "Hipertensión arterial sistémica"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", dosisMaxima: 50, notas: "Fuente: vademecum cardio (documento interno de la clínica). Dosis citada como 6,25-50 mg/perro cada 12 h (según tamaño); el rango mg/kg mostrado es una aproximación, limitada a los 50 mg citados como máximo." },
+      gato:  { dosisMin: 1.5, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", dosisMaxima: 12.5, notas: "Fuente: vademecum cardio (documento interno de la clínica). Dosis citada como fija de 6,25-12,5 mg/gato cada 12-24 h, independientemente del peso; el rango mg/kg mostrado es una aproximación para un gato típico, limitada a los 12,5 mg/gato citados como máximo." }
+    }
+  },
+  {
+    id: "terbutalina",
+    principioActivo: "Terbutalina",
+    nombresComerciales: ["Terbasmin (uso humano)"],
+    categoria: "Broncodilatador (agonista beta-2)",
+    indicaciones: ["Enfermedad respiratoria"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 0.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", dosisMaxima: 10, notas: "Fuente: vademecum cardio (documento interno de la clínica). Dosis citada como 2,5-10 mg/perro (frecuencia no especificada en la fuente; confirmar antes de pautar); el rango mg/kg mostrado es una aproximación, limitada a los 10 mg citados como máximo." }
+    }
+  },
+  {
     id: "buprenorfina",
     principioActivo: "Buprenorfina",
     nombresComerciales: ["Bupaq", "Vetergesic"],
@@ -806,7 +829,7 @@ const DRUGS = [
     indicaciones: ["Insuficiencia cardíaca congestiva", "Arritmia supraventricular"],
     especies: {
       perro: { dosisMin: 0.003, dosisMax: 0.005, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Margen terapéutico muy estrecho: monitorizar niveles séricos y función renal periódicamente." },
-      gato:  { dosisMin: 0.002, dosisMax: 0.004, unidad: "mg/kg", via: "VO", frecuencia: "cada 48 h", notas: "Los gatos son muy sensibles a la toxicidad digitálica: monitorizar niveles séricos estrechamente." }
+      gato:  { dosisMin: 0.002, dosisMax: 0.004, unidad: "mg/kg", via: "VO", frecuencia: "cada 48 h", notas: "Los gatos son muy sensibles a la toxicidad digitálica: monitorizar niveles séricos estrechamente. Alternativa citada en vademecum cardio (fuente interna de la clínica): dosis FIJA de 0,03 mg/gato cada 12-48 h, independientemente del peso — convención habitual en cardiología felina para evitar sobredosificación." }
     }
   },
   {
