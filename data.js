@@ -127,6 +127,161 @@ const DRUGS = [
     }
   },
   {
+    id: "amiodarona",
+    principioActivo: "Amiodarona",
+    nombresComerciales: ["Trangorex (uso humano)"],
+    categoria: "Antiarrítmico clase III",
+    indicaciones: ["Arritmia ventricular", "Arritmia supraventricular"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 15, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "Vigilar función hepática y hemograma; puede causar hepatotoxicidad." }
+    }
+  },
+  {
+    id: "diltiazem",
+    principioActivo: "Diltiazem",
+    nombresComerciales: ["Dilaclan (uso humano)", "Diltiazem (uso humano)"],
+    categoria: "Antagonista del calcio (antiarrítmico/antihipertensivo)",
+    indicaciones: ["Arritmia supraventricular", "Cardiomiopatía"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Vía IV: 0,05-0,25 mg/kg." }
+    }
+  },
+  {
+    id: "esmolol",
+    principioActivo: "Esmolol",
+    nombresComerciales: ["Brevibloc (uso humano)"],
+    categoria: "Betabloqueante de acción corta",
+    indicaciones: ["Arritmia supraventricular", "Arritmia ventricular", "Emergencia/RCP"],
+    especies: {
+      perro: { dosisMin: 0.25, dosisMax: 0.5, unidad: "mg/kg", via: "IV", frecuencia: "bolo de carga lento", notas: "Mantenimiento en infusión continua (CRI): 10-200 microgramos/kg/min — usar la pestaña CRI para calcular el ritmo de la bomba." },
+      gato:  { dosisMin: 0.25, dosisMax: 0.5, unidad: "mg/kg", via: "IV", frecuencia: "bolo de carga lento", notas: "Mantenimiento en infusión continua (CRI): 10-200 microgramos/kg/min — usar la pestaña CRI para calcular el ritmo de la bomba." }
+    }
+  },
+  {
+    id: "fenitoina",
+    principioActivo: "Fenitoína",
+    nombresComerciales: ["Epanutin (uso humano)", "Sinergina (uso humano)"],
+    categoria: "Antiarrítmico/anticonvulsivante",
+    indicaciones: ["Arritmia ventricular"],
+    especies: {
+      perro: { dosisMin: 20, dosisMax: 35, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Uso poco frecuente en la actualidad; vigilar función hepática." }
+    }
+  },
+  {
+    id: "glicopirolato",
+    principioActivo: "Glicopirolato",
+    nombresComerciales: ["Robinul (uso humano)"],
+    categoria: "Anticolinérgico",
+    indicaciones: ["Bradicardia", "Premedicación anticolinérgica"],
+    especies: {
+      perro: { dosisMin: 0.005, dosisMax: 0.01, unidad: "mg/kg", via: "IV/SC", frecuencia: "según necesidad", notas: "Alternativa a la atropina; efecto más prolongado y menos arritmogénico." },
+      gato:  { dosisMin: 0.005, dosisMax: 0.01, unidad: "mg/kg", via: "IV/SC", frecuencia: "según necesidad", notas: "Alternativa a la atropina; efecto más prolongado y menos arritmogénico." }
+    }
+  },
+  {
+    id: "hidralazina",
+    principioActivo: "Hidralazina",
+    nombresComerciales: ["Hydrapres (uso humano)"],
+    categoria: "Vasodilatador arterial",
+    indicaciones: ["Insuficiencia cardíaca congestiva", "Hipertensión arterial sistémica"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Vigilar hipotensión, sobre todo si se combina con IECA/diurético; iniciar con la dosis más baja." }
+    }
+  },
+  {
+    id: "hidroclorotiazida",
+    principioActivo: "Hidroclorotiazida",
+    nombresComerciales: ["Hidrosaluretil (uso humano)"],
+    categoria: "Diurético tiazídico",
+    indicaciones: ["Insuficiencia cardíaca congestiva"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Uso poco habitual; vigilar electrolitos, sobre todo si se combina con otros diuréticos." }
+    }
+  },
+  {
+    id: "imidapril",
+    principioActivo: "Imidapril",
+    nombresComerciales: ["Prilium"],
+    categoria: "IECA (antihipertensivo/cardiorrenal)",
+    indicaciones: ["Insuficiencia cardíaca congestiva", "Hipertensión arterial sistémica"],
+    especies: {
+      perro: { dosisMin: 0.25, dosisMax: 0.25, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Vigilar función renal y potasio al iniciar o ajustar dosis." },
+      gato:  { dosisMin: 0.25, dosisMax: 0.25, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Vigilar función renal y potasio al iniciar o ajustar dosis." }
+    }
+  },
+  {
+    id: "mexiletina",
+    principioActivo: "Mexiletina",
+    nombresComerciales: ["Mexitil (uso humano)"],
+    categoria: "Antiarrítmico clase Ib",
+    indicaciones: ["Arritmia ventricular"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 10, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "A menudo combinado con sotalol o un betabloqueante." }
+    }
+  },
+  {
+    id: "procainamida",
+    principioActivo: "Procainamida",
+    nombresComerciales: ["Biocoryl (uso humano)"],
+    categoria: "Antiarrítmico clase Ia",
+    indicaciones: ["Arritmia ventricular"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 30, unidad: "mg/kg", via: "VO", frecuencia: "cada 6-8 h", notas: "Vía IV/IM: 5-20 mg/kg." }
+    }
+  },
+  {
+    id: "propranolol",
+    principioActivo: "Propranolol",
+    nombresComerciales: ["Sumial (uso humano)"],
+    categoria: "Betabloqueante no selectivo",
+    indicaciones: ["Arritmia supraventricular", "Arritmia ventricular", "Cardiomiopatía"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Vía IV: 0,01-0,1 mg/kg lento. Introducir gradualmente; puede empeorar una insuficiencia cardíaca descompensada." },
+      gato:  { dosisMin: 0.01, dosisMax: 0.1, unidad: "mg/kg", via: "IV", frecuencia: "lento, según necesidad", notas: "La pauta oral en gatos suele ser una dosis fija por animal (no calculable por peso en esta app); consultar fuente adicional para esa pauta." }
+    }
+  },
+  {
+    id: "quinidina",
+    principioActivo: "Quinidina",
+    nombresComerciales: ["Longacor (uso humano)"],
+    categoria: "Antiarrítmico clase Ia",
+    indicaciones: ["Arritmia ventricular"],
+    especies: {
+      perro: { dosisMin: 6, dosisMax: 16, unidad: "mg/kg", via: "VO/IM", frecuencia: "cada 6-8 h", notas: "Uso poco frecuente en la actualidad." }
+    }
+  },
+  {
+    id: "ramipril",
+    principioActivo: "Ramipril",
+    nombresComerciales: ["Vasotop", "Acovil (uso humano)"],
+    categoria: "IECA (antihipertensivo/cardiorrenal)",
+    indicaciones: ["Insuficiencia cardíaca congestiva", "Hipertensión arterial sistémica"],
+    especies: {
+      perro: { dosisMin: 0.125, dosisMax: 0.125, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Vigilar función renal y potasio al iniciar o ajustar dosis." },
+      gato:  { dosisMin: 0.125, dosisMax: 0.125, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Vigilar función renal y potasio al iniciar o ajustar dosis." }
+    }
+  },
+  {
+    id: "sildenafilo",
+    principioActivo: "Sildenafilo",
+    nombresComerciales: ["Viagra (uso humano)", "Revatio (uso humano)"],
+    categoria: "Vasodilatador pulmonar (inhibidor de la PDE5)",
+    indicaciones: ["Enfermedad respiratoria"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", notas: "Dosis inicial para hipertensión pulmonar; puede subirse hasta 4-7 mg/kg TID en casos graves — ver protocolo específico de hipertensión pulmonar. Usar solo en HP grave, no leve/moderada." }
+    }
+  },
+  {
+    id: "sotalol",
+    principioActivo: "Sotalol",
+    nombresComerciales: ["Sotapor (uso humano)"],
+    categoria: "Antiarrítmico clase III / betabloqueante",
+    indicaciones: ["Arritmia ventricular", "Cardiomiopatía"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Introducir gradualmente; vigilar ECG al iniciar o ajustar dosis." }
+    }
+  },
+  {
     id: "omeprazol",
     principioActivo: "Omeprazol",
     nombresComerciales: ["Losec (uso humano)", "Gastrogard (equino, no aplica)"],
