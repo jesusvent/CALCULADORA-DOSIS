@@ -1179,13 +1179,19 @@ function calcularPersonalizada() {
 
   let cantidadTexto = null, detalleAdministracion = null;
   const marcaTexto = marcaComercialActiva ? ` de ${marcaCorta(marcaComercialActiva)}` : "";
+  // La dosis personalizada es un valor mg/kg distinto al de referencia, pero la vía,
+  // frecuencia y notas de administración (ej. "con el estómago vacío") del fármaco activo
+  // siguen aplicando igual, así que se añaden aquí también (antes solo se guardaban al usar
+  // la dosis de referencia, no la personalizada).
+  const datosActivos = datosEspecieActiva();
+  const viaFrecuenciaTexto = datosActivos ? ` · ${datosActivos.via} · ${datosActivos.frecuencia}` + (datosActivos.notas ? ` · ${datosActivos.notas}` : "") : "";
 
   if (comprimidoActivo) {
     const comp = totalMg / comprimidoActivo.mg;
     cantidadTexto = `${fraccionComprimido(comp)} ${unidadComprimidos(comp)}${marcaTexto}`;
     html += `<div class="resultado-volumen">Comprimidos a administrar (de ${comprimidoActivo.mg} mg/comprimido): <strong>${cantidadTexto}</strong></div>`;
     html += `<button class="boton-anadir" data-origen="personalizada">+ Añadir al paciente (${cantidadTexto})</button>`;
-    detalleAdministracion = `${totalTexto} (${comprimidoActivo.mg} mg/comprimido, dosis personalizada: ${valor} ${etiquetaUnidad})`;
+    detalleAdministracion = `${totalTexto} (${comprimidoActivo.mg} mg/comprimido, dosis personalizada: ${valor} ${etiquetaUnidad})${viaFrecuenciaTexto}`;
   } else {
     const concentracion = parseFloat(concentracionInput.value);
     if (concentracion && concentracion > 0) {
@@ -1193,7 +1199,7 @@ function calcularPersonalizada() {
       cantidadTexto = formatNum(vol) + " ml" + marcaTexto;
       html += `<div class="resultado-volumen">Volumen a administrar (a ${concentracion} mg/ml): <strong>${cantidadTexto}</strong></div>`;
       html += `<button class="boton-anadir" data-origen="personalizada">+ Añadir al paciente (${cantidadTexto})</button>`;
-      detalleAdministracion = `${totalTexto} a ${concentracion} mg/ml (dosis personalizada: ${valor} ${etiquetaUnidad})`;
+      detalleAdministracion = `${totalTexto} a ${concentracion} mg/ml (dosis personalizada: ${valor} ${etiquetaUnidad})${viaFrecuenciaTexto}`;
     } else {
       html += `<p class="aviso-inline">⚠ Indica la concentración del preparado (mg/ml) o elige una presentación en comprimidos para poder añadir esta dosis al paciente.</p>`;
     }
