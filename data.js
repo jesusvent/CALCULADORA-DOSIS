@@ -613,7 +613,7 @@ const DRUGS = [
   {
     id: "benazepril",
     principioActivo: "Benazepril",
-    nombresComerciales: ["Fortekor", "Benefortin"],
+    nombresComerciales: ["Fortekor", "Benefortin", "Cardalis (combinado con espironolactona)"],
     categoria: "IECA (antihipertensivo/cardiorrenal)",
     indicaciones: ["Insuficiencia cardíaca congestiva", "Enfermedad renal crónica", "Proteinuria"],
     especies: {
@@ -635,7 +635,7 @@ const DRUGS = [
   {
     id: "espironolactona",
     principioActivo: "Espironolactona",
-    nombresComerciales: ["Prilactone"],
+    nombresComerciales: ["Prilactone", "Cardalis (combinado con benazepril)"],
     categoria: "Diurético ahorrador de potasio",
     indicaciones: ["Insuficiencia cardíaca congestiva"],
     especies: {
@@ -1851,6 +1851,17 @@ const PROTOCOLS = [
     componentes: [
       { nombre: "Diazepam", principioActivoReal: "Diazepam", categoria: "Anticonvulsivante (benzodiazepina)", dosisMin: 0.3, dosisMax: 0.3, unidad: "mg/kg", via: "IV", frecuencia: "dosis única", notas: "" },
       { nombre: "Alfaxalona", principioActivoReal: "Alfaxalona", categoria: "Anestésico neuroesteroide", dosisMin: 1, dosisMax: 3, unidad: "mg/kg", via: "IV", frecuencia: "dosis única", notas: "" }
+    ]
+  },
+  {
+    id: "cardalis-benazepril-espironolactona-perro",
+    nombre: "Insuficiencia cardíaca congestiva — Cardalis (benazepril + espironolactona)",
+    indicacion: "Cardiopulmonar",
+    especies: ["perro"],
+    notas: "Dosis de ficha técnica de Cardalis (comprimidos masticables, combinación fija 1:8 benazepril:espironolactona — presentaciones 2,5/20 mg, 5/40 mg y 10/80 mg): un único comprimido diario cubre ambos principios activos a la vez. Si se calcula cada principio activo por separado (ej. para usar otra marca no combinada), asegurarse de administrarlos igualmente una vez al día juntos.",
+    componentes: [
+      { nombre: "Benazepril", principioActivoReal: "Benazepril", categoria: "IECA (antihipertensivo/cardiorrenal)", dosisMin: 0.25, dosisMax: 0.25, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "" },
+      { nombre: "Espironolactona", principioActivoReal: "Espironolactona", categoria: "Diurético ahorrador de potasio", dosisMin: 2, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "En Cardalis se da una vez al día (a diferencia de la pauta habitual BID de espironolactona sola)." }
     ]
   }
 ];
