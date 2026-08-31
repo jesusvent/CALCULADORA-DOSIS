@@ -809,7 +809,7 @@ function calcularDosisUsoEspecifico() {
     cantidadTexto = textoComprimidos(compMin, compMax) + marcaTexto;
     html += `<div class="resultado-volumen">Comprimidos a administrar (de ${comprimidoActivo.mg} mg/comprimido): <strong>${cantidadTexto}</strong></div>`;
     html += `<button class="boton-anadir" id="boton-anadir-uso-especifico">+ Añadir al paciente (${cantidadTexto})</button>`;
-    detalleAdministracion = `${rangoTexto} (${comprimidoActivo.mg} mg/comprimido) · ${datos.via} · ${datos.frecuencia} · Uso: ${usoEspecificoActivo.nombre}`;
+    detalleAdministracion = `${rangoTexto} (${comprimidoActivo.mg} mg/comprimido) · ${datos.via} · ${datos.frecuencia} · Uso: ${usoEspecificoActivo.nombre}` + (datos.notas ? ` · ${datos.notas}` : "");
   } else {
     const concentracion = parseFloat(concentracionInput.value);
     if (concentracion && concentracion > 0) {
@@ -820,7 +820,7 @@ function calcularDosisUsoEspecifico() {
         : `${formatNum(volMin)} – ${formatNum(volMax)} ml`) + marcaTexto;
       html += `<div class="resultado-volumen">Volumen a administrar (a ${concentracion} ${unidadConc}): <strong>${cantidadTexto}</strong></div>`;
       html += `<button class="boton-anadir" id="boton-anadir-uso-especifico">+ Añadir al paciente (${cantidadTexto})</button>`;
-      detalleAdministracion = `${rangoTexto} a ${concentracion} ${unidadConc} · ${datos.via} · ${datos.frecuencia} · Uso: ${usoEspecificoActivo.nombre}`;
+      detalleAdministracion = `${rangoTexto} a ${concentracion} ${unidadConc} · ${datos.via} · ${datos.frecuencia} · Uso: ${usoEspecificoActivo.nombre}` + (datos.notas ? ` · ${datos.notas}` : "");
     } else {
       html += `<p class="aviso-inline">⚠ Indica la concentración del preparado (${unidadConc}) o elige una presentación en comprimidos para poder añadir esta dosis al paciente.</p>`;
     }
@@ -931,7 +931,7 @@ function calcularDosisIndicacion() {
   if (comprimidoActivo) {
     cantidadTexto = textoComprimidos(dosisMinBase / comprimidoActivo.mg, dosisMaxBase / comprimidoActivo.mg) + marcaTexto;
     html += `<div class="resultado-volumen">Comprimidos a administrar (de ${comprimidoActivo.mg} mg/comprimido): <strong>${cantidadTexto}</strong></div>`;
-    detalleAdministracion = `${rangoTexto} (${comprimidoActivo.mg} mg/comprimido) · ${opcion.via} · ${opcion.frecuencia} · Indicación: ${indicacion.nombre}`;
+    detalleAdministracion = `${rangoTexto} (${comprimidoActivo.mg} mg/comprimido) · ${opcion.via} · ${opcion.frecuencia} · Indicación: ${indicacion.nombre}` + (opcion.notas ? ` · ${opcion.notas}` : "");
   } else {
     const concentracion = parseFloat(concentracionInput.value);
     if (concentracion && concentracion > 0) {
@@ -941,7 +941,7 @@ function calcularDosisIndicacion() {
         ? formatNum(volMin) + " ml"
         : `${formatNum(volMin)} – ${formatNum(volMax)} ml`) + marcaTexto;
       html += `<div class="resultado-volumen">Volumen a administrar (a ${concentracion} ${unidadConc}): <strong>${cantidadTexto}</strong></div>`;
-      detalleAdministracion = `${rangoTexto} a ${concentracion} ${unidadConc} · ${opcion.via} · ${opcion.frecuencia} · Indicación: ${indicacion.nombre}`;
+      detalleAdministracion = `${rangoTexto} a ${concentracion} ${unidadConc} · ${opcion.via} · ${opcion.frecuencia} · Indicación: ${indicacion.nombre}` + (opcion.notas ? ` · ${opcion.notas}` : "");
     }
   }
 
@@ -1045,7 +1045,7 @@ function calcularReferencia() {
     cantidadTexto = textoComprimidos(compMin, compMax) + marcaTexto;
     html += `<div class="resultado-volumen">Comprimidos a administrar (de ${comprimidoActivo.mg} mg/comprimido): <strong>${cantidadTexto}</strong></div>`;
     html += `<button class="boton-anadir" data-origen="referencia">+ Añadir al paciente (${cantidadTexto})</button>`;
-    detalleAdministracion = `${rangoTexto} (${comprimidoActivo.mg} mg/comprimido) · ${datos.via} · ${datos.frecuencia}`;
+    detalleAdministracion = `${rangoTexto} (${comprimidoActivo.mg} mg/comprimido) · ${datos.via} · ${datos.frecuencia}` + (datos.notas ? ` · ${datos.notas}` : "");
   } else {
     const concentracion = parseFloat(concentracionInput.value);
     if (concentracion && concentracion > 0) {
@@ -1056,7 +1056,7 @@ function calcularReferencia() {
         : `${formatNum(volMin)} – ${formatNum(volMax)} ml`) + marcaTexto;
       html += `<div class="resultado-volumen">Volumen a administrar (a ${concentracion} ${unidadConc}): <strong>${cantidadTexto}</strong></div>`;
       html += `<button class="boton-anadir" data-origen="referencia">+ Añadir al paciente (${cantidadTexto})</button>`;
-      detalleAdministracion = `${rangoTexto} a ${concentracion} ${unidadConc} · ${datos.via} · ${datos.frecuencia}`;
+      detalleAdministracion = `${rangoTexto} a ${concentracion} ${unidadConc} · ${datos.via} · ${datos.frecuencia}` + (datos.notas ? ` · ${datos.notas}` : "");
     } else {
       html += `<p class="aviso-inline">⚠ Indica la concentración del preparado (${unidadConc}) o elige una presentación en comprimidos para poder añadir esta dosis al paciente.</p>`;
     }
@@ -1119,7 +1119,7 @@ function calcularReferenciaBanda(datos) {
   `;
   resultadoReferenciaEl.innerHTML = html;
 
-  const detalleAdministracion = `${banda.descripcion} (banda de peso ${banda.pesoMin}-${banda.pesoMax} kg) · ${datos.via} · ${datos.frecuencia}`;
+  const detalleAdministracion = `${banda.descripcion} (banda de peso ${banda.pesoMin}-${banda.pesoMax} kg) · ${datos.via} · ${datos.frecuencia}` + (datos.notas ? ` · ${datos.notas}` : "");
   const botonAnadir = resultadoReferenciaEl.querySelector(".boton-anadir");
   if (botonAnadir) {
     botonAnadir.addEventListener("click", () => {
