@@ -997,6 +997,23 @@ function calcularReferencia() {
     return;
   }
 
+  // Fármacos sin dosis por kg (ej. dosis fija por tramo de peso escrita a mano: "0-10 kg: 1
+  // comprimido, 10-20 kg: 2 comprimidos..."): no hay nada que calcular, así que se muestran
+  // directamente las notas en vez de intentar una operación con un valor inexistente.
+  if (datos.dosisMin == null || datos.dosisMax == null) {
+    resultadoReferenciaEl.innerHTML = `
+      <div class="resultado-card">
+        <p class="aviso-inline">⚠ Este fármaco no tiene una dosis por kg registrada para esta indicación. Pauta indicada por el usuario:</p>
+        <div class="resultado-detalle">
+          <span>${escapeHtml(datos.via)}</span>
+          <span>·</span><span>${escapeHtml(datos.frecuencia)}</span>
+        </div>
+        ${datos.notas ? `<p class="notas">${escapeHtml(datos.notas)}</p>` : `<p class="placeholder">No se han indicado notas con la pauta.</p>`}
+      </div>
+    `;
+    return;
+  }
+
   if (!paciente.peso || paciente.peso <= 0) {
     resultadoReferenciaEl.innerHTML = `<p class="placeholder">Introduce el peso del paciente para calcular la dosis.</p>`;
     return;
@@ -3291,19 +3308,24 @@ cfGuardar.addEventListener("click", async () => {
   const filas = cfPatologiasLista.querySelectorAll(".patologia-fila");
   for (const fila of filas) {
     const especie = fila.querySelector(".pf-especie").value;
-    const min = parseFloat(fila.querySelector(".pf-min").value);
-    const max = parseFloat(fila.querySelector(".pf-max").value);
+    const minRaw = parseFloat(fila.querySelector(".pf-min").value);
+    const maxRaw = parseFloat(fila.querySelector(".pf-max").value);
     const patologia = fila.querySelector(".pf-patologia").value.trim();
-    if (!patologia || isNaN(min) || isNaN(max)) continue;
+    const notas = fila.querySelector(".pf-notas").value.trim();
+    const tieneDosis = !isNaN(minRaw) && !isNaN(maxRaw);
+    // Se admite guardar una patología sin dosis por kg (ej. fármacos con dosis fija por
+    // tramo de peso, tipo "0-10 kg: 1 comprimido, 10-20 kg: 2 comprimidos...") siempre que
+    // se indiquen las notas con esa pauta: sin dosis Y sin notas no aporta nada, se descarta.
+    if (!patologia || (!tieneDosis && !notas)) continue;
     if (!especies[especie]) especies[especie] = [];
     especies[especie].push({
       patologia,
-      dosisMin: min,
-      dosisMax: max,
+      dosisMin: tieneDosis ? minRaw : null,
+      dosisMax: tieneDosis ? maxRaw : null,
       unidad: fila.querySelector(".pf-unidad").value,
       via: fila.querySelector(".pf-via").value.trim() || "-",
       frecuencia: fila.querySelector(".pf-frecuencia").value.trim() || "-",
-      notas: fila.querySelector(".pf-notas").value.trim()
+      notas
     });
   }
   // No es obligatorio indicar ya una dosis: se puede guardar el fármaco solo con el
