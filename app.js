@@ -3306,10 +3306,10 @@ cfGuardar.addEventListener("click", async () => {
       notas: fila.querySelector(".pf-notas").value.trim()
     });
   }
-  if (!Object.keys(especies).length) {
-    alert("Añade al menos una dosis completa (patología, especie, dosis mín. y máx.).");
-    return;
-  }
+  // No es obligatorio indicar ya una dosis: se puede guardar el fármaco solo con el
+  // principio activo (y composición, nombres comerciales...) y volver más tarde a
+  // completar la dosis por patología cuando se tenga. Sin dosis, la ficha mostrará
+  // "sin pauta para esta especie" en la Calculadora hasta que se edite y se añada.
 
   const farmaco = {
     id: editandoId || ("custom-" + generarId()),
