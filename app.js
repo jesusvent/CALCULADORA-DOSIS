@@ -3220,6 +3220,8 @@ const cfAnadirPatologia = document.getElementById("cf-anadir-patologia");
 const cfGuardar = document.getElementById("cf-guardar");
 const cfCancelar = document.getElementById("cf-cancelar");
 const misFarmacosListaEl = document.getElementById("mis-farmacos-lista");
+const misFarmacosBuscadorEl = document.getElementById("misfarmacos-buscador");
+misFarmacosBuscadorEl.addEventListener("input", renderMisFarmacos);
 
 let editandoId = null;
 
@@ -3353,12 +3355,27 @@ cfGuardar.addEventListener("click", async () => {
   renderMisFarmacos();
 });
 
+// Texto de búsqueda de un fármaco personalizado: principio activo y nombres comerciales
+// como campos principales, más composición y categoría como apoyo.
+function textoBusquedaMiFarmaco(f) {
+  return normalizar([f.principioActivo, ...(f.nombresComerciales || []), f.composicion || "", f.categoria || ""].join(" "));
+}
+
 function renderMisFarmacos() {
   if (!customDrugs.length) {
     misFarmacosListaEl.innerHTML = `<p class="placeholder">Todavía no has añadido ningún fármaco propio.</p>`;
     return;
   }
-  misFarmacosListaEl.innerHTML = customDrugs.map((f) => {
+
+  const filtro = normalizar(misFarmacosBuscadorEl.value.trim());
+  const filtrados = !filtro ? customDrugs : customDrugs.filter((f) => textoBusquedaMiFarmaco(f).includes(filtro));
+
+  if (!filtrados.length) {
+    misFarmacosListaEl.innerHTML = `<p class="placeholder">Ningún fármaco coincide con "${escapeHtml(misFarmacosBuscadorEl.value.trim())}".</p>`;
+    return;
+  }
+
+  misFarmacosListaEl.innerHTML = filtrados.map((f) => {
     const filas = [];
     for (const especie of ["perro", "gato"]) {
       for (const e of (f.especies[especie] || [])) {
