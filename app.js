@@ -3379,18 +3379,20 @@ function renderMisFarmacos() {
     const filas = [];
     for (const especie of ["perro", "gato"]) {
       for (const e of (f.especies[especie] || [])) {
+        const tieneDosis = e.dosisMin != null && e.dosisMax != null;
         filas.push(`<div class="protocolo-componente">
           <span class="protocolo-componente-nombre">${escapeHtml(e.patologia)} (${especie === "gato" ? "Gato" : "Perro"})</span>
-          <span class="protocolo-componente-dosis">${e.dosisMin}${e.dosisMin !== e.dosisMax ? "–" + e.dosisMax : ""} ${escapeHtml(e.unidad)}</span>
+          <span class="protocolo-componente-dosis">${tieneDosis ? `${e.dosisMin}${e.dosisMin !== e.dosisMax ? "–" + e.dosisMax : ""} ${escapeHtml(e.unidad)}` : "Sin dosis por kg (ver notas)"}</span>
           <span class="protocolo-componente-via">${escapeHtml(e.via)} · ${escapeHtml(e.frecuencia)}</span>
+          ${e.notas ? `<p class="notas">${escapeHtml(e.notas)}</p>` : ""}
         </div>`);
       }
     }
     return `
       <div class="tarjeta">
-        <h3 class="titulo-tarjeta">${escapeHtml(f.principioActivo)}</h3>
-        ${f.composicion ? `<p class="categoria">${escapeHtml(f.composicion)}</p>` : ""}
-        ${f.nombresComerciales.length ? `<p class="comerciales">Nombres comerciales: ${escapeHtml(f.nombresComerciales.join(", "))}</p>` : ""}
+        <h3 class="titulo-tarjeta">${escapeHtml(f.nombresComerciales.length ? f.nombresComerciales.join(", ") : f.principioActivo)}</h3>
+        <p class="categoria">${escapeHtml(f.principioActivo)}</p>
+        ${f.composicion ? `<p class="ayuda">${escapeHtml(f.composicion)}</p>` : ""}
         <div class="protocolo-componentes">${filas.join("")}</div>
         <div class="fila-botones-form">
           <button type="button" class="boton-secundario boton-editar-mifarmaco" data-id="${f.id}">Editar</button>
