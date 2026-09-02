@@ -3429,11 +3429,12 @@ const importarDatosInput = document.getElementById("importar-datos-input");
 const importarDatosEstadoEl = document.getElementById("importar-datos-estado");
 
 exportarDatosBoton.addEventListener("click", async () => {
-  const [drugs, protocolos, favoritos, favoritosCriExport] = await Promise.all([
+  const [drugs, protocolos, favoritos, favoritosCriExport, imagenes] = await Promise.all([
     dbGetAll("customDrugs"),
     dbGetAll("customProtocols"),
     dbGetAll("favoritosHospital"),
-    dbGetAll("favoritosCri")
+    dbGetAll("favoritosCri"),
+    dbGetAll("imagenes")
   ]);
   const backup = {
     tipo: "calculadora-dosis-backup",
@@ -3442,7 +3443,8 @@ exportarDatosBoton.addEventListener("click", async () => {
     customDrugs: drugs,
     customProtocols: protocolos,
     favoritosHospital: favoritos,
-    favoritosCri: favoritosCriExport
+    favoritosCri: favoritosCriExport,
+    imagenes
   };
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -3454,7 +3456,7 @@ exportarDatosBoton.addEventListener("click", async () => {
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
-  importarDatosEstadoEl.textContent = `Exportado: ${drugs.length} fármaco(s), ${protocolos.length} protocolo(s), ${favoritos.length} favorito(s) del hospital y ${favoritosCriExport.length} favorito(s) de CRI.`;
+  importarDatosEstadoEl.textContent = `Exportado: ${drugs.length} fármaco(s), ${protocolos.length} protocolo(s), ${favoritos.length} favorito(s) del hospital, ${favoritosCriExport.length} favorito(s) de CRI y ${imagenes.length} imagen(es).`;
 });
 
 importarDatosBoton.addEventListener("click", () => importarDatosInput.click());
@@ -3477,13 +3479,14 @@ importarDatosInput.addEventListener("change", async () => {
     for (const p of backup.customProtocols || []) await dbPut("customProtocols", p);
     for (const fav of backup.favoritosHospital || []) await dbPut("favoritosHospital", fav);
     for (const fav of backup.favoritosCri || []) await dbPut("favoritosCri", fav);
+    for (const img of backup.imagenes || []) await dbPut("imagenes", img);
     await cargarCustomDrugs();
     await cargarCustomProtocols();
     await cargarFavoritosHospital();
     await cargarFavoritosCri();
     renderMisFarmacos();
     renderProtocolos();
-    importarDatosEstadoEl.textContent = `Importado: ${(backup.customDrugs || []).length} fármaco(s), ${(backup.customProtocols || []).length} protocolo(s), ${(backup.favoritosHospital || []).length} favorito(s) del hospital y ${(backup.favoritosCri || []).length} favorito(s) de CRI.`;
+    importarDatosEstadoEl.textContent = `Importado: ${(backup.customDrugs || []).length} fármaco(s), ${(backup.customProtocols || []).length} protocolo(s), ${(backup.favoritosHospital || []).length} favorito(s) del hospital, ${(backup.favoritosCri || []).length} favorito(s) de CRI y ${(backup.imagenes || []).length} imagen(es).`;
   } catch (e) {
     importarDatosEstadoEl.textContent = "⚠ No se ha podido leer el archivo (¿es un backup exportado desde esta misma app?).";
   }
