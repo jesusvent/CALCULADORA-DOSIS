@@ -3316,10 +3316,13 @@ cfGuardar.addEventListener("click", async () => {
     // Se admite guardar una patología sin dosis por kg (ej. fármacos con dosis fija por
     // tramo de peso, tipo "0-10 kg: 1 comprimido, 10-20 kg: 2 comprimidos...") siempre que
     // se indiquen las notas con esa pauta: sin dosis Y sin notas no aporta nada, se descarta.
-    if (!patologia || (!tieneDosis && !notas)) continue;
+    // Si hay notas pero no se ha escrito una patología/indicación (ej. un suplemento de uso
+    // general como un probiótico), se guarda igual con la etiqueta genérica "General" en vez
+    // de descartar la fila entera y perder silenciosamente las notas ya escritas.
+    if (!patologia && !tieneDosis && !notas) continue;
     if (!especies[especie]) especies[especie] = [];
     especies[especie].push({
-      patologia,
+      patologia: patologia || "General",
       dosisMin: tieneDosis ? minRaw : null,
       dosisMax: tieneDosis ? maxRaw : null,
       unidad: fila.querySelector(".pf-unidad").value,
