@@ -1,4 +1,4 @@
-const CACHE_NAME = "dosis-vet-cache-v6";
+const CACHE_NAME = "dosis-vet-cache-v7";
 const ARCHIVOS = [
   "./",
   "./index.html",
@@ -32,9 +32,16 @@ self.addEventListener("activate", (event) => {
 // ("caché primero") cualquier actualización de la app se quedaba invisible para siempre
 // en cuanto un navegador ya tenía el service worker instalado, salvo que se cambiara a mano
 // el nombre de CACHE_NAME en cada despliegue — algo fácil de olvidar y que ya ha pasado.
+// "cache: no-store" es imprescindible aquí: sin él, fetch() dentro del service worker sigue
+// respetando la caché HTTP normal del navegador (Cache-Control/ETag), que NO se salta ni con
+// una recarga forzada (Ctrl+Shift+R) hecha por el usuario — esa recarga solo afecta a la
+// petición de navegación inicial, no a las peticiones que el propio service worker repite por
+// dentro. Sin esto, tras desplegar un cambio los usuarios podían seguir viendo la versión
+// vieja hasta que expirase la caché HTTP del servidor (varios minutos), pareciendo que la app
+// nunca se actualiza aunque el fetch handler ya fuera "red primero".
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, { cache: "no-store" })
       .then((respuesta) => {
         const copia = respuesta.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copia));
