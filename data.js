@@ -1128,6 +1128,17 @@ const DRUGS = [
         ]
       }
     }
+  },
+  {
+    id: "oclacitinib",
+    principioActivo: "Oclacitinib",
+    nombresComerciales: ["Apoquel"],
+    categoria: "Inmunomodulador (inhibidor de JAK, antipruriginoso)",
+    indicaciones: ["Dermatitis alérgica", "Dermatitis atópica", "Prurito"],
+    especies: {
+      perro: { dosisMin: 0.4, dosisMax: 0.6, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h durante un máximo de 14 días, después cada 24 h de mantenimiento", notas: "Solo en perros a partir de 12 meses de edad. Fuente: FDA Freedom of Information Summary, NADA 141-345 (Zoetis)." }
+      // No autorizado en gatos: se omite por seguridad.
+    }
   }
 ];
 

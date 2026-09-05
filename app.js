@@ -322,9 +322,18 @@ inputBusqueda.addEventListener("input", () => {
 // Búsqueda genérica en PubMed a partir de un texto libre (para un fármaco que ni siquiera
 // está en CIMAVET/CIMA con nombre reconocible, o que aún no está en la base de datos de
 // dosis): sin indicación concreta, solo el nombre + la especie del paciente activo.
-function urlPubMedTexto(nombre, especie) {
+// Acotada a propósito a solo tres cosas: el nombre buscado (p. ej. "Apoquel"), su principio
+// activo si se conoce (p. ej. "oclacitinib", ya que en PubMed casi nunca aparece el nombre
+// comercial) y la especie del paciente activo — nada de indicación ni otros términos, para no
+// vaciar los resultados de un fármaco que aún no está en la base de datos de dosis.
+function urlPubMedTexto(nombreBuscado, principioActivo, especie) {
+  const limpiar = (s) => (s || "").replace(/\s*\([^)]*\)\s*$/, "").trim();
   const especieEn = especie === "gato" ? "(cat OR feline)" : "(dog OR canine)";
-  return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(`${nombre} AND ${especieEn}`);
+  const nombre = limpiar(nombreBuscado);
+  const principios = limpiar(principioActivo).split(",").map((s) => s.trim()).filter(Boolean);
+  const terminos = [...new Set([nombre, ...principios].filter(Boolean))];
+  const nombreTerm = terminos.length > 1 ? `(${terminos.join(" OR ")})` : terminos[0];
+  return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(`${nombreTerm} AND ${especieEn}`);
 }
 
 function actualizarAvisoNoEnBd(valor, localResultados) {
@@ -335,7 +344,7 @@ function actualizarAvisoNoEnBd(valor, localResultados) {
   avisoNoEnBdEl.classList.remove("oculto");
   avisoNoEnBdEl.innerHTML = `"${escapeHtml(valor)}" no está en tu base de datos de dosis. ` +
     `<button type="button" class="boton-enlace" id="anadir-no-en-bd-boton">+ Añadirlo a Mi base de datos</button> · ` +
-    `<a class="boton-enlace" target="_blank" rel="noopener" href="${urlPubMedTexto(valor, paciente.especie)}">🔎 Buscar en PubMed</a>`;
+    `<a class="boton-enlace" target="_blank" rel="noopener" href="${urlPubMedTexto(valor, null, paciente.especie)}">🔎 Buscar en PubMed</a>`;
   document.getElementById("anadir-no-en-bd-boton").addEventListener("click", () => {
     document.querySelector('.tab-principal[data-vista="misfarmacos"]').click();
     abrirFormulario();
@@ -1477,7 +1486,7 @@ function estadoTexto(estado) {
   return "Desconocido";
 }
 
-function filaCimavetHtml(med) {
+function filaCimavetHtml(med, textoBuscado) {
   const especies = (med.especies || []).map((e) => e.nombre).join(", ");
   const principios = med.pactivos || (med.principiosActivos || []).map((p) => p.nombre).join(", ");
   const ft = (med.docs || []).find((d) => d.tipo === 1);
@@ -1498,7 +1507,7 @@ function filaCimavetHtml(med) {
       <div class="cimavet-enlaces">
         ${ft ? `<a href="${ft.url}" target="_blank" rel="noopener">📄 Ficha técnica (posología del laboratorio)</a>` : ""}
         ${prospecto ? `<a href="${prospecto.url}" target="_blank" rel="noopener">📄 Prospecto</a>` : ""}
-        <a href="${urlPubMedTexto(principios || med.nombre, paciente.especie)}" target="_blank" rel="noopener">🔎 Buscar en PubMed</a>
+        <a href="${urlPubMedTexto(textoBuscado || med.nombre, principios, paciente.especie)}" target="_blank" rel="noopener">🔎 Buscar en PubMed</a>
       </div>
     </div>`;
 }
@@ -1533,9 +1542,10 @@ async function buscarCima(query) {
   return { resultados: [...vistos.values()] };
 }
 
-function filaCimaHtml(med) {
+function filaCimaHtml(med, textoBuscado) {
   const ft = (med.docs || []).find((d) => d.tipo === 1);
   const prospecto = (med.docs || []).find((d) => d.tipo === 2);
+  const principioActivo = med.vtm ? med.vtm.nombre : null;
   return `
     <div class="cimavet-fila">
       <div class="cimavet-nombre">${escapeHtml(med.nombre)} <span class="badge-humano">Uso humano</span></div>
@@ -1552,7 +1562,7 @@ function filaCimaHtml(med) {
       <div class="cimavet-enlaces">
         ${ft ? `<a href="${ft.url}" target="_blank" rel="noopener">📄 Ficha técnica</a>` : ""}
         ${prospecto ? `<a href="${prospecto.url}" target="_blank" rel="noopener">📄 Prospecto</a>` : ""}
-        <a href="${urlPubMedTexto((med.vtm ? med.vtm.nombre : null) || med.nombre, paciente.especie)}" target="_blank" rel="noopener">🔎 Buscar en PubMed</a>
+        <a href="${urlPubMedTexto(textoBuscado || med.nombre, principioActivo, paciente.especie)}" target="_blank" rel="noopener">🔎 Buscar en PubMed</a>
       </div>
     </div>`;
 }
@@ -1570,7 +1580,7 @@ async function buscarEnCimaComoRespaldo(texto, contenedorEl) {
       return;
     }
     contenedorEl.innerHTML = `<p class="aviso-inline">⚠ "${escapeHtml(texto)}" no es un medicamento veterinario autorizado en España, pero sí existe como medicamento de uso humano en CIMA (${resultados.length} resultado(s)). Su uso en animales sería fuera de ficha técnica (off-label), bajo prescripción y responsabilidad del veterinario.</p>` +
-      resultados.map(filaCimaHtml).join("");
+      resultados.map((m) => filaCimaHtml(m, texto)).join("");
   } catch (err) {
     contenedorEl.innerHTML += `<p class="aviso-inline">⚠ No se ha podido conectar con CIMA (${escapeHtml(err.message)}).</p>`;
   }
@@ -1631,7 +1641,7 @@ async function cargarCimavetParaFarmaco(farmaco) {
     let html = mostrar.length === resultados.length
       ? `<p class="ayuda">${resultados.length} presentaciones autorizadas encontradas.</p>`
       : `<p class="ayuda">Mostrando ${mostrar.length} de ${resultados.length} presentaciones autorizadas para "${escapeHtml(principioActivoCorto(farmaco))}", filtradas para perro/gato.</p>`;
-    html += mostrar.map(filaCimavetHtml).join("");
+    html += mostrar.map((m) => filaCimavetHtml(m, principioActivoCorto(farmaco))).join("");
 
     // Hay productos veterinarios, pero ninguno autorizado expresamente para la especie del
     // paciente activo (ej. metamizol: combinados solo para perros, nunca para gatos). Se
@@ -1643,7 +1653,7 @@ async function cargarCimavetParaFarmaco(farmaco) {
         const cimaData = await buscarCima(principioActivoCorto(farmaco));
         const cimaResultados = cimaData.resultados || [];
         html += cimaResultados.length
-          ? cimaResultados.map(filaCimaHtml).join("")
+          ? cimaResultados.map((m) => filaCimaHtml(m, principioActivoCorto(farmaco))).join("")
           : `<p class="placeholder">Sin resultados en CIMA.</p>`;
       } catch (e) {
         html += `<p class="aviso-inline">⚠ No se ha podido conectar con CIMA ahora mismo.</p>`;
@@ -1694,6 +1704,7 @@ async function cargarComercialesParaTexto(texto) {
       resultados.map((m, i) => `<option value="${i}">${esFavorito(m.nombre) ? "⭐ " : ""}${escapeHtml(m.nombre)}${m.labtitular ? " — " + escapeHtml(m.labtitular) : ""}</option>`).join("");
     comercialSelect.disabled = false;
     comercialSelect._resultados = resultados;
+    comercialSelect._textoBuscado = texto;
     comercialDetalleEl.innerHTML = "";
     actualizarConcentracionesDetectadas(resultados);
 
@@ -1708,7 +1719,7 @@ async function cargarComercialesParaTexto(texto) {
         if (requestId !== comercialesRequestId) return;
         const cimaResultados = cimaData.resultados || [];
         html += cimaResultados.length
-          ? cimaResultados.map(filaCimaHtml).join("")
+          ? cimaResultados.map((m) => filaCimaHtml(m, texto)).join("")
           : `<p class="placeholder">Sin resultados en CIMA.</p>`;
       } catch (e) {
         html += `<p class="aviso-inline">⚠ No se ha podido conectar con CIMA ahora mismo.</p>`;
@@ -1733,7 +1744,7 @@ comercialSelect.addEventListener("change", () => {
     return;
   }
   const med = resultados[idx];
-  comercialDetalleEl.innerHTML = filaCimavetHtml(med);
+  comercialDetalleEl.innerHTML = filaCimavetHtml(med, comercialSelect._textoBuscado);
 
   // Al elegir un medicamento concreto, su presentación manda sobre la detección genérica.
   const datos = datosEspecieActiva();
@@ -1963,7 +1974,7 @@ async function ejecutarBusquedaCimavetGeneral() {
     html += `<p class="ayuda">${cimavetRes.totalFilas} resultado(s) encontrados en el catálogo oficial` +
       (cimavetRes.totalFilas > resultadosVet.length ? `, mostrando los primeros ${resultadosVet.length}. Refina la búsqueda para acotar más.` : ".") +
       `</p>`;
-    html += resultadosVet.map(filaCimavetHtml).join("");
+    html += resultadosVet.map((m) => filaCimavetHtml(m, query)).join("");
   } else {
     html += `<p class="placeholder">Sin resultados en CIMAVET para "${escapeHtml(query)}".</p>`;
   }
@@ -1974,7 +1985,7 @@ async function ejecutarBusquedaCimavetGeneral() {
   } else if (resultadosHum.length) {
     html += `<p class="aviso-inline">⚠ Uso en animales fuera de ficha técnica (off-label), bajo prescripción y responsabilidad del veterinario.</p>`;
     html += `<p class="ayuda">${resultadosHum.length} resultado(s).</p>`;
-    html += resultadosHum.map(filaCimaHtml).join("");
+    html += resultadosHum.map((m) => filaCimaHtml(m, query)).join("");
   } else {
     html += `<p class="placeholder">Sin resultados en CIMA para "${escapeHtml(query)}".</p>`;
   }
