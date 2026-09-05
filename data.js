@@ -52,7 +52,7 @@ const DRUGS = [
   {
     id: "metronidazol",
     principioActivo: "Metronidazol",
-    nombresComerciales: ["Flagyl (uso humano)", "Metronidazol Normon"],
+    nombresComerciales: ["Flagyl (uso humano)", "Metronidazol Normon", "Metrobactin"],
     categoria: "Antibiótico/Antiprotozoario",
     indicaciones: ["Infección bacteriana anaerobia", "Diarrea", "Giardiasis"],
     especies: {
@@ -308,7 +308,7 @@ const DRUGS = [
   {
     id: "clindamicina",
     principioActivo: "Clindamicina",
-    nombresComerciales: ["Antirobe", "Clinabel"],
+    nombresComerciales: ["Antirobe", "Clinabel", "Clindaseptin"],
     categoria: "Antibiótico (lincosamida)",
     indicaciones: ["Infección bacteriana", "Infección dental", "Infección ósea"],
     especies: {
@@ -319,7 +319,7 @@ const DRUGS = [
   {
     id: "cefalexina",
     principioActivo: "Cefalexina",
-    nombresComerciales: ["Rilexine", "Ceporex"],
+    nombresComerciales: ["Rilexine", "Ceporex", "Cefabactin", "Cephacare"],
     categoria: "Antibiótico (cefalosporina)",
     indicaciones: ["Infección bacteriana", "Infección cutánea"],
     especies: {
@@ -384,7 +384,7 @@ const DRUGS = [
   {
     id: "doxiciclina",
     principioActivo: "Doxiciclina",
-    nombresComerciales: ["Ronaxan", "Vibravet"],
+    nombresComerciales: ["Ronaxan", "Vibravet", "Doxybactin"],
     categoria: "Antibiótico (tetraciclina)",
     indicaciones: ["Infección bacteriana", "Ehrlichiosis", "Enfermedad respiratoria"],
     especies: {
@@ -714,7 +714,7 @@ const DRUGS = [
   {
     id: "cefadroxilo",
     principioActivo: "Cefadroxilo",
-    nombresComerciales: [],
+    nombresComerciales: ["Semelcef"],
     categoria: "Antibiótico (cefalosporina)",
     indicaciones: ["Infección cutánea", "Infección bacteriana"],
     especies: {
@@ -1138,6 +1138,253 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 0.4, dosisMax: 0.6, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h durante un máximo de 14 días, después cada 24 h de mantenimiento", notas: "Solo en perros a partir de 12 meses de edad. Fuente: FDA Freedom of Information Summary, NADA 141-345 (Zoetis)." }
       // No autorizado en gatos: se omite por seguridad.
+    }
+  },
+
+  // ---- Suplementos/nutracéuticos sin dosis lineal por kg (pauta fija por tramo de peso,
+  // tal cual figura en el prospecto del fabricante) ----
+  {
+    id: "hepatosil-plus-gel",
+    principioActivo: "Silibina (cardo mariano) + fosfatidilcolina + vitamina E",
+    nombresComerciales: ["Hepatosil Plus Gel"],
+    categoria: "Suplemento hepático",
+    indicaciones: ["Apoyo hepático"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "Hasta 5 kg: 1 ml al día. De 5 a 10 kg: 2 ml al día. De 10 a 20 kg: 3 ml al día. De 20 a 30 kg: 4 ml al día. Más de 30 kg: 5 ml al día. Directamente en la boca o mezclado con la comida." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "Hasta 5 kg: 1 ml al día. De 5 a 10 kg: 2 ml al día. De 10 a 20 kg: 3 ml al día. De 20 a 30 kg: 4 ml al día. Más de 30 kg: 5 ml al día. Directamente en la boca o mezclado con la comida." }
+    }
+  },
+  {
+    id: "hepatosil-plus-razas-pequenas",
+    principioActivo: "Levadura de cerveza + silibina (cardo mariano) + taurina + vitaminas del grupo B",
+    nombresComerciales: ["Hepatosil Plus Razas Pequeñas"],
+    categoria: "Suplemento hepático",
+    indicaciones: ["Apoyo hepático"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "Hasta 2,5 kg: 0,5 comprimidos al día. De 2 a 5 kg: 1 comprimido al día. De 5 a 10 kg: 2 comprimidos al día." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "Hasta 2,5 kg: 0,5 comprimidos al día. De 2 a 5 kg: 1 comprimido al día. De 5 a 10 kg: 2 comprimidos al día." }
+    }
+  },
+  {
+    id: "hepatosil-plus-razas-medianas-grandes",
+    principioActivo: "Levadura de cerveza + silibina (cardo mariano) + taurina + vitaminas del grupo B",
+    nombresComerciales: ["Hepatosil Plus Razas Medianas y Grandes"],
+    categoria: "Suplemento hepático",
+    indicaciones: ["Apoyo hepático"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "<10 kg: 1/2 comprimido/día. 10-15 kg: 3/4 comprimidos/día. 15-20 kg: 1 comprimido/día. 20-25 kg: 1 1/4 comprimidos/día. 25-30 kg: 1 1/2 comprimidos/día. 30-35 kg: 1 3/4 comprimidos/día. 35-40 kg: 2 comprimidos/día. >40 kg: 2 1/2 comprimidos/día." }
+    }
+  },
+  {
+    id: "vetilea-hepato-gel",
+    principioActivo: "Producto de levadura (Saccharomyces cerevisiae)",
+    nombresComerciales: ["Vetilea Hepato Gel"],
+    categoria: "Suplemento hepático",
+    indicaciones: ["Apoyo hepático"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "0,5 ml al día por cada 5 kg de peso corporal." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "0,5 ml al día por cada 5 kg de peso corporal." }
+    }
+  },
+  {
+    id: "vetilea-hepato-st",
+    principioActivo: "Producto de levadura (Saccharomyces cerevisiae)",
+    nombresComerciales: ["Vetilea Hepato ST"],
+    categoria: "Suplemento hepático",
+    indicaciones: ["Apoyo hepático"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "1 comprimido al día por cada 20 kg de peso corporal." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "1 comprimido al día por cada 20 kg de peso corporal." }
+    }
+  },
+  {
+    id: "calmurofel",
+    principioActivo: "L-triptófano + glucosamina + condroitín sulfato + ácido hialurónico",
+    nombresComerciales: ["Calmurofel"],
+    categoria: "Ansiolítico natural (triptófano)",
+    indicaciones: ["Ansiedad", "Estrés"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "<3 kg: 1 cápsula al día. >3 kg: 2 cápsulas al día. Mantenimiento en casos crónicos: <3 kg: 1 cápsula en días alternos; >3 kg: 1 cápsula al día." }
+    }
+  },
+  {
+    id: "impromune-pasta",
+    principioActivo: "Nucleoforce (nucleótidos de Saccharomyces cerevisiae) + Immunactive (Lentinus edodes)",
+    nombresComerciales: ["Impromune Pasta"],
+    categoria: "Inmunoestimulante",
+    indicaciones: ["Apoyo inmunitario"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "<10 kg: 2 ml/día. 11-25 kg: 4 ml/día. >26 kg: 8 ml/día." }
+    }
+  },
+  {
+    id: "bener-rc-15",
+    principioActivo: "Levadura de S. cerevisiae + hierro, cobre, vitaminas C, E, B1, B2, B3, B6, B9, B12 y K3",
+    nombresComerciales: ["BENER RC-15"],
+    categoria: "Suplemento multivitamínico",
+    indicaciones: ["Suplementación nutricional"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "1 chew por cada 15 kg de peso." }
+    }
+  },
+  {
+    id: "dialix-lespedeza-5",
+    principioActivo: "Lespedeza capitata",
+    nombresComerciales: ["Dialix Lespedeza 5"],
+    categoria: "Suplemento renal (Lespedeza capitata)",
+    indicaciones: ["Apoyo renal", "Proteinuria"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "1 soft chew por cada 5 kg de peso, dos veces al día." }
+    }
+  },
+  {
+    id: "dialix-lespedeza-15",
+    principioActivo: "Lespedeza capitata",
+    nombresComerciales: ["Dialix Lespedeza 15"],
+    categoria: "Suplemento renal (Lespedeza capitata)",
+    indicaciones: ["Apoyo renal", "Proteinuria"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "1 comprimido dos veces al día (mañana y noche) por cada 15 kg de peso." }
+    }
+  },
+  {
+    id: "dialix-lespedeza-plus-5",
+    principioActivo: "Lespedeza capitata + carbonato cálcico",
+    nombresComerciales: ["Dialix Lespedeza Plus 5"],
+    categoria: "Suplemento renal (Lespedeza capitata)",
+    indicaciones: ["Apoyo renal", "Proteinuria"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "1 soft chew por cada 5 kg de peso, dos veces al día." }
+    }
+  },
+  {
+    id: "dialix-lespedeza-plus-15",
+    principioActivo: "Lespedeza capitata + carbonato cálcico",
+    nombresComerciales: ["Dialix Lespedeza Plus 15"],
+    categoria: "Suplemento renal (Lespedeza capitata)",
+    indicaciones: ["Apoyo renal", "Proteinuria"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "1 soft chew por cada 15 kg de peso, dos veces al día." }
+    }
+  },
+  {
+    id: "zylkene-75",
+    principioActivo: "Caseína hidrolizada (alfa-casozepina)",
+    nombresComerciales: ["Zylkene 75 mg"],
+    categoria: "Ansiolítico natural (caseína hidrolizada)",
+    indicaciones: ["Ansiedad", "Estrés"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "Menos de 5 kg: 1 cápsula/24 h. De 5 a 10 kg: 2 cápsulas/24 h." }
+    }
+  },
+  {
+    id: "zylkene-225",
+    principioActivo: "Caseína hidrolizada (alfa-casozepina)",
+    nombresComerciales: ["Zylkene 225 mg"],
+    categoria: "Ansiolítico natural (caseína hidrolizada)",
+    indicaciones: ["Ansiedad", "Estrés"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "De 10 a 15 kg: 1 cápsula/24 h. De 15 a 30 kg: 2 cápsulas/24 h." }
+    }
+  },
+  {
+    id: "zylkene-450",
+    principioActivo: "Caseína hidrolizada (alfa-casozepina)",
+    nombresComerciales: ["Zylkene 450 mg"],
+    categoria: "Ansiolítico natural (caseína hidrolizada)",
+    indicaciones: ["Ansiedad", "Estrés"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "20-40 kg: 1 cápsula al día. >40 kg: 2 cápsulas al día." }
+    }
+  },
+  {
+    id: "cystaid-canino",
+    principioActivo: "N-acetil-D-glucosamina",
+    nombresComerciales: ["Cystaid Canino"],
+    categoria: "Suplemento urinario",
+    indicaciones: ["Cistitis idiopática", "Apoyo urinario"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "1 cápsula por cada 10 kg de peso durante 3-4 semanas hasta la desaparición de los síntomas. Mantenimiento/prevención en casos recurrentes: 1 cápsula por cada 10 kg cada 2 días (un día sí, un día no)." }
+    }
+  },
+  {
+    id: "cystaid-gatos",
+    principioActivo: "N-acetil-D-glucosamina + L-teanina + quercetina dihidrato",
+    nombresComerciales: ["Cystaid Gatos"],
+    categoria: "Suplemento urinario",
+    indicaciones: ["Cistitis idiopática felina", "Apoyo urinario"],
+    especies: {
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "Inicialmente 2 cápsulas al día (1 mañana / 1 noche) durante 3-4 semanas. Para tratamientos más largos: 1 cápsula al día." }
+    }
+  },
+  {
+    id: "urinaid",
+    principioActivo: "D-manosa + arándano (Vaccinium macrocarpon) + granada + Withania somnifera",
+    nombresComerciales: ["Urinaid"],
+    categoria: "Suplemento urinario",
+    indicaciones: ["Apoyo urinario"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "<10 kg: 1 comprimido. 10-20 kg: 1 1/2 comprimidos. 20-30 kg: 2 comprimidos. >30 kg: 3 comprimidos." }
+    }
+  },
+  {
+    id: "calmex-perros",
+    principioActivo: "L-triptófano + Rhodiola rosea + lecitina + Passiflora incarnata",
+    nombresComerciales: ["Calmex Perros"],
+    categoria: "Ansiolítico natural (triptófano/rhodiola)",
+    indicaciones: ["Ansiedad", "Estrés"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "<10 kg: 1 comprimido/día. 11-20 kg: 2 comprimidos/día. 21-30 kg: 3 comprimidos/día. 31-40 kg: 4 comprimidos/día. >40 kg: 5 comprimidos/día." }
+    }
+  },
+  {
+    id: "aktivait-perros-medianos-grandes",
+    principioActivo: "DHA/EPA + fosfatidilserina + antioxidantes (vitamina E, coenzima Q10, ácido alfa lipoico)",
+    nombresComerciales: ["Aktivait Perros Medianos y Grandes"],
+    categoria: "Suplemento cognitivo (antioxidantes)",
+    indicaciones: ["Disfunción cognitiva", "Apoyo neurológico en el envejecimiento"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "10-20 kg: 1 comprimido/día. 20-40 kg: 2 comprimidos/día (1 mañana, 1 noche). >40 kg: 3 comprimidos/día (2 mañana, 1 noche)." }
+    }
+  },
+  {
+    id: "condrovet-force-ha-120",
+    principioActivo: "Glucosamina HCl + condroitín sulfato + ácido hialurónico + colágeno nativo tipo II",
+    nombresComerciales: ["Condrovet Force HA 120"],
+    categoria: "Suplemento articular (condroprotector)",
+    indicaciones: ["Osteoartritis", "Apoyo articular"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "<5 kg: 1/2 comprimido. 5-10 kg: 1 comprimido. 10-20 kg: 2 comprimidos. 20-40 kg: 3 comprimidos. >40 kg: 4 comprimidos." }
+    }
+  },
+  {
+    id: "condrovet-force-ha-240",
+    principioActivo: "Glucosamina HCl + condroitín sulfato + ácido hialurónico + colágeno nativo tipo II",
+    nombresComerciales: ["Condrovet Force HA 240"],
+    categoria: "Suplemento articular (condroprotector)",
+    indicaciones: ["Osteoartritis", "Apoyo articular"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "<5 kg: 1/2 comprimido. 5-10 kg: 1 comprimido. 10-20 kg: 2 comprimidos. 20-40 kg: 3 comprimidos. >40 kg: 4 comprimidos." }
+    }
+  },
+  {
+    id: "condrovet-force-ha-gatos",
+    principioActivo: "Glucosamina HCl + condroitín sulfato + ácido hialurónico + colágeno nativo tipo II",
+    nombresComerciales: ["Condrovet Force HA Gatos"],
+    categoria: "Suplemento articular (condroprotector)",
+    indicaciones: ["Osteoartritis", "Apoyo articular"],
+    especies: {
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "<5 kg: 1 cápsula al día. >5 kg: 2 cápsulas al día." }
+    }
+  },
+  {
+    id: "cosequin-advanced-perros",
+    principioActivo: "Glucosamina HCl + condroitín sulfato + MSM + hialuronato sódico",
+    nombresComerciales: ["Cosequin Advanced Perros"],
+    categoria: "Suplemento articular (condroprotector)",
+    indicaciones: ["Osteoartritis", "Apoyo articular"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "Hasta 7 kg: 1/2 comprimido. 8-15 kg: 1 comprimido. 16-30 kg: 2 comprimidos. >30 kg: 3 comprimidos." }
     }
   }
 ];
