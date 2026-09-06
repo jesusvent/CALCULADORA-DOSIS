@@ -1753,12 +1753,23 @@ async function cargarComercialesParaTexto(texto, nombreComercialBuscado) {
   comercialSelect.innerHTML = `<option value="">Buscando en CIMAVET...</option>`;
   comercialSelect.disabled = true;
   try {
-    const data = await buscarCimavet(texto, 150);
+    let data = await buscarCimavet(texto, 150);
     if (requestId !== comercialesRequestId) return; // ha llegado una búsqueda más reciente entretanto
     // Filtrar por especie ANTES de decidir si hay resultados: si CIMAVET solo tiene
     // presentaciones para otra especie (ej. paracetamol solo para porcino), esto debe
     // tratarse como "sin resultados para perro/gato" y buscar en CIMA, no mostrarlas igual.
     let resultados = filtrarCimavetPorEspecie(data.resultados || []);
+    // Si buscar por principio activo no encuentra nada, pero se conoce el nombre comercial
+    // con el que se encontró el fármaco (y es distinto del texto ya probado), se reintenta
+    // con ese nombre antes de rendirse: CIMAVET no sabe interpretar principios activos
+    // combinados tal cual se escriben en "Mi base de datos" (ej. "Espiramicina, Metronidazol"
+    // para Stomorgyl, que sí está registrado en CIMAVET, pero indexado por el nombre del
+    // combinado, no por esa lista de ingredientes unida por comas).
+    if (!resultados.length && nombreComercialBuscado && normalizar(nombreComercialBuscado) !== normalizar(texto)) {
+      data = await buscarCimavet(nombreComercialBuscado, 150);
+      if (requestId !== comercialesRequestId) return;
+      resultados = filtrarCimavetPorEspecie(data.resultados || []);
+    }
     if (!resultados.length) {
       resetComercialSelect("Sin resultados en CIMAVET (no autorizado como veterinario)");
       actualizarConcentracionesDetectadas([]);
