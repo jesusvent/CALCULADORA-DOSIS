@@ -1372,6 +1372,7 @@ const PRINCIPIO_ACTIVO_PUBMED_EN = {
   "Trimetoprim/Sulfametoxazol": "trimethoprim/sulfamethoxazole",
   "Xilazina": "xylazine",
   "Zonisamida": "zonisamide",
+  "Espiramicina + Metronidazol": "spiramycin + metronidazole",
 
   // ---- Suplementos/nutracéuticos (principio activo en español, sin cognado directo en
   // inglés en muchos casos): sin esta traducción, terminosPubMed() igual separa los

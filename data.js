@@ -403,6 +403,17 @@ const DRUGS = [
       gato:  { dosisMin: 5, dosisMax: 10, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "Administrar con agua/alimento para evitar esofagitis; no tumbar al animal tras la toma." }
     }
   },
+  {
+    id: "espiramicina-metronidazol",
+    principioActivo: "Espiramicina + Metronidazol",
+    nombresComerciales: ["Stomorgyl"],
+    categoria: "Antibiótico (macrólido + antiprotozoario)",
+    indicaciones: ["Enfermedad periodontal", "Estomatitis", "Gingivitis", "Infección bucal"],
+    especies: {
+      perro: { dosisMin: 12.5, dosisMax: 12.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, durante 5-10 días", notas: "Dosis expresada como metronidazol; el comprimido asocia además 75.000 UI/kg de espiramicina (proporción fija, equivale a 1 comprimido de Stomorgyl por cada 10 kg de peso al día). No usar en gestación ni lactancia. Fuente: ficha técnica CIMAVET (Stomorgyl, nº registro 537 ESP)." },
+      gato:  { dosisMin: 12.5, dosisMax: 12.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, durante 5-10 días", notas: "Dosis expresada como metronidazol; el comprimido asocia además 75.000 UI/kg de espiramicina (proporción fija, equivale a 1 comprimido de Stomorgyl por cada 10 kg de peso al día). No usar en gestación ni lactancia. Fuente: ficha técnica CIMAVET (Stomorgyl, nº registro 537 ESP)." }
+    }
+  },
 
   // ---- Sedación / anestesia / premedicación ----
   {
