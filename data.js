@@ -39,6 +39,17 @@ const DRUGS = [
     }
   },
   {
+    id: "amoxicilina-retard",
+    principioActivo: "Amoxicilina (retard/depot)",
+    nombresComerciales: ["Amoxoil Retard"],
+    categoria: "Antibiótico (betalactámico, liberación prolongada)",
+    indicaciones: ["Profilaxis prequirúrgica", "Infección bacteriana"],
+    especies: {
+      perro: { dosisMin: 15, dosisMax: 15, unidad: "mg/kg", via: "IM", frecuencia: "cada 48 h", notas: "Formulación de liberación prolongada (150 mg/ml); no confundir con la dosis oral estándar de amoxicilina." },
+      gato:  { dosisMin: 15, dosisMax: 15, unidad: "mg/kg", via: "IM", frecuencia: "cada 48 h", notas: "Misma dosis que en perros (formulación de liberación prolongada, 150 mg/ml)." }
+    }
+  },
+  {
     id: "enrofloxacina",
     principioActivo: "Enrofloxacina",
     nombresComerciales: ["Baytril"],
@@ -2287,6 +2298,17 @@ const PROTOCOLS = [
     componentes: [
       { nombre: "Diazepam", principioActivoReal: "Diazepam", categoria: "Anticonvulsivante (benzodiazepina)", dosisMin: 0.3, dosisMax: 0.3, unidad: "mg/kg", via: "IV", frecuencia: "dosis única", notas: "" },
       { nombre: "Alfaxalona", principioActivoReal: "Alfaxalona", categoria: "Anestésico neuroesteroide", dosisMin: 1, dosisMax: 3, unidad: "mg/kg", via: "IV", frecuencia: "dosis única", notas: "" }
+    ]
+  },
+  {
+    id: "sedacion-cirugia-acepromazina-metadona-ventura",
+    nombre: "Sedación/premedicación quirúrgica (protocolo Ventura): acepromacina + metadona",
+    indicacion: "Sedación",
+    especies: ["perro"],
+    notas: "Protocolo real de la clínica.",
+    componentes: [
+      { nombre: "Acepromazina", principioActivoReal: "Acepromazina", categoria: "Tranquilizante fenotiazínico", dosisMin: 0.02, dosisMax: 0.02, unidad: "mg/kg", via: "IV/IM", frecuencia: "dosis única", notas: "" },
+      { nombre: "Metadona", principioActivoReal: "Metadona", categoria: "Analgésico opioide", dosisMin: 0.3, dosisMax: 0.3, unidad: "mg/kg", via: "IV/IM", frecuencia: "dosis única", notas: "" }
     ]
   },
   {
