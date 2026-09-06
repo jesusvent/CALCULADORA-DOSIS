@@ -1397,6 +1397,96 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según peso (ver notas)", notas: "Hasta 7 kg: 1/2 comprimido. 8-15 kg: 1 comprimido. 16-30 kg: 2 comprimidos. >30 kg: 3 comprimidos." }
     }
+  },
+
+  // ---- Fármacos sin pauta de dosificación registrada todavía: solo nombre/composición
+  // conocidos (el usuario no había anotado una dosis en su base de datos personal). Se
+  // añaden igualmente para que el producto sea localizable por nombre/composición desde
+  // cualquier dispositivo; en cuanto se indique la pauta real se completa con notas. ----
+  {
+    id: "fortiflora-perros",
+    principioActivo: "Cepa probiótica Enterococcus faecium SF68",
+    nombresComerciales: ["Fortiflora perros"],
+    categoria: "Probiótico",
+    indicaciones: ["Diarrea", "Apoyo digestivo"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" }
+    }
+  },
+  {
+    id: "fortiflora-felina",
+    principioActivo: "Cepa probiótica Enterococcus faecium SF68",
+    nombresComerciales: ["Fortiflora Felina"],
+    categoria: "Probiótico",
+    indicaciones: ["Diarrea", "Apoyo digestivo"],
+    especies: {
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" }
+    }
+  },
+  {
+    id: "pro-enteric-advanced-15",
+    principioActivo: "Probiótico (Enterococcus faecium) + prebiótico (FOS/arabinogalactanos)",
+    nombresComerciales: ["Pro Enteric Advanced 15ml"],
+    categoria: "Probiótico/Prebiótico",
+    indicaciones: ["Diarrea", "Apoyo digestivo"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" }
+    }
+  },
+  {
+    id: "pro-enteric-advanced-30",
+    principioActivo: "Probiótico (Enterococcus faecium) + prebiótico (FOS/arabinogalactanos) + caolina + pectina",
+    nombresComerciales: ["Pro Enteric Advanced 30ml"],
+    categoria: "Probiótico/Prebiótico",
+    indicaciones: ["Diarrea", "Apoyo digestivo"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" }
+    }
+  },
+  {
+    id: "digest-plasmoral-razas-pequenas-medianas",
+    principioActivo: "Complejo de plasma + probióticos (Enterococcus faecium) + prebióticos (FOS/MOS) + vitaminas + zinc + selenio",
+    nombresComerciales: ["Digest Plasmoral Razas Pequeñas y Medianas"],
+    categoria: "Probiótico/Prebiótico",
+    indicaciones: ["Diarrea", "Apoyo digestivo"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" }
+    }
+  },
+  {
+    id: "digest-plasmoral-razas-grandes-gigantes",
+    principioActivo: "Complejo de plasma + probióticos (Enterococcus faecium) + prebióticos (FOS/MOS) + vitaminas + zinc + selenio",
+    nombresComerciales: ["Digest Plasmoral Razas Grandes y Gigantes"],
+    categoria: "Probiótico/Prebiótico",
+    indicaciones: ["Diarrea", "Apoyo digestivo"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" }
+    }
+  },
+  {
+    id: "vetilea-gastro-gel",
+    principioActivo: "Carbonato cálcico + alginato sódico",
+    nombresComerciales: ["Vetilea Gastro Gel 50ml"],
+    categoria: "Antiácido/Protector gástrico",
+    indicaciones: ["Gastritis", "Reflujo gastroesofágico"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" }
+    }
+  },
+  {
+    id: "vetilea-gastro-comprimidos",
+    principioActivo: "Carbonato cálcico + alginato sódico",
+    nombresComerciales: ["Vetilea Gastro Comprimidos"],
+    categoria: "Antiácido/Protector gástrico",
+    indicaciones: ["Gastritis", "Reflujo gastroesofágico"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "-", notas: "" }
+    }
   }
 ];
 
