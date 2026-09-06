@@ -326,12 +326,30 @@ inputBusqueda.addEventListener("input", () => {
 // activo si se conoce (p. ej. "oclacitinib", ya que en PubMed casi nunca aparece el nombre
 // comercial) y la especie del paciente activo — nada de indicación ni otros términos, para no
 // vaciar los resultados de un fármaco que aún no está en la base de datos de dosis.
+//
+// Extrae términos "atómicos" de un texto para combinarlos en una búsqueda OR de PubMed:
+// - separa ingredientes combinados unidos por "+" o "," (p. ej. "Glucosamina + condroitín
+//   sulfato"), ya que un nombre compuesto tal cual casi nunca aparece como frase literal en
+//   un abstract;
+// - saca el contenido entre paréntesis como término adicional en vez de dejarlo anidado
+//   dentro de la cadena — los paréntesis literales rompen el anidamiento de la consulta y la
+//   vacían por completo (ej. "Producto de levadura (Saccharomyces cerevisiae)" generaba
+//   "(Producto de levadura (Saccharomyces cerevisiae) OR ...)", que PubMed no sabe interpretar
+//   y devuelve 0 resultados).
+function terminosPubMed(texto) {
+  if (!texto) return [];
+  const extras = [];
+  const base = texto.replace(/\(([^)]*)\)/g, (_, contenido) => { extras.push(contenido); return " + "; });
+  return [base, ...extras]
+    .join(" + ")
+    .split(/[+,]/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 function urlPubMedTexto(nombreBuscado, principioActivo, especie) {
-  const limpiar = (s) => (s || "").replace(/\s*\([^)]*\)\s*$/, "").trim();
   const especieEn = especie === "gato" ? "(cat OR feline)" : "(dog OR canine)";
-  const nombre = limpiar(nombreBuscado);
-  const principios = limpiar(principioActivo).split(",").map((s) => s.trim()).filter(Boolean);
-  const terminos = [...new Set([nombre, ...principios].filter(Boolean))];
+  const terminos = [...new Set([...terminosPubMed(nombreBuscado), ...terminosPubMed(principioActivo)])];
   const nombreTerm = terminos.length > 1 ? `(${terminos.join(" OR ")})` : terminos[0];
   return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(`${nombreTerm} AND ${especieEn}`);
 }
@@ -1438,12 +1456,12 @@ const INDICACION_PUBMED_EN = {
 function urlPubMed(farmaco, especie, indicacion) {
   // El nombre en español apenas encuentra nada en PubMed (literatura casi toda en inglés):
   // se traduce si está en el diccionario, y si no, se usa tal cual (funciona igual para
-  // nombres ya parecidos en ambos idiomas). Los nombres comerciales a veces llevan una
-  // anotación entre paréntesis (ej. "Augmentin (uso humano)") que NO debe ir en la búsqueda:
-  // sus paréntesis literales rompen el anidamiento de la consulta y la vacían por completo.
+  // nombres ya parecidos en ambos idiomas). terminosPubMed() separa ingredientes combinados
+  // ("+"/",") y extrae paréntesis como término aparte en vez de dejarlos anidados (ej.
+  // "Augmentin (uso humano)" o "Producto de levadura (Saccharomyces cerevisiae)"), que si no
+  // rompen el anidamiento de la consulta y la vacían por completo.
   const principioActivoEn = PRINCIPIO_ACTIVO_PUBMED_EN[farmaco.principioActivo] || farmaco.principioActivo;
-  const comercialesLimpios = (farmaco.nombresComerciales || []).map((n) => n.replace(/\s*\([^)]*\)\s*$/, "").trim()).filter(Boolean);
-  const nombres = [principioActivoEn, ...comercialesLimpios];
+  const nombres = [...new Set([...terminosPubMed(principioActivoEn), ...(farmaco.nombresComerciales || []).flatMap(terminosPubMed)])];
   const nombreTerm = nombres.length > 1 ? `(${nombres.join(" OR ")})` : nombres[0];
   const especieEn = especie === "gato" ? "(cat OR feline)" : "(dog OR canine)";
   const partes = [nombreTerm, especieEn];
