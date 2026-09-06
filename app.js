@@ -349,7 +349,11 @@ function terminosPubMed(texto) {
 
 function urlPubMedTexto(nombreBuscado, principioActivo, especie) {
   const especieEn = especie === "gato" ? "(cat OR feline)" : "(dog OR canine)";
-  const terminos = [...new Set([...terminosPubMed(nombreBuscado), ...terminosPubMed(principioActivo)])];
+  // Traduce el principio activo si está en el diccionario (PubMed apenas indexa literatura en
+  // español): sin esto, un suplemento como "Caseína hidrolizada (alfa-casozepina)" se busca
+  // literalmente en español y no encuentra prácticamente nada.
+  const principioActivoEn = (typeof PRINCIPIO_ACTIVO_PUBMED_EN !== "undefined" && PRINCIPIO_ACTIVO_PUBMED_EN[principioActivo]) || principioActivo;
+  const terminos = [...new Set([...terminosPubMed(nombreBuscado), ...terminosPubMed(principioActivoEn)])];
   const nombreTerm = terminos.length > 1 ? `(${terminos.join(" OR ")})` : terminos[0];
   return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(`${nombreTerm} AND ${especieEn}`);
 }
@@ -386,8 +390,16 @@ listadoCompletoBoton.addEventListener("click", () => {
 });
 listadoCompletoFiltroEl.addEventListener("input", renderListadoCompleto);
 
+// Muestra primero el/los nombre(s) comercial(es) (lo que el usuario reconoce a simple vista,
+// ej. "Zylkene") y el principio activo como subtítulo (ej. "Caseína hidrolizada..."), no al
+// revés — igual que ya se hizo en "Mi base de datos". Si un fármaco no tiene ningún nombre
+// comercial registrado, se usa el principio activo como título por no dejarlo en blanco.
+function nombrePrincipalListado(f) {
+  return (f.nombresComerciales && f.nombresComerciales.length) ? f.nombresComerciales.join(", ") : f.principioActivo;
+}
+
 function renderListadoCompleto() {
-  const todos = [...DRUGS, ...customDrugs].slice().sort((a, b) => a.principioActivo.localeCompare(b.principioActivo, "es"));
+  const todos = [...DRUGS, ...customDrugs].slice().sort((a, b) => nombrePrincipalListado(a).localeCompare(nombrePrincipalListado(b), "es"));
   const filtro = normalizar(listadoCompletoFiltroEl.value.trim());
   const filtrados = !filtro ? todos : todos.filter((f) =>
     normalizar(f.principioActivo).includes(filtro) ||
@@ -402,8 +414,8 @@ function renderListadoCompleto() {
   listadoCompletoListaEl.innerHTML = `<p class="ayuda">${filtrados.length} de ${todos.length} fármaco(s)</p>` +
     filtrados.map((f) => `
       <div class="listado-completo-fila" data-id="${f.id}">
-        <span class="listado-completo-nombre">${escapeHtml(f.principioActivo)}${f.esPersonalizado ? ` <span class="tipo-tag tipo-tag-personalizado">Personalizado</span>` : ""}</span>
-        <span class="listado-completo-comerciales">${escapeHtml((f.nombresComerciales || []).join(", ") || "—")}</span>
+        <span class="listado-completo-nombre">${escapeHtml(nombrePrincipalListado(f))}${f.esPersonalizado ? ` <span class="tipo-tag tipo-tag-personalizado">Personalizado</span>` : ""}</span>
+        <span class="listado-completo-comerciales">${escapeHtml(f.principioActivo)}</span>
         <span class="listado-completo-categoria">${escapeHtml(f.categoria || "")}</span>
       </div>
     `).join("");
@@ -411,7 +423,7 @@ function renderListadoCompleto() {
   listadoCompletoListaEl.querySelectorAll(".listado-completo-fila").forEach((fila) => {
     fila.addEventListener("click", () => {
       const f = todos.find((x) => x.id === fila.dataset.id);
-      if (f) seleccionarFarmaco(f);
+      if (f) seleccionarFarmaco(f, nombrePrincipalListado(f));
       listadoCompletoEl.classList.add("oculto");
       listadoCompletoBoton.textContent = "📋 Ver todos los fármacos de la base de datos";
     });
@@ -438,13 +450,13 @@ function renderSugerencias(resultados) {
     li.innerHTML = `<span class="termino">${escapeHtml(r.termino)}</span> <span class="tipo-tag">${escapeHtml(r.tipo)}</span>` +
       (r.tipo === "Nombre comercial" ? `<span class="submeta">${escapeHtml(r.farmaco.principioActivo)}</span>` : "") +
       (r.farmaco.esPersonalizado ? `<span class="tipo-tag tipo-tag-personalizado">Personalizado</span>` : "");
-    li.addEventListener("click", () => seleccionarFarmaco(r.farmaco));
+    li.addEventListener("click", () => seleccionarFarmaco(r.farmaco, r.termino));
     listaSugerencias.appendChild(li);
   }
   listaSugerencias.classList.remove("oculto");
 }
 
-function seleccionarFarmaco(farmaco) {
+function seleccionarFarmaco(farmaco, terminoBuscado) {
   farmacoActivo = farmaco;
   patologiaSeleccionada = null;
   comprimidoActivo = null;
@@ -486,7 +498,12 @@ function seleccionarFarmaco(farmaco) {
     resetComercialSelect("Fármaco personalizado — concentración ya indicada arriba");
     cimavetFarmacoResultadoEl.innerHTML = `<p class="ayuda">Fármaco personalizado con concentración propia. Si quieres comparar con productos comerciales reales, consulta la pestaña "Buscador CIMAVET y CIMA".</p>`;
   } else {
-    cargarComercialesParaTexto(principioActivoCorto(farmaco));
+    // Se pasa el término con el que realmente se encontró el fármaco (ej. "Zylkene", si se
+    // buscó por nombre comercial) para que, si CIMAVET/CIMA no encuentran nada por el
+    // principio activo (habitual en suplementos no autorizados como medicamento), el enlace
+    // de PubMed pueda igualmente buscar por ese nombre comercial en vez de solo por la
+    // composición/principio activo, que en PubMed casi nunca da resultados útiles.
+    cargarComercialesParaTexto(principioActivoCorto(farmaco), terminoBuscado);
   }
 }
 
@@ -1354,7 +1371,33 @@ const PRINCIPIO_ACTIVO_PUBMED_EN = {
   "Trimetoprim/Sulfadiazina + Pirimetamina": "trimethoprim/sulfadiazine AND pyrimethamine",
   "Trimetoprim/Sulfametoxazol": "trimethoprim/sulfamethoxazole",
   "Xilazina": "xylazine",
-  "Zonisamida": "zonisamide"
+  "Zonisamida": "zonisamide",
+
+  // ---- Suplementos/nutracéuticos (principio activo en español, sin cognado directo en
+  // inglés en muchos casos): sin esta traducción, terminosPubMed() igual separa los
+  // ingredientes combinados, pero busca literalmente en español y no encuentra apenas nada
+  // en PubMed (indexado casi todo en inglés). ----
+  "Amoxicilina (retard/depot)": "amoxicillin (long-acting/depot)",
+  "Silibina (cardo mariano) + fosfatidilcolina + vitamina E": "silibinin (milk thistle) + phosphatidylcholine + vitamin E",
+  "Levadura de cerveza + silibina (cardo mariano) + taurina + vitaminas del grupo B": "brewer's yeast + silibinin (milk thistle) + taurine + B vitamins",
+  "Producto de levadura (Saccharomyces cerevisiae)": "yeast product (Saccharomyces cerevisiae)",
+  "L-triptófano + glucosamina + condroitín sulfato + ácido hialurónico": "L-tryptophan + glucosamine + chondroitin sulfate + hyaluronic acid",
+  "Nucleoforce (nucleótidos de Saccharomyces cerevisiae) + Immunactive (Lentinus edodes)": "Nucleoforce (Saccharomyces cerevisiae nucleotides) + Immunactive (Lentinus edodes)",
+  "Levadura de S. cerevisiae + hierro, cobre, vitaminas C, E, B1, B2, B3, B6, B9, B12 y K3": "S. cerevisiae yeast + iron, copper, vitamins C, E, B1, B2, B3, B6, B9, B12 and K3",
+  "Lespedeza capitata + carbonato cálcico": "Lespedeza capitata + calcium carbonate",
+  "Caseína hidrolizada (alfa-casozepina)": "hydrolyzed casein (alpha-casozepine)",
+  "N-acetil-D-glucosamina": "N-acetyl-D-glucosamine",
+  "N-acetil-D-glucosamina + L-teanina + quercetina dihidrato": "N-acetyl-D-glucosamine + L-theanine + quercetin dihydrate",
+  "D-manosa + arándano (Vaccinium macrocarpon) + granada + Withania somnifera": "D-mannose + cranberry (Vaccinium macrocarpon) + pomegranate + Withania somnifera",
+  "L-triptófano + Rhodiola rosea + lecitina + Passiflora incarnata": "L-tryptophan + Rhodiola rosea + lecithin + Passiflora incarnata",
+  "DHA/EPA + fosfatidilserina + antioxidantes (vitamina E, coenzima Q10, ácido alfa lipoico)": "DHA/EPA + phosphatidylserine + antioxidants (vitamin E, coenzyme Q10, alpha lipoic acid)",
+  "Glucosamina HCl + condroitín sulfato + ácido hialurónico + colágeno nativo tipo II": "glucosamine HCl + chondroitin sulfate + hyaluronic acid + native type II collagen",
+  "Glucosamina HCl + condroitín sulfato + MSM + hialuronato sódico": "glucosamine HCl + chondroitin sulfate + MSM + sodium hyaluronate",
+  "Cepa probiótica Enterococcus faecium SF68": "Enterococcus faecium SF68 probiotic strain",
+  "Probiótico (Enterococcus faecium) + prebiótico (FOS/arabinogalactanos)": "probiotic (Enterococcus faecium) + prebiotic (FOS/arabinogalactans)",
+  "Probiótico (Enterococcus faecium) + prebiótico (FOS/arabinogalactanos) + caolina + pectina": "probiotic (Enterococcus faecium) + prebiotic (FOS/arabinogalactans) + kaolin + pectin",
+  "Complejo de plasma + probióticos (Enterococcus faecium) + prebióticos (FOS/MOS) + vitaminas + zinc + selenio": "plasma complex + probiotics (Enterococcus faecium) + prebiotics (FOS/MOS) + vitamins + zinc + selenium",
+  "Carbonato cálcico + alginato sódico": "calcium carbonate + sodium alginate"
 };
 
 const INDICACION_PUBMED_EN = {
@@ -1585,7 +1628,7 @@ function filaCimaHtml(med, textoBuscado) {
     </div>`;
 }
 
-async function buscarEnCimaComoRespaldo(texto, contenedorEl) {
+async function buscarEnCimaComoRespaldo(texto, contenedorEl, principioActivo, nombreComercialBuscado) {
   contenedorEl.innerHTML = `<p class="placeholder">No autorizado como veterinario. Buscando en CIMA (medicina humana)...</p>`;
   try {
     const data = await buscarCima(texto);
@@ -1594,7 +1637,14 @@ async function buscarEnCimaComoRespaldo(texto, contenedorEl) {
     // básicamente alfabético) escondía casi todas las marcas habituales sin ningún criterio.
     const resultados = data.resultados || [];
     if (!resultados.length) {
-      contenedorEl.innerHTML = `<p class="placeholder">"${escapeHtml(texto)}" no se ha encontrado ni como medicamento veterinario (CIMAVET) ni como medicamento de uso humano (CIMA).</p>`;
+      // Sin resultados en CIMAVET ni en CIMA (habitual en suplementos/nutracéuticos que no
+      // son medicamento autorizado bajo ningún nombre): se ofrece igualmente un enlace a
+      // PubMed. Se usa el nombre comercial buscado (ej. "Zylkene") en vez de "texto" cuando
+      // se conoce, ya que "texto" aquí es el principio activo usado para la consulta a
+      // CIMA/CIMAVET (ej. "Caseína hidrolizada (alfa-casozepina)") y buscar solo por ese
+      // texto en PubMed es mucho menos fiable que por el nombre comercial real del producto.
+      contenedorEl.innerHTML = `<p class="placeholder">"${escapeHtml(texto)}" no se ha encontrado ni como medicamento veterinario (CIMAVET) ni como medicamento de uso humano (CIMA).</p>` +
+        `<a class="boton-enlace" target="_blank" rel="noopener" href="${urlPubMedTexto(nombreComercialBuscado || texto, principioActivo, paciente.especie)}">🔎 Buscar en PubMed</a>`;
       return;
     }
     contenedorEl.innerHTML = `<p class="aviso-inline">⚠ "${escapeHtml(texto)}" no es un medicamento veterinario autorizado en España, pero sí existe como medicamento de uso humano en CIMA (${resultados.length} resultado(s)). Su uso en animales sería fuera de ficha técnica (off-label), bajo prescripción y responsabilidad del veterinario.</p>` +
@@ -1652,7 +1702,7 @@ async function cargarCimavetParaFarmaco(farmaco) {
     const mostrar = filtrarCimavetPorEspecie(resultados);
 
     if (!mostrar.length) {
-      await buscarEnCimaComoRespaldo(principioActivoCorto(farmaco), cimavetFarmacoResultadoEl);
+      await buscarEnCimaComoRespaldo(principioActivoCorto(farmaco), cimavetFarmacoResultadoEl, farmaco.principioActivo);
       return;
     }
 
@@ -1698,7 +1748,7 @@ function resetComercialSelect(mensaje) {
 // fuera el resultado de lo que el usuario terminó escribiendo. Solo se aplica la respuesta
 // si el texto buscado sigue siendo el que hay en el campo en ese momento.
 let comercialesRequestId = 0;
-async function cargarComercialesParaTexto(texto) {
+async function cargarComercialesParaTexto(texto, nombreComercialBuscado) {
   const requestId = ++comercialesRequestId;
   comercialSelect.innerHTML = `<option value="">Buscando en CIMAVET...</option>`;
   comercialSelect.disabled = true;
@@ -1712,7 +1762,7 @@ async function cargarComercialesParaTexto(texto) {
     if (!resultados.length) {
       resetComercialSelect("Sin resultados en CIMAVET (no autorizado como veterinario)");
       actualizarConcentracionesDetectadas([]);
-      await buscarEnCimaComoRespaldo(texto, comercialDetalleEl);
+      await buscarEnCimaComoRespaldo(texto, comercialDetalleEl, farmacoActivo ? farmacoActivo.principioActivo : null, nombreComercialBuscado);
       return;
     }
     const principioActivoParaFavoritos = farmacoActivo ? farmacoActivo.principioActivo : texto;
