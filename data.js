@@ -102,6 +102,99 @@ const DRUGS = [
     }
   },
   {
+    id: "acido-tolfenamico",
+    principioActivo: "Ácido tolfenámico",
+    nombresComerciales: ["Tolfedine", "Algenamic", "Tolfelab", "Tolfenil", "Tolfedian", "Tolfedol"],
+    categoria: "AINE",
+    indicaciones: ["Dolor postquirúrgico", "Infección respiratoria alta"],
+    especies: {
+      perro: { dosisMin: 4, dosisMax: 4, unidad: "mg/kg", via: "IM/SC", frecuencia: "dosis única, repetible a las 24 h", notas: "Prevención del dolor postoperatorio: dosis única IM 1 h antes de la inducción anestésica. No combinar con otros AINEs ni corticoides. Fuente: ficha técnica CIMAVET (Tolfedine, nº registro 792 ESP)." },
+      gato:  { dosisMin: 4, dosisMax: 4, unidad: "mg/kg", via: "SC (no usar vía IM en gatos)", frecuencia: "dosis única, repetible a las 24 h", notas: "Coadyuvante en enfermedad de vías respiratorias altas, junto con tratamiento antimicrobiano. No combinar con otros AINEs ni corticoides. Fuente: ficha técnica CIMAVET (Tolfedine, nº registro 792 ESP)." }
+    }
+  },
+  {
+    id: "domperidona",
+    principioActivo: "Domperidona",
+    nombresComerciales: ["Leisguard"],
+    categoria: "Inmunoestimulante",
+    indicaciones: ["Prevención de leishmaniosis"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 0.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, durante 4 semanas consecutivas", notas: "Reduce el riesgo de infección activa/enfermedad clínica tras contacto con Leishmania infantum, mediante estimulación de la inmunidad celular (no es un uso gastrointestinal/procinético clásico). Fuente: ficha técnica CIMAVET (Leisguard, nº registro 2383 ESP)." }
+    }
+  },
+  {
+    id: "metergolina",
+    principioActivo: "Metergolina",
+    nombresComerciales: ["Contralac"],
+    categoria: "Inhibidor de la prolactina",
+    indicaciones: ["Pseudogestación", "Supresión de la lactación"],
+    especies: {
+      perro: { dosisMin: 0.2, dosisMax: 0.2, unidad: "mg/kg", via: "VO", frecuencia: "al día, repartido en 2 tomas", notas: "Solo en perras. Supresión de la lactación posparto y de otras manifestaciones de pseudogestación. Fuente: ficha técnica CIMAVET (Contralac, nº registro 809 ESP)." }
+    }
+  },
+  {
+    id: "apomorfina",
+    principioActivo: "Apomorfina",
+    nombresComerciales: ["Apovomin", "Emedog"],
+    categoria: "Emético",
+    indicaciones: ["Inducción del vómito"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 0.1, unidad: "mg/kg", via: "SC", frecuencia: "dosis única", notas: "Solo perros; una única administración por vía subcutánea. Fuente: ficha técnica CIMAVET (Apovomin 1 mg/ml, nº registro 3970 ESP)." }
+    }
+  },
+  {
+    id: "etamsilato",
+    principioActivo: "Etamsilato",
+    nombresComerciales: ["Hemo", "Hemosilate"],
+    categoria: "Hemostático",
+    indicaciones: ["Hemorragia quirúrgica", "Hemorragia postraumática"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 12.5, unidad: "mg/kg", via: "IM/IV", frecuencia: "según gravedad del proceso hemorrágico", notas: "Fuente: ficha técnica CIMAVET (Hemosilate, nº registro 3647 ESP)." },
+      gato:  { dosisMin: 5, dosisMax: 12.5, unidad: "mg/kg", via: "IM/IV", frecuencia: "según gravedad del proceso hemorrágico", notas: "Fuente: ficha técnica CIMAVET (Hemosilate, nº registro 3647 ESP)." }
+    }
+  },
+  {
+    id: "pentobarbital",
+    principioActivo: "Pentobarbital",
+    nombresComerciales: ["Dolethal", "Euthasol", "Exagon", "Euthanimal"],
+    categoria: "Barbitúrico (eutanasia)",
+    indicaciones: ["Eutanasia"],
+    especies: {
+      perro: { dosisMin: 133, dosisMax: 133, unidad: "mg/kg", via: "IV (o intracardiaca tras sedación/anestesia profunda)", frecuencia: "dosis única", notas: "Exclusivamente para eutanasia. Administración endovenosa rápida; usar catéter para evitar extravasación. Fuente: ficha técnica CIMAVET (Dolethal, nº registro 737 ESP)." },
+      gato:  { dosisMin: 133, dosisMax: 133, unidad: "mg/kg", via: "IV (o intracardiaca tras sedación/anestesia profunda)", frecuencia: "dosis única", notas: "Exclusivamente para eutanasia. Administración endovenosa rápida; usar catéter para evitar extravasación. Fuente: ficha técnica CIMAVET (Dolethal, nº registro 737 ESP)." }
+    }
+  },
+  {
+    id: "fentanilo",
+    principioActivo: "Fentanilo",
+    nombresComerciales: ["Fentadon"],
+    categoria: "Analgésico opioide",
+    indicaciones: ["Analgesia intraoperatoria", "Dolor postquirúrgico"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 10, unidad: "mcg/kg", via: "IV", frecuencia: "bolo lento; puede seguirse de infusión continua", notas: "Solo perros. Tras el bolo, infusión continua de 12-24 microgramos/kg/h para analgesia intraoperatoria, o 6-10 microgramos/kg/h en postoperatorio ya sedado (calcúlala en la pestaña CRI). Margen de seguridad estrecho: medir la dosis con exactitud. Fuente: ficha técnica CIMAVET (Fentadon, nº registro 2519 ESP)." }
+    }
+  },
+  {
+    id: "propentofilina",
+    principioActivo: "Propentofilina",
+    nombresComerciales: ["Karsivan", "Vitofyllin", "Canergy"],
+    categoria: "Vasodilatador (geriátrico/cognitivo)",
+    indicaciones: ["Disfunción cognitiva", "Mala circulación cerebral/periférica en el perro geriátrico"],
+    especies: {
+      perro: { dosisMin: 6, dosisMax: 10, unidad: "mg/kg", via: "VO", frecuencia: "al día, dividido en 2 tomas", notas: "Mejora signos de apatía y letargia asociados a mala circulación cerebral/periférica en perros geriátricos. Fuente: ficha técnica CIMAVET (Karsivan, nº registro 1055 ESP)." }
+    }
+  },
+  {
+    id: "ketoconazol",
+    principioActivo: "Ketoconazol",
+    nombresComerciales: ["Fungiconazol"],
+    categoria: "Antifúngico (imidazol)",
+    indicaciones: ["Dermatomicosis"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 10, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Solo perros. Equivale a 1 comprimido de 200 mg por cada 20 kg de peso al día. Para dermatomicosis por Microsporum canis/gypseum y otros dermatofitos sensibles. Fuente: ficha técnica CIMAVET (Fungiconazol, nº registro 3118 ESP)." }
+    }
+  },
+  {
     id: "tramadol",
     principioActivo: "Tramadol",
     nombresComerciales: ["Tralgiol", "Adolonta (uso humano)"],
@@ -3482,6 +3575,10 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "cefalexin": "Cefalexina",
   "cefovecin": "Cefovecina",
   "clindamycin": "Clindamicina",
+  "apomorphine": "Apomorfina",
+  "domperidone": "Domperidona",
+  "etamsylate": "Etamsilato",
+  "fentanyl": "Fentanilo",
   "cyclosporine": "Ciclosporina",
   "dexamethasone": "Dexametasona",
   "dexmedetomidine": "Dexmedetomidina",
@@ -3495,8 +3592,11 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "gabapentin": "Gabapentina",
   "grapiprant": "Grapiprant",
   "insulin": "Insulina glargina",
+  "kaliumbromid": "Bromuro de potasio",
   "itraconazole": "Itraconazol",
   "ketamine": "Ketamina",
+  "ketoconazole": "Ketoconazol",
+  "metergoline": "Metergolina",
   "levothyroxine": "Levotiroxina",
   "lidocainhydrochlorid-monohydrat": "Lidocaína",
   "lokivetmab": "Lokivetmab",
@@ -3510,11 +3610,14 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "metoclopramid": "Metoclopramida",
   "metronidazole": "Metronidazol",
   "midazolam": "Midazolam",
+  "pentobarbital": "Pentobarbital",
+  "pentobarbital natrium": "Pentobarbital",
   "phenobarbital": "Fenobarbital",
   "phytomenadione": "Fitomenadiona (Vitamina K1)",
   "pimobendan": "Pimobendán",
   "pradofloxacin": "Pradofloxacina",
   "prednisolone": "Prednisolona",
+  "propentofylline": "Propentofilina",
   "propofol": "Propofol",
   "ramipril": "Ramipril",
   "robenacoxib": "Robenacoxib",
@@ -3522,6 +3625,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "spironolacton": "Espironolactona",
   "telmisartan": "Telmisartán",
   "thiamazole": "Metimazol",
+  "tolfenamic acid": "Ácido tolfenámico",
   "tramadolhydrochlorid": "Tramadol",
   "xylazine": "Xilazina",
   "trilostan": "Trilostano"
