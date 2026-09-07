@@ -195,6 +195,81 @@ const DRUGS = [
     }
   },
   {
+    id: "gentamicina",
+    principioActivo: "Gentamicina",
+    nombresComerciales: ["Gentavall", "Gentacalier", "Gentamiciven", "Vetersan Gentamicina"],
+    categoria: "Antibiótico (aminoglucósido)",
+    indicaciones: ["Infección bacteriana"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 5, unidad: "mg/kg", via: "IM/IV lenta", frecuencia: "cada 12 h, durante 3-4 días", notas: "Vigilar función renal (nefrotoxicidad). Fuente: ficha técnica CIMAVET (Gentavall 40 mg/ml, nº registro 307 ESP)." },
+      gato:  { dosisMin: 5, dosisMax: 5, unidad: "mg/kg", via: "IM/IV lenta", frecuencia: "cada 12 h, durante 3-4 días", notas: "Vigilar función renal (nefrotoxicidad). Fuente: ficha técnica CIMAVET (Gentavall 40 mg/ml, nº registro 307 ESP)." }
+    }
+  },
+  {
+    id: "tetracosactida",
+    principioActivo: "Tetracosactida",
+    nombresComerciales: ["Cosacthen"],
+    categoria: "Diagnóstico (estimulación ACTH)",
+    indicaciones: ["Evaluación de la función corticosuprarrenal"],
+    especies: {
+      perro: { dosisMin: 0.005, dosisMax: 0.005, unidad: "mg/kg", via: "IV/IM", frecuencia: "dosis única (test de estimulación con ACTH)", notas: "Solo perros. Equivale a 5 microgramos/kg. Fuente: ficha técnica CIMAVET (Cosacthen, nº registro 3872 ESP)." }
+    }
+  },
+  {
+    id: "cabergolina",
+    principioActivo: "Cabergolina",
+    nombresComerciales: ["Kabergovet", "Kaberstop", "Caliergolin", "Finilac", "Galastop", "Lactofin", "Veylactin"],
+    categoria: "Inhibidor de la prolactina",
+    indicaciones: ["Pseudogestación", "Supresión de la lactación"],
+    especies: {
+      perro: { dosisMin: 0.005, dosisMax: 0.005, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, durante 4-6 días", notas: "Equivale a 5 microgramos/kg (0,1 ml/kg de la solución de 50 microgramos/ml). Repetir el ciclo si los signos no se resuelven o recidivan. Fuente: ficha técnica CIMAVET (Kabergovet, nº registro 3968 ESP)." },
+      gato:  { dosisMin: 0.005, dosisMax: 0.005, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, durante 4-6 días", notas: "Equivale a 5 microgramos/kg (0,1 ml/kg de la solución de 50 microgramos/ml). Repetir el ciclo si los signos no se resuelven o recidivan. Fuente: ficha técnica CIMAVET (Kabergovet, nº registro 3968 ESP)." }
+    }
+  },
+  {
+    id: "nandrolona",
+    principioActivo: "Nandrolona",
+    nombresComerciales: ["Myodine"],
+    categoria: "Esteroide anabolizante",
+    indicaciones: ["Tratamiento anabolizante coadyuvante"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 5, unidad: "mg/kg", via: "SC/IM", frecuencia: "repetible cada 3-4 semanas", notas: "Como laurato de nandrolona. Ajustar dosis según respuesta clínica. Fuente: ficha técnica CIMAVET (Myodine, nº registro 3574 ESP)." },
+      gato:  { dosisMin: 2, dosisMax: 5, unidad: "mg/kg", via: "SC/IM", frecuencia: "repetible cada 3-4 semanas", notas: "Como laurato de nandrolona. Ajustar dosis según respuesta clínica. Fuente: ficha técnica CIMAVET (Myodine, nº registro 3574 ESP)." }
+    }
+  },
+  {
+    id: "lactulosa",
+    principioActivo: "Lactulosa",
+    nombresComerciales: ["Laxatract", "Laxasan"],
+    categoria: "Laxante osmótico",
+    indicaciones: ["Estreñimiento"],
+    especies: {
+      perro: { dosisMin: 400, dosisMax: 400, unidad: "mg/kg", via: "VO", frecuencia: "al día, repartido en 2-3 tomas; ajustar según respuesta", notas: "Fuente: ficha técnica CIMAVET (Laxatract 667 mg/ml, nº registro 3793 ESP)." },
+      gato:  { dosisMin: 400, dosisMax: 400, unidad: "mg/kg", via: "VO", frecuencia: "al día, repartido en 2-3 tomas; ajustar según respuesta", notas: "Fuente: ficha técnica CIMAVET (Laxatract 667 mg/ml, nº registro 3793 ESP)." }
+    }
+  },
+  {
+    id: "aglepristona",
+    principioActivo: "Aglepristona",
+    nombresComerciales: ["Alizin"],
+    categoria: "Antiprogestágeno",
+    indicaciones: ["Inducción del aborto"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 10, unidad: "mg/kg", via: "SC", frecuencia: "dos veces, con un intervalo de 24 h", notas: "Solo en perras gestantes; inducción del aborto hasta 45 días tras el apareamiento. Administrar en la piel del cuello para evitar reacciones locales. Fuente: ficha técnica CIMAVET (Alizin, nº registro 1539 ESP)." }
+    }
+  },
+  {
+    id: "oxitocina",
+    principioActivo: "Oxitocina",
+    nombresComerciales: ["Facilpart"],
+    categoria: "Hormona (oxitócico)",
+    indicaciones: ["Inducción al parto", "Inercia uterina", "Eyección láctea"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "UI", via: "IV/IM/SC", frecuencia: "-", notas: "Dosis fija por animal, no por kg: obstetricia 5-25 UI; eyección láctea 2-10 UI. Perras. Usar la dosis más baja del rango; repetible tras al menos 30 min si el veterinario lo considera necesario. Fuente: ficha técnica CIMAVET (Facilpart, nº registro 528 ESP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "UI", via: "IV/IM/SC", frecuencia: "-", notas: "Dosis fija por animal, no por kg: obstetricia 5-10 UI; eyección láctea 1-10 UI. Gatas. Usar la dosis más baja del rango; repetible tras al menos 30 min si el veterinario lo considera necesario. Fuente: ficha técnica CIMAVET (Facilpart, nº registro 528 ESP)." }
+    }
+  },
+  {
     id: "tramadol",
     principioActivo: "Tramadol",
     nombresComerciales: ["Tralgiol", "Adolonta (uso humano)"],
@@ -3588,6 +3663,13 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "firocoxib": "Firocoxib",
   "fluoxetine": "Fluoxetina",
   "frunevetmab": "Frunevetmab",
+  "aglepriston": "Aglepristona",
+  "cabergolin": "Cabergolina",
+  "gentamicin": "Gentamicina",
+  "lactulose": "Lactulosa",
+  "nandrolone": "Nandrolona",
+  "oxytocin": "Oxitocina",
+  "tetracosactid": "Tetracosactida",
   "furosemide": "Furosemida",
   "gabapentin": "Gabapentina",
   "grapiprant": "Grapiprant",
