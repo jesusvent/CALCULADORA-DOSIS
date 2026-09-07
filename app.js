@@ -3550,7 +3550,12 @@ exportarDatosBoton.addEventListener("click", async () => {
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  const fecha = new Date().toISOString().slice(0, 10);
+  // Fecha Y hora local en el nombre del archivo (no solo la fecha): sin la hora, dos
+  // exportaciones el mismo día se llaman igual y una sustituye a la otra sin darse cuenta.
+  // Se evitan los ":" del formato ISO porque no son válidos en nombres de archivo de Windows.
+  const ahora = new Date();
+  const dosDigitos = (n) => String(n).padStart(2, "0");
+  const fecha = `${ahora.getFullYear()}-${dosDigitos(ahora.getMonth() + 1)}-${dosDigitos(ahora.getDate())}_${dosDigitos(ahora.getHours())}-${dosDigitos(ahora.getMinutes())}`;
   a.href = url;
   a.download = `calculadora-dosis-backup-${fecha}.json`;
   document.body.appendChild(a);
