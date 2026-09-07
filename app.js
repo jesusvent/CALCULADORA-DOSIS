@@ -3686,10 +3686,16 @@ document.addEventListener("wheel", () => {
 // ============================================================
 const CLAVE_ULTIMA_IMPORTACION = "ultimaImportacionLocal";
 
+// Formatea fecha + hora juntas (ej. "7/9/2026, 00:22") en vez de solo la fecha, para poder
+// distinguir varias actualizaciones ocurridas el mismo día.
+function formatearFechaHora(fecha) {
+  return `${fecha.toLocaleDateString("es-ES")}, ${fecha.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}`;
+}
+
 function actualizarIndicadorUltimaActualizacion() {
   const el = document.getElementById("ultima-actualizacion");
   if (!el) return;
-  const fechaBD = new Date(ULTIMA_ACTUALIZACION_BD + "T00:00:00");
+  const fechaBD = new Date(ULTIMA_ACTUALIZACION_BD);
   let fechaImport = null;
   try {
     const guardada = localStorage.getItem(CLAVE_ULTIMA_IMPORTACION);
@@ -3699,7 +3705,7 @@ function actualizarIndicadorUltimaActualizacion() {
   const usarImport = fechaImport && !isNaN(fechaImport) && fechaImport > fechaBD;
   const fecha = usarImport ? fechaImport : fechaBD;
   const origen = usarImport ? "última importación de tus datos en este dispositivo" : "base de datos compartida";
-  el.textContent = `Última actualización: ${fecha.toLocaleDateString("es-ES")} (${origen})`;
+  el.textContent = `Última actualización: ${formatearFechaHora(fecha)} (${origen})`;
 }
 
 // ============================================================
