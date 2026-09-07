@@ -1322,6 +1322,7 @@ const PRINCIPIO_ACTIVO_PUBMED_EN = {
   "Cefazolina": "cefazolin",
   "Cefovecina": "cefovecin",
   "Cefpodoxima": "cefpodoxime",
+  "Ciclosporina": "cyclosporine OR ciclosporin",
   "Cisaprida": "cisapride",
   "Clindamicina": "clindamycin",
   "Clorfeniramina": "chlorpheniramine",

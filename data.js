@@ -135,6 +135,17 @@ const DRUGS = [
     }
   },
   {
+    id: "ciclosporina",
+    principioActivo: "Ciclosporina",
+    nombresComerciales: ["Atopica", "Modulis", "Cyclavance", "Sporimune"],
+    categoria: "Inmunosupresor",
+    indicaciones: ["Dermatitis atópica", "Dermatitis alérgica"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 5, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h al inicio; una vez controlados los signos clínicos (4-8 semanas), reducir a días alternos o cada 3-4 días según respuesta", notas: "No usar en perros menores de 6 meses ni con menos de 2 kg de peso. La marca Optimmune (misma composición) es una pomada oftálmica para queratoconjuntivitis seca, de uso y dosis completamente distintos — no es esta presentación oral. Fuente: ficha técnica CIMAVET (Atopica solución oral, nº registro 2367 ESP)." },
+      gato:  { dosisMin: 7, dosisMax: 7, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h al inicio; reducir a días alternos o cada 3-4 días según respuesta clínica", notas: "No usar en gatos infectados por FeLV o FIV. La marca Optimmune (misma composición) es una pomada oftálmica para queratoconjuntivitis seca, de uso y dosis completamente distintos — no es esta presentación oral. Fuente: ficha técnica CIMAVET (Atopica solución oral, nº registro 2367 ESP)." }
+    }
+  },
+  {
     id: "furosemida",
     principioActivo: "Furosemida",
     nombresComerciales: ["Seguril"],
@@ -3450,6 +3461,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "cefalexin": "Cefalexina",
   "cefovecin": "Cefovecina",
   "clindamycin": "Clindamicina",
+  "cyclosporine": "Ciclosporina",
   "dexmedetomidine": "Dexmedetomidina",
   "diazepam": "Diazepam",
   "doxycycline": "Doxiciclina",
