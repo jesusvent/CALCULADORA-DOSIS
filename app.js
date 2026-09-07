@@ -461,7 +461,10 @@ function seleccionarFarmaco(farmaco, terminoBuscado) {
   patologiaSeleccionada = null;
   comprimidoActivo = null;
   marcaComercialActiva = null;
-  inputBusqueda.value = farmaco.principioActivo;
+  // Si se encontró por nombre comercial (ej. "Fortiflora Felina"), el cuadro de búsqueda se
+  // queda con ese texto en vez de cambiarlo por el principio activo — cambiarlo confundía,
+  // ya que parecía que la búsqueda por nombre comercial no había funcionado.
+  inputBusqueda.value = terminoBuscado || farmaco.principioActivo;
   listaSugerencias.classList.add("oculto");
   avisoNoEnBdEl.classList.add("oculto");
 
