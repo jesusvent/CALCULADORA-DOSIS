@@ -270,6 +270,26 @@ const DRUGS = [
     }
   },
   {
+    id: "efedrina",
+    principioActivo: "Efedrina",
+    nombresComerciales: ["Enurace", "Caniphedrin"],
+    categoria: "Simpaticomimético (incontinencia urinaria)",
+    indicaciones: ["Incontinencia urinaria"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "al día, dividido en 2 tomas (dosis inicial; ajustar según respuesta)", notas: "Solo en perras ovariohisterectomizadas, para incontinencia por incompetencia del esfínter uretral. No superar 5 mg/kg/día. Administrar antes de las comidas con algo de alimento. Fuente: ficha técnica CIMAVET (Enurace 50, nº registro 2074 ESP)." }
+    }
+  },
+  {
+    id: "fenilpropanolamina",
+    principioActivo: "Fenilpropanolamina",
+    nombresComerciales: ["Propalin", "Proin", "Uriphex", "Continenza", "Urilin", "Uristop"],
+    categoria: "Simpaticomimético (incontinencia urinaria)",
+    indicaciones: ["Incontinencia urinaria"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h, con la comida", notas: "Eficacia demostrada en perras ovariohisterectomizadas con incontinencia por incompetencia del esfínter uretral. La absorción mejora en ayunas. Fuente: ficha técnica CIMAVET (Propalin, nº registro 1507 ESP)." }
+    }
+  },
+  {
     id: "tramadol",
     principioActivo: "Tramadol",
     nombresComerciales: ["Tralgiol", "Adolonta (uso humano)"],
@@ -3659,7 +3679,9 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "dexmedetomidine": "Dexmedetomidina",
   "diazepam": "Diazepam",
   "doxycycline": "Doxiciclina",
+  "ephedrine": "Efedrina",
   "enrofloxacin": "Enrofloxacina",
+  "phenylpropalin": "Fenilpropanolamina",
   "firocoxib": "Firocoxib",
   "fluoxetine": "Fluoxetina",
   "frunevetmab": "Frunevetmab",
