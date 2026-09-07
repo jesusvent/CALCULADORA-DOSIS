@@ -332,6 +332,17 @@ const DRUGS = [
     }
   },
   {
+    id: "praziquantel-pirantel-febantel",
+    principioActivo: "Praziquantel + pirantel + febantel",
+    nombresComerciales: ["Drontal", "Drontal Plus", "Endogard", "Cestem", "Zipyran Plus", "Cazitel", "Helm-Ex", "Wellplus", "ZIKYALL", "Cat-Ex"],
+    categoria: "Antiparasitario interno (dewormer de amplio espectro)",
+    indicaciones: ["Desparasitación interna"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 5, unidad: "mg/kg", via: "VO", frecuencia: "dosis única", notas: "Dosis expresada como praziquantel; el comprimido asocia además 15 mg/kg de febantel y 14,4 mg/kg de pirantel embonato (proporción fija, equivale a 1 comprimido de Drontal Plus por cada 10 kg de peso). Fuente: ficha técnica CIMAVET (Drontal Plus, nº registro 539 ESP)." },
+      gato:  { dosisMin: 5, dosisMax: 5, unidad: "mg/kg", via: "VO", frecuencia: "dosis única", notas: "Dosis expresada como praziquantel; el comprimido asocia además 57,5 mg/kg de pirantel embonato (sin febantel en la formulación felina; proporción fija, equivale a 1 comprimido de Drontal por cada 4 kg de peso). Gatitos <1 kg: no tratar. Fuente: ficha técnica CIMAVET (Drontal gatos, nº registro 1098 ESP)." }
+    }
+  },
+  {
     id: "tramadol",
     principioActivo: "Tramadol",
     nombresComerciales: ["Tralgiol", "Adolonta (uso humano)"],
@@ -3729,6 +3740,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "framycetin": "Fludrocortisona + framicetina + nistatina + tiabendazol",
   "chlorhexidine digluconate, miconazole nitrate": "Clorhexidina + miconazol",
   "gentamicin/clotrimazol/betametasona": "Gentamicina + betametasona + clotrimazol",
+  "praziquantel/pyrantel/fenbantel": "Praziquantel + pirantel + febantel",
   "fluoxetine": "Fluoxetina",
   "frunevetmab": "Frunevetmab",
   "aglepriston": "Aglepristona",
