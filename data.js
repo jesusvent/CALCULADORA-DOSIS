@@ -15,6 +15,12 @@
 //   }
 // }
 
+// Fecha del último cambio de CONTENIDO en este archivo (fármaco o protocolo añadido/editado):
+// actualizar a mano cada vez que se modifique DRUGS o PROTOCOLS y se suba a GitHub. Se muestra
+// en la cabecera de la app para que cualquier usuario sepa si su copia está al día — no tocar
+// por cambios que no sean de contenido (ej. arreglos de app.js/estilos).
+const ULTIMA_ACTUALIZACION_BD = "2026-09-07";
+
 const DRUGS = [
   {
     id: "amoxicilina-clavulanico",

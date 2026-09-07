@@ -3579,6 +3579,8 @@ importarDatosInput.addEventListener("change", async () => {
     await cargarFavoritosCri();
     renderMisFarmacos();
     renderProtocolos();
+    try { localStorage.setItem(CLAVE_ULTIMA_IMPORTACION, new Date().toISOString()); } catch (e) { /* localStorage no disponible: se ignora */ }
+    actualizarIndicadorUltimaActualizacion();
     importarDatosEstadoEl.textContent = `Importado: ${(backup.customDrugs || []).length} fármaco(s), ${(backup.customProtocols || []).length} protocolo(s), ${(backup.favoritosHospital || []).length} favorito(s) del hospital, ${(backup.favoritosCri || []).length} favorito(s) de CRI y ${(backup.imagenes || []).length} imagen(es).`;
   } catch (e) {
     importarDatosEstadoEl.textContent = "⚠ No se ha podido leer el archivo (¿es un backup exportado desde esta misma app?).";
@@ -3607,6 +3609,30 @@ document.addEventListener("wheel", () => {
 }, { passive: true });
 
 // ============================================================
+// "Última actualización" en la cabecera: la fecha más reciente entre el contenido
+// compartido (ULTIMA_ACTUALIZACION_BD, en data.js) y la última vez que este dispositivo
+// importó un backup de datos personales. Exportar NO cuenta como actualización, ya que no
+// cambia ningún contenido, solo lo vuelca a un archivo.
+// ============================================================
+const CLAVE_ULTIMA_IMPORTACION = "ultimaImportacionLocal";
+
+function actualizarIndicadorUltimaActualizacion() {
+  const el = document.getElementById("ultima-actualizacion");
+  if (!el) return;
+  const fechaBD = new Date(ULTIMA_ACTUALIZACION_BD + "T00:00:00");
+  let fechaImport = null;
+  try {
+    const guardada = localStorage.getItem(CLAVE_ULTIMA_IMPORTACION);
+    if (guardada) fechaImport = new Date(guardada);
+  } catch (e) { /* localStorage no disponible (modo privado, etc.): se ignora */ }
+
+  const usarImport = fechaImport && !isNaN(fechaImport) && fechaImport > fechaBD;
+  const fecha = usarImport ? fechaImport : fechaBD;
+  const origen = usarImport ? "última importación de tus datos en este dispositivo" : "base de datos compartida";
+  el.textContent = `Última actualización: ${fecha.toLocaleDateString("es-ES")} (${origen})`;
+}
+
+// ============================================================
 // Arranque
 // ============================================================
 actualizarPaciente();
@@ -3614,3 +3640,4 @@ cargarCustomDrugs().then(renderMisFarmacos);
 cargarCustomProtocols();
 cargarFavoritosHospital();
 cargarFavoritosCri();
+actualizarIndicadorUltimaActualizacion();
