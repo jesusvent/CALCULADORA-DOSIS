@@ -632,6 +632,19 @@ input:focus, select:focus {
 }
 .listado-completo-fila:last-child { border-bottom: none; }
 .listado-completo-fila:hover { background: var(--azul-claro); }
+
+#importar-comparacion-lista { max-height: 340px; overflow-y: auto; border: 1px solid var(--gris-borde); border-radius: 10px; margin-bottom: 12px; }
+.importar-comparacion-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--gris-borde);
+}
+.importar-comparacion-fila:last-child { border-bottom: none; }
+.importar-comparacion-opciones { display: flex; gap: 12px; flex-shrink: 0; font-size: 0.85rem; white-space: nowrap; }
+.importar-comparacion-opciones label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
 .listado-completo-nombre { font-weight: 700; flex: 1 1 100%; }
 .listado-completo-comerciales { color: var(--gris-texto); font-size: 0.85rem; }
 .listado-completo-categoria { color: var(--azul-oscuro); font-size: 0.8rem; font-weight: 600; }

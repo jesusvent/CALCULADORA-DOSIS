@@ -3520,6 +3520,11 @@ const exportarDatosBoton = document.getElementById("exportar-datos-boton");
 const importarDatosBoton = document.getElementById("importar-datos-boton");
 const importarDatosInput = document.getElementById("importar-datos-input");
 const importarDatosEstadoEl = document.getElementById("importar-datos-estado");
+const importarComparacionEl = document.getElementById("importar-comparacion");
+const importarComparacionIntroEl = document.getElementById("importar-comparacion-intro");
+const importarComparacionListaEl = document.getElementById("importar-comparacion-lista");
+const importarComparacionContinuarBoton = document.getElementById("importar-comparacion-continuar");
+const importarComparacionCancelarBoton = document.getElementById("importar-comparacion-cancelar");
 
 exportarDatosBoton.addEventListener("click", async () => {
   const [drugs, protocolos, favoritos, favoritosCriExport, imagenes] = await Promise.all([
@@ -3554,10 +3559,79 @@ exportarDatosBoton.addEventListener("click", async () => {
 
 importarDatosBoton.addEventListener("click", () => importarDatosInput.click());
 
+// Aplica de verdad el backup ya validado (y, si hubo que preguntar, ya resuelto): añade/
+// actualiza por id sin borrar nada del dispositivo que no se haya decidido eliminar
+// explícitamente en la comparación previa.
+async function ejecutarImportacion(backup) {
+  for (const f of backup.customDrugs || []) await dbPut("customDrugs", f);
+  for (const p of backup.customProtocols || []) await dbPut("customProtocols", p);
+  for (const fav of backup.favoritosHospital || []) await dbPut("favoritosHospital", fav);
+  for (const fav of backup.favoritosCri || []) await dbPut("favoritosCri", fav);
+  for (const img of backup.imagenes || []) await dbPut("imagenes", img);
+  await cargarCustomDrugs();
+  await cargarCustomProtocols();
+  await cargarFavoritosHospital();
+  await cargarFavoritosCri();
+  renderMisFarmacos();
+  renderProtocolos();
+  try { localStorage.setItem(CLAVE_ULTIMA_IMPORTACION, new Date().toISOString()); } catch (e) { /* localStorage no disponible: se ignora */ }
+  actualizarIndicadorUltimaActualizacion();
+  importarDatosEstadoEl.textContent = `Importado: ${(backup.customDrugs || []).length} fármaco(s), ${(backup.customProtocols || []).length} protocolo(s), ${(backup.favoritosHospital || []).length} favorito(s) del hospital, ${(backup.favoritosCri || []).length} favorito(s) de CRI y ${(backup.imagenes || []).length} imagen(es).`;
+}
+
+// Fármacos de "Mi base de datos" en este dispositivo que el archivo a importar (todavía sin
+// confirmar) no incluye — hay que preguntar uno a uno si se conservan o se eliminan antes de
+// seguir, en vez de dejarlos siempre tal cual sin decírselo al usuario.
+let importacionPendiente = null; // { backup, faltantes: [customDrug, ...] }
+
+function ocultarComparacionImportacion() {
+  importarComparacionEl.classList.add("oculto");
+  importarComparacionListaEl.innerHTML = "";
+  importacionPendiente = null;
+}
+
+function mostrarComparacionImportacion(backup, faltantes) {
+  importacionPendiente = { backup, faltantes };
+  importarComparacionIntroEl.textContent = `El archivo a importar no incluye ${faltantes.length} fármaco(s) que sí tienes guardado(s) en este dispositivo. Elige, para cada uno, si quieres conservarlo o eliminarlo antes de continuar con la importación.`;
+  importarComparacionListaEl.innerHTML = faltantes.map((f) => `
+    <div class="importar-comparacion-fila" data-id="${escapeHtml(f.id)}">
+      <div>
+        <strong>${escapeHtml((f.nombresComerciales && f.nombresComerciales.length) ? f.nombresComerciales.join(", ") : f.principioActivo)}</strong>
+        <div class="ayuda">${escapeHtml(f.principioActivo)}</div>
+      </div>
+      <div class="importar-comparacion-opciones">
+        <label><input type="radio" name="accion-${escapeHtml(f.id)}" value="conservar" checked /> Conservar</label>
+        <label><input type="radio" name="accion-${escapeHtml(f.id)}" value="eliminar" /> Eliminar</label>
+      </div>
+    </div>
+  `).join("");
+  importarDatosEstadoEl.textContent = "";
+  importarComparacionEl.classList.remove("oculto");
+  importarComparacionEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+importarComparacionContinuarBoton.addEventListener("click", async () => {
+  if (!importacionPendiente) return;
+  const { backup, faltantes } = importacionPendiente;
+  for (const f of faltantes) {
+    const marcado = importarComparacionListaEl.querySelector(`input[name="accion-${CSS.escape(f.id)}"]:checked`);
+    if (marcado && marcado.value === "eliminar") await dbDelete("customDrugs", f.id);
+  }
+  ocultarComparacionImportacion();
+  importarDatosEstadoEl.textContent = "Importando...";
+  await ejecutarImportacion(backup);
+});
+
+importarComparacionCancelarBoton.addEventListener("click", () => {
+  ocultarComparacionImportacion();
+  importarDatosEstadoEl.textContent = "Importación cancelada.";
+});
+
 importarDatosInput.addEventListener("change", async () => {
   const file = importarDatosInput.files[0];
   importarDatosInput.value = "";
   if (!file) return;
+  ocultarComparacionImportacion();
   importarDatosEstadoEl.textContent = "Importando...";
   try {
     const texto = await file.text();
@@ -3566,22 +3640,18 @@ importarDatosInput.addEventListener("change", async () => {
       importarDatosEstadoEl.textContent = "⚠ Este archivo no parece una copia de seguridad de esta app.";
       return;
     }
-    // Se añaden/actualizan (por id) sin borrar lo que ya hubiera en este dispositivo,
-    // para no perder por accidente datos propios de este dispositivo al importar.
-    for (const f of backup.customDrugs || []) await dbPut("customDrugs", f);
-    for (const p of backup.customProtocols || []) await dbPut("customProtocols", p);
-    for (const fav of backup.favoritosHospital || []) await dbPut("favoritosHospital", fav);
-    for (const fav of backup.favoritosCri || []) await dbPut("favoritosCri", fav);
-    for (const img of backup.imagenes || []) await dbPut("imagenes", img);
-    await cargarCustomDrugs();
-    await cargarCustomProtocols();
-    await cargarFavoritosHospital();
-    await cargarFavoritosCri();
-    renderMisFarmacos();
-    renderProtocolos();
-    try { localStorage.setItem(CLAVE_ULTIMA_IMPORTACION, new Date().toISOString()); } catch (e) { /* localStorage no disponible: se ignora */ }
-    actualizarIndicadorUltimaActualizacion();
-    importarDatosEstadoEl.textContent = `Importado: ${(backup.customDrugs || []).length} fármaco(s), ${(backup.customProtocols || []).length} protocolo(s), ${(backup.favoritosHospital || []).length} favorito(s) del hospital, ${(backup.favoritosCri || []).length} favorito(s) de CRI y ${(backup.imagenes || []).length} imagen(es).`;
+    // Comparación previa: si el archivo a importar no trae algún fármaco que sí existe ya en
+    // este dispositivo (ej. se exportó desde otro ordenador antes de añadir ese fármaco, o se
+    // borró allí), no se asume nada — se pregunta explícitamente si conservarlo o eliminarlo
+    // antes de aplicar el resto de la importación.
+    const idsEnArchivo = new Set((backup.customDrugs || []).map((f) => f.id));
+    const localDrugs = await dbGetAll("customDrugs");
+    const faltantes = localDrugs.filter((f) => !idsEnArchivo.has(f.id));
+    if (faltantes.length) {
+      mostrarComparacionImportacion(backup, faltantes);
+      return;
+    }
+    await ejecutarImportacion(backup);
   } catch (e) {
     importarDatosEstadoEl.textContent = "⚠ No se ha podido leer el archivo (¿es un backup exportado desde esta misma app?).";
   }
