@@ -401,6 +401,27 @@ const DRUGS = [
     }
   },
   {
+    id: "diazepam",
+    principioActivo: "Diazepam",
+    nombresComerciales: ["Diazedor", "Solupam", "Ziapam"],
+    categoria: "Anticonvulsivante (benzodiazepina)",
+    indicaciones: ["Convulsiones", "Espasmo musculoesquelético", "Sedación", "Premedicación"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 2, unidad: "mg/kg", via: "IV lenta (única vía autorizada)", frecuencia: "según uso: preanestesia 0,1-0,2 mg/kg · sedación 0,2-0,6 mg/kg · convulsiones/espasmo musculoesquelético 0,5-2 mg/kg", notas: "Solo vía intravenosa lenta; no usar en enfermedad hepática grave. Fuente: ficha técnica CIMAVET (Diazedor, nº registro 3643 ESP)." },
+      gato:  { dosisMin: 0.1, dosisMax: 2, unidad: "mg/kg", via: "IV lenta (única vía autorizada)", frecuencia: "según uso: preanestesia 0,1-0,2 mg/kg · sedación 0,2-0,6 mg/kg · convulsiones/espasmo musculoesquelético 0,5-2 mg/kg", notas: "Solo vía intravenosa lenta; no usar en enfermedad hepática grave. Fuente: ficha técnica CIMAVET (Diazedor, nº registro 3643 ESP)." }
+    }
+  },
+  {
+    id: "fluoxetina",
+    principioActivo: "Fluoxetina",
+    nombresComerciales: ["Fluoxevet", "Reconcile"],
+    categoria: "Antidepresivo (ISRS)",
+    indicaciones: ["Ansiedad por separación", "Trastornos de conducta"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Solo junto con técnicas de modificación de conducta; no como tratamiento único. Fuente: ficha técnica CIMAVET (Fluoxevet, nº registro 4342 ESP)." }
+    }
+  },
+  {
     id: "ondansetron",
     principioActivo: "Ondansetrón",
     nombresComerciales: ["Zofran (uso humano)", "Yatrox"],

@@ -1338,6 +1338,7 @@ const PRINCIPIO_ACTIVO_PUBMED_EN = {
   "Fenbendazol": "fenbendazole",
   "Fenobarbital": "phenobarbital",
   "Fitomenadiona (Vitamina K1)": "phytomenadione OR phytonadione (vitamin K1)",
+  "Fluoxetina": "fluoxetine",
   "Flumazenilo": "flumazenil",
   "Furazolidona": "furazolidone",
   "Furosemida": "furosemide",
