@@ -290,6 +290,48 @@ const DRUGS = [
     }
   },
   {
+    id: "otomax",
+    principioActivo: "Gentamicina + betametasona + clotrimazol",
+    nombresComerciales: ["Otomax"],
+    categoria: "Ótico (antibiótico + corticoide + antifúngico)",
+    indicaciones: ["Otitis externa"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica", frecuencia: "2 veces al día, durante 7 días", notas: "Dosis fija según peso, no por kg: <15 kg → 4 gotas/oído; >15 kg → 8 gotas/oído, dos veces al día. Masajear suavemente la base de la oreja tras aplicar. Fuente: ficha técnica CIMAVET (Otomax, nº registro 1294 ESP)." }
+    }
+  },
+  {
+    id: "canaural",
+    principioActivo: "Fludrocortisona + framicetina + nistatina + tiabendazol",
+    nombresComerciales: ["Canaural"],
+    categoria: "Ótico (antibiótico + antifúngico + corticoide)",
+    indicaciones: ["Otitis externa", "Dermatitis"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica", frecuencia: "2 veces al día, durante 7-14 días", notas: "5-10 gotas en el canal auditivo, dos veces al día. Agitar bien antes de usar; ajustar según la patología. Fuente: ficha técnica CIMAVET (Canaural, nº registro 2448 ESP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica", frecuencia: "2 veces al día, durante 7-14 días", notas: "5-10 gotas en el canal auditivo, dos veces al día. Agitar bien antes de usar; ajustar según la patología. Fuente: ficha técnica CIMAVET (Canaural, nº registro 2448 ESP)." }
+    }
+  },
+  {
+    id: "aurizon",
+    principioActivo: "Marbofloxacina + clotrimazol + dexametasona",
+    nombresComerciales: ["Aurizon"],
+    categoria: "Ótico (antibiótico + antifúngico + corticoide)",
+    indicaciones: ["Otitis externa"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica", frecuencia: "una vez al día, durante 7-14 días", notas: "10 gotas en el oído afectado, una vez al día. Agitar bien antes de usar. A los 7 días, valorar si conviene prolongar el tratamiento otra semana. Fuente: ficha técnica CIMAVET (Aurizon, nº registro 1400 ESP)." }
+    }
+  },
+  {
+    id: "malaseb",
+    principioActivo: "Clorhexidina + miconazol",
+    nombresComerciales: ["Malaseb"],
+    categoria: "Champú antiséptico/antifúngico",
+    indicaciones: ["Dermatitis seborreica", "Dermatofitosis (Microsporum canis)"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Tópica (champú)", frecuencia: "2 veces por semana hasta mejoría, luego semanal de mantenimiento", notas: "Dejar actuar 10 minutos antes de aclarar. Fuente: ficha técnica CIMAVET (Malaseb, nº registro 2125 ESP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Tópica (champú)", frecuencia: "2 veces por semana hasta cultivo negativo (máximo 16 semanas)", notas: "Dejar actuar 10 minutos antes de aclarar. Fuente: ficha técnica CIMAVET (Malaseb, nº registro 2125 ESP)." }
+    }
+  },
+  {
     id: "tramadol",
     principioActivo: "Tramadol",
     nombresComerciales: ["Tralgiol", "Adolonta (uso humano)"],
@@ -3683,6 +3725,10 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "enrofloxacin": "Enrofloxacina",
   "phenylpropalin": "Fenilpropanolamina",
   "firocoxib": "Firocoxib",
+  "marbofloxacin/clotrimazol/dexamethason": "Marbofloxacina + clotrimazol + dexametasona",
+  "framycetin": "Fludrocortisona + framicetina + nistatina + tiabendazol",
+  "chlorhexidine digluconate, miconazole nitrate": "Clorhexidina + miconazol",
+  "gentamicin/clotrimazol/betametasona": "Gentamicina + betametasona + clotrimazol",
   "fluoxetine": "Fluoxetina",
   "frunevetmab": "Frunevetmab",
   "aglepriston": "Aglepristona",
