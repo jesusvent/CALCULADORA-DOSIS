@@ -1706,6 +1706,67 @@ const DRUGS = [
     }
   },
   {
+    id: "emodepsida-praziquantel",
+    principioActivo: "Emodepsida + Praziquantel",
+    nombresComerciales: ["Profender"],
+    categoria: "Antiparasitario interno combinado (nematodos + cestodos)",
+    indicaciones: ["Desparasitación interna", "Nematodos", "Cestodos"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "dosis única", notas: "Dosis expresada como emodepsida; el mismo comprimido aporta además 5 mg/kg de prazicuantel (comprimidos de liberación modificada). Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/05/054 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." },
+      gato:  { dosisMin: 3, dosisMax: 3, unidad: "mg/kg", via: "Tópica (spot-on)", frecuencia: "dosis única", notas: "Dosis expresada como emodepsida; el mismo volumen aporta además 12 mg/kg de prazicuantel. Pipetas por tramo de peso: 0,5-2,5 kg → 0,35 ml; >2,5-5 kg → 0,70 ml; >5-8 kg → 1,12 ml; >8 kg → combinación de pipetas. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/05/054 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "tigolaner-emodepsida-praziquantel",
+    principioActivo: "Tigolaner + Emodepsida + Praziquantel",
+    nombresComerciales: ["Felpreva"],
+    categoria: "Antiparasitario externo e interno combinado (spot-on, acción trimestral)",
+    indicaciones: ["Pulgas", "Garrapatas", "Nematodos", "Cestodos", "Lombriz pulmonar"],
+    especies: {
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Tópica (spot-on)", frecuencia: "cada 3 meses (no indicado a intervalos menores)", notas: "Dosis mínima: 14,4 mg/kg tigolaner + 3 mg/kg emodepsida + 12 mg/kg praziquantel (0,148 ml/kg). Pipetas por tramo de peso: 1,0-2,5 kg → 0,37 ml; 2,6-5,0 kg → 0,74 ml; 5,1-8,0 kg → 1,18 ml; >8 kg → combinación de pipetas. Actividad frente a pulgas/garrapatas de 3 meses; no repetir antes de ese plazo. Datos de seguridad limitados más allá de 4 tratamientos consecutivos (posible acumulación de tigolaner). Lombriz pulmonar (Aelurostrongylus, Troglostrongylus): repetir a las 2 semanas con un spot-on que contenga solo emodepsida+praziquantel. Solo indicado cuando coinciden ectoparásitos, cestodos y nematodos a la vez. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/21/277 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "emodepsida-toltrazurilo",
+    principioActivo: "Emodepsida + Toltrazurilo",
+    nombresComerciales: ["Procox"],
+    categoria: "Antiparasitario interno combinado (nematodos + coccidios)",
+    indicaciones: ["Desparasitación interna", "Nematodos", "Coccidiosis"],
+    especies: {
+      perro: { dosisMin: 0.45, dosisMax: 0.45, unidad: "mg/kg", via: "VO", frecuencia: "dosis única", notas: "Dosis expresada como emodepsida; el mismo volumen (0,5 ml/kg) aporta además 9 mg/kg de toltrazurilo. Cachorros desde 2 semanas de edad y ≥0,4 kg de peso. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/11/123 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "medetomidina-vatinoxan",
+    principioActivo: "Medetomidina + Vatinoxan",
+    nombresComerciales: ["Zenalpha"],
+    categoria: "Sedante alfa-2 agonista + antagonista periférico (menor efecto cardiovascular)",
+    indicaciones: ["Sedación", "Premedicación"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "IM", frecuencia: "dosis única, procedimientos ≤30 min", notas: "Dosis basada en superficie corporal (1 mg/m² de medetomidina + 20 mg/m² de vatinoxan), no en mg/kg lineal — el mg/kg real baja al aumentar el peso. Vatinoxan es un antagonista periférico de receptores alfa-2 que reduce los efectos cardiovasculares (bradicardia, vasoconstricción) de la medetomidina sin revertir la sedación. Volumen orientativo según ficha técnica: 3,5-4 kg → 0,4 ml; 7,1-10 kg → 0,8 ml; 15,1-20 kg → 1,4 ml; 25,1-30 kg → 1,8 ml; 45,1-50 kg → 2,6 ml; >80 kg → 3,8 ml (tabla completa en ficha técnica). Reversible con atipamezol (vigilar taquicardia tras revertir). Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 42810/5000 — equivalente al registro CIMAVET EU/2/21/279 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "tasipimidina",
+    principioActivo: "Tasipimidina",
+    nombresComerciales: ["Tessie"],
+    categoria: "Agonista alfa-2 adrenérgico (ansiolítico)",
+    indicaciones: ["Ansiedad situacional", "Miedo a ruidos", "Ansiedad por separación"],
+    especies: {
+      perro: { dosisMin: 0.03, dosisMax: 0.03, unidad: "mg/kg", via: "VO", frecuencia: "según necesidad, hasta 9 días consecutivos", notas: "Alivio a corto plazo de ansiedad/miedo situacional (ruidos, ausencia del propietario). No dar de comer 1 h antes ni 1 h después (retrasa la absorción). Si se combina con fluoxetina o clomipramina, reducir a 0,02 mg/kg (dar antes una dosis de prueba y observar 2 h). Si el perro va a quedarse solo, dar antes una dosis de prueba y observar 2 h para confirmar tolerancia. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 06043/5004 — equivalente al registro CIMAVET EU/2/21/276 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "velagliflozina",
+    principioActivo: "Velagliflozina",
+    nombresComerciales: ["Senvelgo"],
+    categoria: "Antidiabético (inhibidor de SGLT2)",
+    indicaciones: ["Diabetes mellitus no insulinodependiente (gato)"],
+    especies: {
+      gato: { dosisMin: 1, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Misma pauta independientemente de tratamiento previo con insulina u otro antidiabético. Al cambiar desde insulina, omitir la dosis de insulina de la noche anterior al inicio de velagliflozina. No usar en gatos con cetoacidosis diabética, cetonuria o deshidratación grave. Jeringa dosificadora incluida con escala en kg (incrementos de 0,5 kg). Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 08327/5004 — equivalente al registro CIMAVET EU/2/23/305 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
     id: "benazepril-espironolactona",
     principioActivo: "Benazepril + Espironolactona",
     nombresComerciales: ["Cardalis"],
@@ -4135,8 +4196,8 @@ const PRODUCTOS_HOSPITAL = [
   { marca: "Privaprol", laboratorio: "Fatro", composicion: "Lotrifen", orden: "Según Necesidad" },
   { marca: "Procamidor", laboratorio: "Karizoo", composicion: "Procaine", orden: "Fuera de Acuerdo" },
   { marca: "Procapen", laboratorio: "Livisto", composicion: "Benzylpenicillin", orden: "Según Necesidad" },
-  { marca: "Procox", laboratorio: "Vetoquinol", composicion: "Toltrazurile/Prazicuantel", orden: "Fuera de Acuerdo" },
-  { marca: "Profender", laboratorio: "Vetoquinol", composicion: "Emodepside/Prazicuantel/Tigolaner", orden: "Fuera de Acuerdo" },
+  { marca: "Procox", laboratorio: "Vetoquinol", composicion: "Toltrazurile/Emodepside", orden: "Fuera de Acuerdo" },
+  { marca: "Profender", laboratorio: "Vetoquinol", composicion: "Emodepside/Prazicuantel", orden: "Fuera de Acuerdo" },
   { marca: "Propalin", laboratorio: "Vetoquinol", composicion: "Phenylpropalin", orden: "Recomendado" },
   { marca: "Propancat", laboratorio: "Fatro", composicion: "Praziquantel/Pyrantel/Fenbantel", orden: "Recomendado" },
   { marca: "PROPOFOL LIPURO", laboratorio: "B.Braun", composicion: "Propofol", orden: "Recomendado" },
@@ -4336,6 +4397,12 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "ivermectine - pyrantel": "Ivermectina + Pirantel",
   "desoxycortone pivalate": "Desoxicortona",
   "benazepril-hydrochlorid/spironolacton": "Benazepril + Espironolactona",
+  "velagliflozine": "Velagliflozina",
+  "tasipimidine": "Tasipimidina",
+  "medetomidine - vatinoxan": "Medetomidina + Vatinoxan",
+  "toltrazurile/emodepside": "Emodepsida + Toltrazurilo",
+  "emodepside/prazicuantel/tigolaner": "Tigolaner + Emodepsida + Praziquantel",
+  "emodepside/prazicuantel": "Emodepsida + Praziquantel",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",

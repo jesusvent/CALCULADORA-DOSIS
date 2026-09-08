@@ -1380,6 +1380,8 @@ const PRINCIPIO_ACTIVO_PUBMED_EN = {
   "Nitenpiram": "nitenpyram",
   "Antimoniato de meglumina": "meglumine antimoniate",
   "Desoxicortona": "desoxycortone OR deoxycorticosterone pivalate",
+  "Velagliflozina": "velagliflozin",
+  "Tasipimidina": "tasipimidine",
   "Gluconato cálcico": "calcium gluconate",
   "Miltefosina": "miltefosine",
   "Pregabalina": "pregabalin",
