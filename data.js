@@ -1706,6 +1706,56 @@ const DRUGS = [
     }
   },
   {
+    id: "hidrocortisona-miconazol-gentamicina",
+    principioActivo: "Hidrocortisona + Miconazol + Gentamicina",
+    nombresComerciales: ["Easotic"],
+    categoria: "Corticoide + antifúngico + antibiótico ótico",
+    indicaciones: ["Otitis externa"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica", frecuencia: "1 ml (1 dosis) por oído afectado, una vez al día durante 5 días", notas: "Agitar bien antes de usar; limpiar el envase multidosis pulsando la bomba antes de la primera administración. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/08/085 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "gentamicina-posaconazol-mometasona",
+    principioActivo: "Gentamicina + Posaconazol + Mometasona",
+    nombresComerciales: ["Mometamax"],
+    categoria: "Antibiótico + antifúngico + corticoide ótico (dosis única)",
+    indicaciones: ["Otitis externa"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica", frecuencia: "dosis única de 0,8 ml por oído infectado", notas: "Tratamiento único (no repetir); la respuesta clínica máxima puede no verse hasta 28-42 días después. Limpiar y secar el conducto auditivo antes de aplicar. Administrar solo por veterinario o personal entrenado bajo supervisión veterinaria. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/22/289 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "florfenicol-terbinafina-mometasona",
+    principioActivo: "Florfenicol + Terbinafina + Mometasona",
+    nombresComerciales: ["Neptra"],
+    categoria: "Antibiótico + antifúngico + corticoide ótico (dosis única)",
+    indicaciones: ["Otitis externa"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica", frecuencia: "dosis única de 1 ml por oído infectado", notas: "Tratamiento único; la respuesta clínica máxima puede no verse hasta 28 días después. Agitar bien 5 segundos antes de usar. Limpiar y secar el conducto auditivo antes de aplicar. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/19/246 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "terbinafina-florfenicol-betametasona",
+    principioActivo: "Terbinafina + Florfenicol + Betametasona",
+    nombresComerciales: ["Osurnia"],
+    categoria: "Antifúngico + antibiótico + corticoide ótico (gel)",
+    indicaciones: ["Otitis externa"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica (gel)", frecuencia: "1 tubo por oído infectado; repetir a los 7 días (2 dosis en total)", notas: "Respuesta clínica máxima puede no verse hasta 21 días después de la 2ª dosis. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/14/170 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "orbifloxacino-mometasona-posaconazol",
+    principioActivo: "Orbifloxacino + Mometasona + Posaconazol",
+    nombresComerciales: ["Posatex"],
+    categoria: "Antibiótico + corticoide + antifúngico ótico",
+    indicaciones: ["Otitis externa"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica", frecuencia: "según peso, una vez al día durante 7 días", notas: "Gotas por tramo de peso: <2 kg → 2 gotas; 2-15 kg → 4 gotas; ≥15 kg → 8 gotas, una vez al día x7 días. Limpiar y secar el conducto auditivo y recortar el exceso de pelo antes de aplicar; agitar bien antes de usar. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/08/081 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
     id: "marbofloxacino-ketoconazol-prednisolona",
     principioActivo: "Marbofloxacino + Ketoconazol + Prednisolona",
     nombresComerciales: ["Triderm"],
@@ -4451,6 +4501,11 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "prednisolone/polymyxin-b/miconazolnitrate": "Miconazol + Prednisolona + Polimixina B",
   "triamcinolone + salicylic acid": "Triamcinolona + Ácido salicílico",
   "triamcinolone + 2-hydroxybenzo acid + salicylic acid": "Triamcinolona + Ácido salicílico",
+  "hydrocortison/miconazol/gentamicine": "Hidrocortisona + Miconazol + Gentamicina",
+  "gentamicine/posaconazol/momethason": "Gentamicina + Posaconazol + Mometasona",
+  "terbinafin/florfenicol/momethason": "Florfenicol + Terbinafina + Mometasona",
+  "terbinafin/florfenicol/betamethason": "Terbinafina + Florfenicol + Betametasona",
+  "orbiflo/posaconazol/momethason": "Orbifloxacino + Mometasona + Posaconazol",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",
