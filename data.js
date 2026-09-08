@@ -1364,6 +1364,86 @@ const DRUGS = [
     }
   },
   {
+    id: "lotilaner",
+    principioActivo: "Lotilaner",
+    nombresComerciales: ["Credelio", "Adtab"],
+    categoria: "Antiparasitario externo (isoxazolina)",
+    indicaciones: ["Pulgas", "Garrapatas", "Sarna sarcóptica", "Sarna demodécica"],
+    especies: {
+      perro: {
+        tipoDosis: "banda",
+        pesoMinimo: 1.3,
+        via: "VO (comprimido masticable)",
+        frecuencia: "una vez al mes, con o después de la comida",
+        notas: "Dosis 20-43 mg/kg. Actividad persistente 1 mes frente a pulgas y garrapatas. Sarna sarcóptica y demodicosis: mensual 2 meses consecutivos, continuar hasta 2 raspados cutáneos negativos consecutivos; casos graves pueden requerir tratamiento prolongado. Dosis fija por tramo de peso según ficha técnica, no mg/kg lineal. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 52127/5009 — equivalente al registro CIMAVET EU/2/17/206 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." ,
+        bandas: [
+          { pesoMin: 1.3, pesoMax: 2.5, mg: 56, comprimidos: 1, descripcion: "1 comprimido de 56 mg" },
+          { pesoMin: 2.6, pesoMax: 5.5, mg: 112, comprimidos: 1, descripcion: "1 comprimido de 112 mg" },
+          { pesoMin: 5.6, pesoMax: 11.0, mg: 225, comprimidos: 1, descripcion: "1 comprimido de 225 mg" },
+          { pesoMin: 11.1, pesoMax: 22.0, mg: 450, comprimidos: 1, descripcion: "1 comprimido de 450 mg" },
+          { pesoMin: 22.1, pesoMax: 45.0, mg: 900, comprimidos: 1, descripcion: "1 comprimido de 900 mg" }
+        ]
+      },
+      gato: {
+        tipoDosis: "banda",
+        pesoMinimo: 0.5,
+        via: "VO (comprimido masticable)",
+        frecuencia: "una vez al mes, con o dentro de los 30 min tras la comida",
+        notas: "Dosis 6-24 mg/kg. Actividad persistente 1 mes frente a pulgas y garrapatas; tratamiento mensual durante toda la temporada. Dosis fija por tramo de peso según ficha técnica, no mg/kg lineal. Fuente: Summary of Product Characteristics, VMD (Reino Unido), equivalente al registro CIMAVET EU/2/17/206 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." ,
+        bandas: [
+          { pesoMin: 0.5, pesoMax: 2.0, mg: 12, comprimidos: 1, descripcion: "1 comprimido de 12 mg" },
+          { pesoMin: 2.1, pesoMax: 8.0, mg: 48, comprimidos: 1, descripcion: "1 comprimido de 48 mg" }
+        ]
+      }
+    }
+  },
+  {
+    id: "sarolaner",
+    principioActivo: "Sarolaner",
+    nombresComerciales: ["Simparica"],
+    categoria: "Antiparasitario externo (isoxazolina)",
+    indicaciones: ["Pulgas", "Garrapatas", "Sarna sarcóptica", "Sarna demodécica", "Otodectes"],
+    especies: {
+      perro: {
+        tipoDosis: "banda",
+        pesoMinimo: 1.3,
+        via: "VO (comprimido masticable)",
+        frecuencia: "una vez al mes",
+        notas: "Dosis 2-4 mg/kg. Pulgas y garrapatas: actividad persistente ≥5 semanas, mensual durante toda la temporada. Otodectes: dosis única, revalorar a los 30 días. Sarna sarcóptica: mensual 2 meses consecutivos. Demodicosis: mensual 3 meses consecutivos, continuar hasta 2 raspados cutáneos negativos consecutivos. Dosis fija por tramo de peso según ficha técnica, no mg/kg lineal. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 42058/5052 — equivalente al registro CIMAVET EU/2/15/191 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." ,
+        bandas: [
+          { pesoMin: 1.3, pesoMax: 2.5, mg: 5, comprimidos: 1, descripcion: "1 comprimido de 5 mg" },
+          { pesoMin: 2.6, pesoMax: 5.0, mg: 10, comprimidos: 1, descripcion: "1 comprimido de 10 mg" },
+          { pesoMin: 5.1, pesoMax: 10.0, mg: 20, comprimidos: 1, descripcion: "1 comprimido de 20 mg" },
+          { pesoMin: 10.1, pesoMax: 20.0, mg: 40, comprimidos: 1, descripcion: "1 comprimido de 40 mg" },
+          { pesoMin: 20.1, pesoMax: 40.0, mg: 80, comprimidos: 1, descripcion: "1 comprimido de 80 mg" },
+          { pesoMin: 40.1, pesoMax: 60.0, mg: 120, comprimidos: 1, descripcion: "1 comprimido de 120 mg" }
+        ]
+      }
+    }
+  },
+  {
+    id: "afoxolaner",
+    principioActivo: "Afoxolaner",
+    nombresComerciales: ["Nexgard", "Frontpro"],
+    categoria: "Antiparasitario externo (isoxazolina)",
+    indicaciones: ["Pulgas", "Garrapatas", "Sarna sarcóptica", "Sarna demodécica", "Otodectes"],
+    especies: {
+      perro: {
+        tipoDosis: "banda",
+        pesoMinimo: 2,
+        via: "VO (comprimido masticable)",
+        frecuencia: "una vez al mes",
+        notas: "Dosis 2,7-7 mg/kg. Pulgas: actividad persistente ≥5 semanas. Garrapatas: tratamiento mensual. Sarna sarcóptica: mensual 2 meses consecutivos (o más según respuesta). Otodectes: dosis única, revalorar al mes. Demodicosis: mensual, casos graves pueden requerir tratamiento prolongado. Dosis fija por tramo de peso según ficha técnica, no mg/kg lineal. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 61700/5028 — equivalente al registro CIMAVET EU/2/13/159 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." ,
+        bandas: [
+          { pesoMin: 2, pesoMax: 4.0, mg: 11, comprimidos: 1, descripcion: "1 comprimido de 11 mg" },
+          { pesoMin: 4.1, pesoMax: 10.0, mg: 28, comprimidos: 1, descripcion: "1 comprimido de 28 mg" },
+          { pesoMin: 10.1, pesoMax: 25.0, mg: 68, comprimidos: 1, descripcion: "1 comprimido de 68 mg" },
+          { pesoMin: 25.1, pesoMax: 50.0, mg: 136, comprimidos: 1, descripcion: "1 comprimido de 136 mg" }
+        ]
+      }
+    }
+  },
+  {
     id: "enflicoxib",
     principioActivo: "Enflicoxib",
     nombresComerciales: ["Daxocox"],
@@ -4125,6 +4205,9 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "cimicoxib": "Cimicoxib",
   "mavacoxib": "Mavacoxib",
   "enflicoxib": "Enflicoxib",
+  "lotilaner": "Lotilaner",
+  "afoxolaner": "Afoxolaner",
+  "sarolaner": "Sarolaner",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",
