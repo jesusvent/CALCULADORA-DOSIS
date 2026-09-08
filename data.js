@@ -1364,6 +1364,108 @@ const DRUGS = [
     }
   },
   {
+    id: "atinvicitinib",
+    principioActivo: "Atinvicitinib",
+    nombresComerciales: ["Numelvi"],
+    categoria: "Inmunomodulador (inhibidor de JAK, antipruriginoso)",
+    indicaciones: ["Dermatitis alérgica", "Dermatitis atópica", "Prurito"],
+    especies: {
+      perro: { dosisMin: 0.8, dosisMax: 1.2, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, con o cerca de la comida", notas: "Comprimidos ranurados (4,8/7,2/21,6/31,6 mg) fraccionables por mitades según tabla de peso de la ficha técnica. Producto nuevo (autorizado GB en 01/2026). Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 01708/5134 — equivalente al registro CIMAVET EU/2/25/351 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "ilunocitinib",
+    principioActivo: "Ilunocitinib",
+    nombresComerciales: ["Zenrelia"],
+    categoria: "Inmunomodulador (inhibidor de JAK, antipruriginoso)",
+    indicaciones: ["Dermatitis alérgica", "Dermatitis atópica", "Prurito"],
+    especies: {
+      perro: { dosisMin: 0.6, dosisMax: 0.8, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Investigar y tratar causas subyacentes (pulgas, alergia alimentaria, contacto) e infecciones/infestaciones concomitantes. No usar en perros con inmunosupresión. Duración del tratamiento según valoración riesgo-beneficio individual. Comprimidos ranurados (4,8/6,4/8,5/15 mg) fraccionables por mitades según tabla de peso de la ficha técnica. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 52127/5063 — equivalente al registro CIMAVET EU/2/25/349 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "osaterona",
+    principioActivo: "Osaterona",
+    nombresComerciales: ["Ypozane"],
+    categoria: "Antiandrógeno",
+    indicaciones: ["Hiperplasia prostática benigna"],
+    especies: {
+      perro: { dosisMin: 0.25, dosisMax: 0.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h durante 7 días", notas: "Hiperplasia prostática benigna en machos enteros. Comprimidos por tramo de peso: 3-7,5 kg → 1,875 mg; 7,5-15 kg → 3,75 mg; 15-30 kg → 7,5 mg; 30-60 kg → 15 mg (1 comprimido/día, 7 días). Sin datos en perros <3 kg. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 05653/5023 — equivalente al registro CIMAVET EU/2/06/068 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "deslorelina",
+    principioActivo: "Deslorelina",
+    nombresComerciales: ["Suprelorin"],
+    categoria: "Agonista de la GnRH (implante anticonceptivo)",
+    indicaciones: ["Infertilidad temporal / anticoncepción"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "SC (implante)", frecuencia: "1 implante cada 6 meses (macho adulto) o dosis única prepuberal", notas: "Dosis fija: 1 implante de 4,7 mg por animal, independientemente del tamaño/peso. Macho intacto adulto: infertilidad temporal desde 6 semanas hasta al menos 6 meses tras el implante; reimplantar cada 6 meses para mantener el efecto sin periodo de fertilidad intermedio. Hembra prepuberal: implantar entre 12-16 semanas de edad para retrasar el primer celo. Existe también presentación de 9,4 mg (perros y hurones). Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 05653/5017 — equivalente al registro CIMAVET EU/2/07/072 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "SC (implante)", frecuencia: "1 implante", notas: "Dosis fija: 1 implante de 4,7 mg por animal, independientemente del peso. Macho intacto ≥3 meses: infertilidad temporal y supresión del olor de la orina, libido, vocalización, marcaje y agresividad. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 05653/5017 — equivalente al registro CIMAVET EU/2/07/072 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "estriol",
+    principioActivo: "Estriol",
+    nombresComerciales: ["Incurin"],
+    categoria: "Estrógeno de acción corta",
+    indicaciones: ["Incontinencia urinaria hormonodependiente"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, ajuste individual (no existe relación establecida con el peso)", notas: "Solo en perras esterilizadas (ovariohisterectomizadas) >1 año, incontinencia por incompetencia del mecanismo esfinteriano. Iniciar con 1 comprimido/día (1 mg); si funciona, bajar a 1/2 comprimido/día (0,5 mg, dosis mínima); si no funciona, subir a 2 comprimidos/día (2 mg, dosis máxima) en toma única. Usar la dosis eficaz más baja posible; en algunas perras basta con días alternos. Revisión cada 6 meses. No usar en perras enteras, con polidipsia-poliuria, ni en gestación/lactancia. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 01708/5038 — equivalente al registro CIMAVET EU/2/00/018 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "ropinirol",
+    principioActivo: "Ropinirol",
+    nombresComerciales: ["Clevor"],
+    categoria: "Agonista dopaminérgico (emético)",
+    indicaciones: ["Inducción del vómito (descontaminación digestiva)"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Oftálmica (colirio, no VO/parenteral)", frecuencia: "dosis única en el/los ojo(s) según tabla de peso; repetir la misma dosis si no vomita en 15 min", notas: "Colirio para inducir el vómito (no es un fármaco sistémico clásico: se absorbe por vía conjuntival). Dosis por tramo de peso (no lineal mg/kg): 1,8-5 kg → 1 gota; 5,1-10 kg → 2 gotas; 10,1-20 kg → 3 gotas; 20,1-35 kg → 4 gotas; 35,1-60 kg → 6 gotas; 60,1-100 kg → 8 gotas (1 gota ≈ 810 µg ropinirol). Si son 2-4 gotas, repartir entre ambos ojos; si son 6-8 gotas, dividir en 2 administraciones separadas 1-2 min. No usar en perros <1,8 kg, <4,5 meses, con depresión del SNC, convulsiones u otros problemas neurológicos que puedan favorecer la aspiración. Fuente: Summary of Product Characteristics, VMD (Reino Unido), equivalente al registro CIMAVET EU/2/17/222 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "toceranib",
+    principioActivo: "Toceranib",
+    nombresComerciales: ["Palladia"],
+    categoria: "Inhibidor de tirosina-quinasa (terapia dirigida, oncológico)",
+    indicaciones: ["Mastocitoma"],
+    especies: {
+      perro: { dosisMin: 3.25, dosisMax: 3.25, unidad: "mg/kg", via: "VO", frecuencia: "días alternos (cada 48 h)", notas: "Dosis inicial recomendada 3,25 mg/kg cada 48 h, en mastocitomas grado 2/3 recurrentes con o sin metástasis en ganglio linfático. Reevaluación veterinaria semanal las primeras 6 semanas, después cada 6 semanas. Si hay efectos adversos, reducir a 2,75 mg/kg o 2,25 mg/kg (no bajar de 2,2 mg/kg) o interrumpir hasta 2 semanas. Combinar habitualmente con un AINE anti-COX2 los días que no se administra toceranib. Fuente: European Commission Community Register (Anexo I, Summary of Product Characteristics), equivalente al registro CIMAVET EU/2/09/100 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "masitinib",
+    principioActivo: "Masitinib",
+    nombresComerciales: ["Masivet"],
+    categoria: "Inhibidor de tirosina-quinasa (terapia dirigida, oncológico)",
+    indicaciones: ["Mastocitoma"],
+    especies: {
+      perro: { dosisMin: 11, dosisMax: 14, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Dosis recomendada 12,5 mg/kg/día (rango 11-14 mg/kg). Indicado en mastocitomas grado 2/3 recurrentes o no resecables con mutación activadora del receptor c-Kit. En perros <15 kg el ajuste exacto no siempre es posible: usar combinación de comprimidos de 50/150 mg para acercarse al objetivo. Si hay reacciones adversas, reducir a 9 mg/kg/día (rango 7,5-10,5) o 6 mg/kg/día (rango 4,5-7,5). Tratamiento continuo mientras la enfermedad esté estable o responda. Fuente: European Commission Community Register (Anexo I, Summary of Product Characteristics), equivalente al registro CIMAVET EU/2/08/087 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "pregabalina",
+    principioActivo: "Pregabalina",
+    nombresComerciales: ["Bonqat"],
+    categoria: "Anticonvulsivante / analgésico neuropático",
+    indicaciones: ["Ansiedad aguda", "Dolor neuropático", "Epilepsia (coadyuvante)"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", notas: "Uso con comprimidos de uso humano (fuera de ficha, no existe presentación CIMAVET para perros). Dolor neuropático/coadyuvante anticonvulsivante." },
+      gato: { dosisMin: 5, dosisMax: 5, unidad: "mg/kg", via: "VO", frecuencia: "dosis única, aproximadamente 1,5 h antes del transporte o la visita veterinaria", notas: "Ansiedad/miedo agudos asociados a transporte o visitas veterinarias, dosis única (no crónica). Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 06043/5003 (Bonqat, Orion) — mismo registro nacional en España (CIMAVET, autorización no centralizada)." }
+    }
+  },
+  {
+    id: "mirtazapina",
+    principioActivo: "Mirtazapina",
+    nombresComerciales: ["Mirataz"],
+    categoria: "Estimulante del apetito / antiemético",
+    indicaciones: ["Inapetencia", "Anorexia", "Náuseas/vómitos"],
+    especies: {
+      gato: { dosisMin: 1.88, dosisMax: 1.88, unidad: "mg/kg", via: "VO", frecuencia: "cada 48-72 h, ciclos de hasta 3 semanas", notas: "Vía oral con comprimidos de uso humano (fuera de ficha): empezar con 1/8 de comprimido de 15 mg en gatos pequeños y 1/4 en grandes; también actúa como antiemético. Existe además presentación tópica veterinaria específica (Mirataz, pomada transdérmica): dosis fija de 2 mg/gato (0,1 g pomada = línea de 3,8 cm) aplicada en la cara interna del pabellón auricular una vez al día durante 14 días, alternando oreja cada día — dosis fija por gato, no por kg. Fuente forma tópica: Summary of Product Characteristics, VMD (Reino Unido), VM 50406/5055 — equivalente al registro CIMAVET EU/2/19/247 (Mirataz, Dechra)." }
+    }
+  },
+  {
     id: "imepitoina",
     principioActivo: "Imepitoina",
     nombresComerciales: ["Pexion"],
@@ -3985,6 +4087,16 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "fipronil": "Fipronil",
   "fluoxetine": "Fluoxetina",
   "frunevetmab": "Frunevetmab",
+  "masitinib": "Masitinib",
+  "toceranib": "Toceranib",
+  "pregabalin": "Pregabalina",
+  "mirtazapane": "Mirtazapina",
+  "ropinirole hydrochloride": "Ropinirol",
+  "estriol": "Estriol",
+  "atinvicitinib": "Atinvicitinib",
+  "deslorelon": "Deslorelina",
+  "osateron": "Osaterona",
+  "ilunocitinib": "Ilunocitinib",
   "aglepriston": "Aglepristona",
   "cabergolin": "Cabergolina",
   "gentamicin": "Gentamicina",
