@@ -546,6 +546,16 @@ const DRUGS = [
     }
   },
   {
+    id: "clomipramina",
+    principioActivo: "Clomipramina",
+    nombresComerciales: ["Clomicalm"],
+    categoria: "Antidepresivo (tricíclico)",
+    indicaciones: ["Ansiedad por separación", "Trastornos de conducta"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h (2 mg/kg/toma, hasta 2-4 mg/kg/día)", notas: "Solo junto con técnicas de modificación de conducta; no como tratamiento único. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 05653/5027-5029 — equivalente al registro CIMAVET EU/2/98/007 (Clomicalm)." }
+    }
+  },
+  {
     id: "torasemida",
     principioActivo: "Torasemida",
     nombresComerciales: ["Upcard", "Isemid"],
@@ -1592,6 +1602,56 @@ const DRUGS = [
         bandas: [
           { pesoMin: 2.5, pesoMax: 7.0, mg: null, ml: 1, concentracion: 7, descripcion: "1 vial (7 mg, 1 ml)" },
           { pesoMin: 7.1, pesoMax: 14.0, mg: null, ml: 2, concentracion: 7, descripcion: "2 viales (14 mg, 2 ml)" }
+        ]
+      }
+    }
+  },
+  {
+    id: "izenivetmab",
+    principioActivo: "Izenivetmab",
+    nombresComerciales: ["Lenivia"],
+    categoria: "Anticuerpo monoclonal (anti-NGF, antidolor)",
+    indicaciones: ["Dolor por osteoartritis"],
+    especies: {
+      perro: {
+        tipoDosis: "banda",
+        pesoMinimo: 0,
+        avisoPesoMinimo: "No usar en perros menores de 12 meses, en reproductores ni en gestación/lactancia.",
+        via: "SC",
+        frecuencia: "una vez cada 3 meses",
+        notas: "Dosis recomendada 0,05-0,1 mg/kg. Dosis fija por tramo de peso según ficha técnica, no mg/kg lineal. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 42058/5193 — equivalente al registro CIMAVET EU/2/25/355 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE).",
+        bandas: [
+          { pesoMin: 0, pesoMax: 5.0, formula: true, mlPorKg: 0.1, concentracion: 0.5, descripcion: "0,1 ml/kg del vial de 0,5 mg/ml" },
+          { pesoMin: 5.0, pesoMax: 10.0, mg: 0.5, ml: 1, descripcion: "1 vial de 0,5 mg (1 ml)" },
+          { pesoMin: 10.1, pesoMax: 20.0, mg: 1.0, ml: 1, descripcion: "1 vial de 1,0 mg (1 ml)" },
+          { pesoMin: 20.1, pesoMax: 30.0, mg: 1.5, ml: 1, descripcion: "1 vial de 1,5 mg (1 ml)" },
+          { pesoMin: 30.1, pesoMax: 40.0, mg: 2.0, ml: 1, descripcion: "1 vial de 2,0 mg (1 ml)" },
+          { pesoMin: 40.1, pesoMax: 60.0, mg: 3.0, ml: 1, descripcion: "1 vial de 3,0 mg (1 ml)" },
+          { pesoMin: 60.1, pesoMax: 80.0, mg: 4.0, ml: 2, descripcion: "2 viales de 2,0 mg (2 ml)" },
+          { pesoMin: 80.1, pesoMax: 100.0, mg: 5.0, ml: 2, descripcion: "1 vial de 2,0 mg + 1 vial de 3,0 mg (2 ml)" },
+          { pesoMin: 100.1, pesoMax: 120.0, mg: 6.0, ml: 2, descripcion: "2 viales de 3,0 mg (2 ml)" }
+        ]
+      }
+    }
+  },
+  {
+    id: "relfovetmab",
+    principioActivo: "Relfovetmab",
+    nombresComerciales: ["Portela"],
+    categoria: "Anticuerpo monoclonal (anti-NGF, antidolor)",
+    indicaciones: ["Dolor por osteoartritis"],
+    especies: {
+      gato: {
+        tipoDosis: "banda",
+        pesoMinimo: 2.5,
+        avisoPesoMinimo: "No usar en gatos de menos de 2,5 kg, menores de 12 meses, en reproductores ni en gestación/lactancia. Seguridad y eficacia no estudiadas en gatos de más de 13,7 kg.",
+        via: "SC",
+        frecuencia: "una vez cada 3 meses",
+        notas: "Dosis recomendada 0,5-1,25 mg/kg. Dosis fija por tramo de peso según ficha técnica, no mg/kg lineal. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 42058/5214 — equivalente al registro CIMAVET EU/2/25/353 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE).",
+        bandas: [
+          { pesoMin: 2.5, pesoMax: 5.0, mg: 2.5, ml: 1, descripcion: "1 vial de 2,5 mg (1 ml)" },
+          { pesoMin: 5.1, pesoMax: 12.8, mg: 6.4, ml: 1, descripcion: "1 vial de 6,4 mg (1 ml)" },
+          { pesoMin: 12.9, pesoMax: 13.7, mg: 8.9, ml: 2, descripcion: "1 vial de 2,5 mg + 1 vial de 6,4 mg (2 ml)" }
         ]
       }
     }
@@ -3892,6 +3952,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "cefalexin": "Cefalexina",
   "cefovecin": "Cefovecina",
   "clindamycin": "Clindamicina",
+  "clomipramine hydrochloride": "Clomipramina",
   "apomorphine": "Apomorfina",
   "domperidone": "Domperidona",
   "etamsylate": "Etamsilato",
