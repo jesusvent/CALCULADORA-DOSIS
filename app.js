@@ -1379,6 +1379,7 @@ const PRINCIPIO_ACTIVO_PUBMED_EN = {
   "Mebendazol": "mebendazole",
   "Nitenpiram": "nitenpyram",
   "Antimoniato de meglumina": "meglumine antimoniate",
+  "Desoxicortona": "desoxycortone OR deoxycorticosterone pivalate",
   "Gluconato cálcico": "calcium gluconate",
   "Miltefosina": "miltefosine",
   "Pregabalina": "pregabalin",

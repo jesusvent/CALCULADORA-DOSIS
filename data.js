@@ -1706,6 +1706,26 @@ const DRUGS = [
     }
   },
   {
+    id: "benazepril-espironolactona",
+    principioActivo: "Benazepril + Espironolactona",
+    nombresComerciales: ["Cardalis"],
+    categoria: "Cardiovascular combinado (IECA + diurético ahorrador de potasio)",
+    indicaciones: ["Insuficiencia cardíaca congestiva"],
+    especies: {
+      perro: { dosisMin: 0.25, dosisMax: 0.25, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, con la comida", notas: "Dosis expresada como benazepril; el comprimido asocia además 2 mg/kg de espironolactona (proporción fija según tramo de peso de la ficha técnica). Insuficiencia cardíaca congestiva por enfermedad valvular degenerativa crónica, con apoyo diurético si procede. No usar en gestación/lactación ni en reproductores. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/12/142 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "desoxicortona",
+    principioActivo: "Desoxicortona",
+    nombresComerciales: ["Zycortal"],
+    categoria: "Mineralocorticoide (terapia sustitutiva)",
+    indicaciones: ["Hipoadrenocorticismo primario (Addison)"],
+    especies: {
+      perro: { dosisMin: 2.2, dosisMax: 2.2, unidad: "mg/kg", via: "SC", frecuencia: "dosis inicial; reevaluar Na⁺/K⁺ a los 10 días y ajustar dosis/intervalo según respuesta (intervalo típico final 20-46 días)", notas: "Dosis inicial 2,2 mg/kg SC. Reevaluar a los 10 días (Tmax): Na/K ≥34 → bajar a 2,0 mg/kg; 32-34 → bajar a 2,1 mg/kg; 27-32 → mantener 2,2 mg/kg; 24-27 → subir a 2,3 mg/kg; <24 → subir a 2,4 mg/kg. Una vez optimizado el intervalo (puede alargarse si Na/K >32) y la dosis, mantener el mismo régimen a largo plazo, siempre en combinación con un glucocorticoide (ej. prednisolona). Dosis final media en ensayo clínico 1,9 mg/kg (rango 1,2-2,5 mg/kg). Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 50406/5053 — equivalente al registro CIMAVET EU/2/15/189 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
     id: "antimoniato-meglumina",
     principioActivo: "Antimoniato de meglumina",
     nombresComerciales: ["Antishmania"],
@@ -4314,6 +4334,8 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "meglumine antimonate": "Antimoniato de meglumina",
   "calcium gluconate": "Gluconato cálcico",
   "ivermectine - pyrantel": "Ivermectina + Pirantel",
+  "desoxycortone pivalate": "Desoxicortona",
+  "benazepril-hydrochlorid/spironolacton": "Benazepril + Espironolactona",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",
