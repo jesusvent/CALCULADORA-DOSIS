@@ -546,6 +546,16 @@ const DRUGS = [
     }
   },
   {
+    id: "torasemida",
+    principioActivo: "Torasemida",
+    nombresComerciales: ["Upcard", "Isemid"],
+    categoria: "Diurético",
+    indicaciones: ["Insuficiencia cardíaca congestiva", "Edema"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 0.6, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Solo perros. La mayoría se estabiliza con ≤0,3 mg/kg/día; titular en incrementos de 0,1 mg/kg según respuesta clínica y vigilando función renal/electrolitos. No evaluado por encima de 0,8 mg/kg/día. Un solo comprimido tiene aprox. 20 veces el efecto diurético de una dosis única de furosemida. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 06462/5012-5015 — equivalente al registro CIMAVET EU/2/15/184 (Upcard)." }
+    }
+  },
+  {
     id: "amiodarona",
     principioActivo: "Amiodarona",
     nombresComerciales: ["Trangorex (uso humano)"],
@@ -3953,6 +3963,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "spironolacton": "Espironolactona",
   "telmisartan": "Telmisartán",
   "thiamazole": "Metimazol",
+  "torasemid": "Torasemida",
   "tiletamine/zolazepam": "Tiletamina + Zolazepam",
   "thiopental": "Tiopental",
   "tolfenamic acid": "Ácido tolfenámico",

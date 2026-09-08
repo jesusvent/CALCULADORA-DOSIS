@@ -1406,6 +1406,7 @@ const PRINCIPIO_ACTIVO_PUBMED_EN = {
   "Selamectina": "selamectin",
   "Sucralfato": "sucralfate",
   "Telmisartán": "telmisartan",
+  "Torasemida": "torasemide",
   "Terbinafina": "terbinafine",
   "Tetracosactida": "tetracosactide",
   "Tilosina": "tylosin",
