@@ -1674,6 +1674,49 @@ const DRUGS = [
     }
   },
   {
+    id: "fenbendazol",
+    principioActivo: "Fenbendazol",
+    nombresComerciales: ["Panacur"],
+    categoria: "Antiparasitario interno (bencimidazol)",
+    indicaciones: ["Desparasitación interna", "Nematodos", "Cestodos", "Giardia"],
+    especies: {
+      perro: { dosisMin: 50, dosisMax: 50, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h durante 3 días (nematodos) o 5 días (cestodos/giardia)", notas: "Pautas alternativas de la ficha técnica: dosis única de 100 mg/kg, o 50 mg/kg/día x3 días, o 20 mg/kg/día x5 días (todas equivalentes en eficacia según indicación). Perras gestantes (crías libres de parásitos): 25 mg/kg/día desde el día 40 de gestación hasta 2 días posparto. Depositar los comprimidos en la base de la lengua. Fuente: ficha técnica CIMAVET (Panacur, nº registro 1085 ESP)." },
+      gato:  { dosisMin: 50, dosisMax: 50, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h durante 3 días (nematodos) o 5 días (cestodos/giardia)", notas: "Pautas alternativas de la ficha técnica: dosis única de 100 mg/kg, o 50 mg/kg/día x3 días, o 20 mg/kg/día x5 días. Fuente: ficha técnica CIMAVET (Panacur, nº registro 1085 ESP)." }
+    }
+  },
+  {
+    id: "nitenpiram",
+    principioActivo: "Nitenpiram",
+    nombresComerciales: ["Capstar"],
+    categoria: "Antiparasitario externo (neonicotinoide, acción rápida)",
+    indicaciones: ["Pulgas"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "según infestación, hasta 1 vez al día", notas: "Acción rápida (mata pulgas en horas) pero sin efecto residual; repetir diario o días alternos si la infestación es intensa, combinar con un antiparasitario de acción prolongada. No dar más de un comprimido al día. Comprimidos de 11,4 mg (gatos y perros pequeños, 1-11 kg) o 57 mg (perros grandes). Fuente: ficha técnica CIMAVET (Capstar, nº registro 1459/1460 ESP)." },
+      gato:  { dosisMin: 1, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "según infestación, hasta 1 vez al día", notas: "Acción rápida (mata pulgas en horas) pero sin efecto residual; repetir diario o días alternos si la infestación es intensa, combinar con un antiparasitario de acción prolongada. No dar más de un comprimido al día. Comprimido de 11,4 mg. Fuente: ficha técnica CIMAVET (Capstar, nº registro 1459 ESP)." }
+    }
+  },
+  {
+    id: "miltefosina",
+    principioActivo: "Miltefosina",
+    nombresComerciales: ["Milteforan"],
+    categoria: "Antiparasitario (leishmanicida)",
+    indicaciones: ["Leishmaniosis"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h durante 28 días", notas: "1 ml de solución oral por cada 10 kg. Verter sobre parte del alimento. Cumplir los 28 días completos es crucial (el parásito se aloja también en tejidos profundos: médula ósea, ganglios, bazo, hígado). Fuente: ficha técnica CIMAVET (Milteforan, nº registro 4297 ESP)." }
+    }
+  },
+  {
+    id: "mebendazol",
+    principioActivo: "Mebendazol",
+    nombresComerciales: ["Telmin"],
+    categoria: "Antiparasitario interno (bencimidazol)",
+    indicaciones: ["Desparasitación interna", "Nematodos", "Cestodos"],
+    especies: {
+      perro: { dosisMin: 20, dosisMax: 20, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h durante 3 días (nematodos) o 5 días (cestodos)", notas: "Equivale a 1 comprimido/5 kg/día. Fuente: ficha técnica CIMAVET (Telmin, nº registro 474 ESP)." },
+      gato:  { dosisMin: 20, dosisMax: 20, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h durante 3 días (nematodos) o 5 días (cestodos)", notas: "Equivale a 1 comprimido/5 kg/día. Fuente: ficha técnica CIMAVET (Telmin, nº registro 474 ESP)." }
+    }
+  },
+  {
     id: "imidacloprid-moxidectina",
     principioActivo: "Imidacloprid + Moxidectina",
     nombresComerciales: ["Advocate", "Prinovox", "Prinocate"],
@@ -4233,6 +4276,10 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "milbemycinoxim/praziquantel": "Milbemicina oxima + Praziquantel",
   "imidacloprid/moxidectin": "Imidacloprid + Moxidectina",
   "moxidectin/imidacloprid": "Imidacloprid + Moxidectina",
+  "fenbendazol": "Fenbendazol",
+  "nitenpyram": "Nitenpiram",
+  "miltefosine": "Miltefosina",
+  "mebendazole": "Mebendazol",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",
