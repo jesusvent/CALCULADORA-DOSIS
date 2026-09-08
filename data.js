@@ -195,6 +195,49 @@ const DRUGS = [
     }
   },
   {
+    id: "melarsomina",
+    principioActivo: "Melarsomina",
+    nombresComerciales: ["Immiticide"],
+    categoria: "Adulticida (dirofilariosis)",
+    indicaciones: ["Dirofilariosis canina"],
+    especies: {
+      perro: { dosisMin: 2.14, dosisMax: 2.14, unidad: "mg/kg", via: "IM profunda (masas lumbares)", frecuencia: "dos inyecciones separadas 24 h", notas: "Solo perros. Tratamiento de formas adultas de Dirofilaria immitis. Pesar con exactitud; inyectar cada dosis en un lado distinto del animal. Antídoto en sobredosis: dimercaprol (BAL) 3 mg/kg. Fuente: ficha técnica CIMAVET (Immiticide, nº registro 820 ESP)." }
+    }
+  },
+  {
+    id: "medroxiprogesterona",
+    principioActivo: "Acetato de medroxiprogesterona",
+    nombresComerciales: ["Gestovex"],
+    categoria: "Progestágeno",
+    indicaciones: ["Aplazamiento del celo"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según pauta (ver notas)", notas: "Solo perras. Interrupción/aplazamiento corto del celo: 2 comprimidos de 5 mg/día durante 3-4 días, luego 1 comprimido/día durante 12-14 días (doblar dosis si >15-20 kg), administrado en proestro/estro. Fuente: ficha técnica CIMAVET (Gestovex, nº registro 2398 ESP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según pauta (ver notas)", notas: "Solo gatas. Aplazamiento del celo a largo plazo: 1 comprimido de 5 mg a la semana, administrado durante el anestro. Fuente: ficha técnica CIMAVET (Gestovex, nº registro 2398 ESP)." }
+    }
+  },
+  {
+    id: "bencilpenicilina-dihidroestreptomicina",
+    principioActivo: "Bencilpenicilina procaína + Dihidroestreptomicina",
+    nombresComerciales: ["Cen-A-Pen", "Penivex Complex"],
+    categoria: "Antibiótico (betalactámico + aminoglucósido)",
+    indicaciones: ["Infección bacteriana"],
+    especies: {
+      perro: { dosisMin: 20, dosisMax: 20, unidad: "mg/kg", via: "IM", frecuencia: "cada 24 h, durante 3 días consecutivos", notas: "Dosis de cada componente (20 mg/kg de bencilpenicilina procaína + 20 mg/kg de dihidroestreptomicina). Vigilar función renal por el componente aminoglucósido. Fuente: ficha técnica CIMAVET (Cen-A-Pen, nº registro 1013 ESP)." },
+      gato:  { dosisMin: 20, dosisMax: 20, unidad: "mg/kg", via: "IM", frecuencia: "cada 24 h, durante 3 días consecutivos", notas: "Dosis de cada componente (20 mg/kg de bencilpenicilina procaína + 20 mg/kg de dihidroestreptomicina). Vigilar función renal por el componente aminoglucósido. Fuente: ficha técnica CIMAVET (Cen-A-Pen, nº registro 1013 ESP)." }
+    }
+  },
+  {
+    id: "clortetraciclina-oftalmica",
+    principioActivo: "Clortetraciclina (oftálmica)",
+    nombresComerciales: ["Ophtocycline"],
+    categoria: "Antibiótico oftálmico (tetraciclina)",
+    indicaciones: ["Queratitis", "Conjuntivitis", "Blefaritis"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Oftálmica (pomada)", frecuencia: "4 veces al día, durante 5 días", notas: "Aplicar 0,5-2 cm de pomada en el saco conjuntival según tamaño del animal. Si no hay mejoría clínica a los 3 días, valorar otro tratamiento. Fuente: ficha técnica CIMAVET (Ophtocycline, nº registro 3586 ESP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Oftálmica (pomada)", frecuencia: "4 veces al día, durante 5 días", notas: "Aplicar 0,5-2 cm de pomada en el saco conjuntival según tamaño del animal. Si no hay mejoría clínica a los 3 días, valorar otro tratamiento. Fuente: ficha técnica CIMAVET (Ophtocycline, nº registro 3586 ESP)." }
+    }
+  },
+  {
     id: "gentamicina",
     principioActivo: "Gentamicina",
     nombresComerciales: ["Gentavall", "Gentacalier", "Gentamiciven", "Vetersan Gentamicina"],
@@ -3752,8 +3795,10 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "atipamezole": "Atipamezol",
   "bedinvetmab": "Bedinvetmab",
   "benazepril": "Benazepril",
+  "benzylpenicillin": "Bencilpenicilina procaína + Dihidroestreptomicina",
   "buprenorphin": "Buprenorfina",
   "butorphanol": "Butorfanol",
+  "chlortetracycline": "Clortetraciclina (oftálmica)",
   "carprofen": "Carprofeno",
   "cefadroxil": "Cefadroxilo",
   "cefalexin": "Cefalexina",
@@ -3802,6 +3847,8 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "maropitant": "Maropitant",
   "marbofloxacin": "Marbofloxacina",
   "medetomidine": "Medetomidina",
+  "medroxyprogesterone": "Acetato de medroxiprogesterona",
+  "melarsomine": "Melarsomina",
   "meloxicam": "Meloxicam",
   "metamizole": "Metamizol",
   "methadone": "Metadona",
