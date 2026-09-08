@@ -195,6 +195,37 @@ const DRUGS = [
     }
   },
   {
+    id: "acido-fusidico-betametasona",
+    principioActivo: "Ácido fusídico + Betametasona (gel cutáneo)",
+    nombresComerciales: ["Betafuse"],
+    categoria: "Antibiótico + corticoide tópico",
+    indicaciones: ["Pioderma superficial", "Dermatitis húmeda aguda", "Intertrigo"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Cutánea (gel)", frecuencia: "2 veces al día, mínimo 5 días (máximo 7 días)", notas: "Aplicar ~0,5 cm de gel por cada 8 cm² de lesión, cortando el pelo y limpiando la zona antes. Continuar 48 h tras la curación. Fuente: ficha técnica CIMAVET (Betafuse, nº registro 3483 ESP)." }
+    }
+  },
+  {
+    id: "acetilcisteina-oftalmica",
+    principioActivo: "Acetilcisteína (oftálmica)",
+    nombresComerciales: ["Stromease"],
+    categoria: "Colirio mucolítico",
+    indicaciones: ["Úlcera corneal"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Oftálmica (colirio)", frecuencia: "2 gotas, 3-4 veces al día", notas: "Tratamiento de apoyo de úlceras corneales. Fuente: ficha técnica CIMAVET (Stromease, nº registro 4028 ESP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Oftálmica (colirio)", frecuencia: "2 gotas, 3-4 veces al día", notas: "Tratamiento de apoyo de úlceras corneales. Fuente: ficha técnica CIMAVET (Stromease, nº registro 4028 ESP)." }
+    }
+  },
+  {
+    id: "pentosano-polisulfato",
+    principioActivo: "Pentosano polisulfato sódico",
+    nombresComerciales: ["Oapent", "Osteopen"],
+    categoria: "Condroprotector inyectable",
+    indicaciones: ["Osteoartritis", "Enfermedad articular degenerativa"],
+    especies: {
+      perro: { dosisMin: 3, dosisMax: 3, unidad: "mg/kg", via: "SC", frecuencia: "4 administraciones, con intervalo de 5-7 días entre cada una", notas: "Solo perros adultos con madurez esquelética. Inyección subcutánea aséptica; usar jeringa graduada con precisión. Fuente: ficha técnica CIMAVET (Oapent, nº registro 4521 ESP)." }
+    }
+  },
+  {
     id: "melarsomina",
     principioActivo: "Melarsomina",
     nombresComerciales: ["Immiticide"],
@@ -3793,6 +3824,9 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "amlodipin": "Amlodipino",
   "amoxicillin + clavulanic acid": "Amoxicilina/Ácido clavulánico",
   "atipamezole": "Atipamezol",
+  "acetylcysteine": "Acetilcisteína (oftálmica)",
+  "betamethasone/fusidic acid": "Ácido fusídico + Betametasona (gel cutáneo)",
+  "pentosan polysulfat natrium": "Pentosano polisulfato sódico",
   "bedinvetmab": "Bedinvetmab",
   "benazepril": "Benazepril",
   "benzylpenicillin": "Bencilpenicilina procaína + Dihidroestreptomicina",
@@ -3838,6 +3872,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "insulin": "Insulina glargina",
   "kaliumbromid": "Bromuro de potasio",
   "itraconazole": "Itraconazol",
+  "ivermectine": "Ivermectina",
   "ketamine": "Ketamina",
   "ketoconazole": "Ketoconazol",
   "metergoline": "Metergolina",
@@ -3862,6 +3897,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "phytomenadione": "Fitomenadiona (Vitamina K1)",
   "pimobendan": "Pimobendán",
   "pradofloxacin": "Pradofloxacina",
+  "praziquantel": "Praziquantel",
   "prednisolone": "Prednisolona",
   "propentofylline": "Propentofilina",
   "propofol": "Propofol",
