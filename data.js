@@ -237,6 +237,17 @@ const DRUGS = [
     }
   },
   {
+    id: "tiopental",
+    principioActivo: "Tiopental",
+    nombresComerciales: ["Tiobarbital"],
+    categoria: "Barbitúrico (anestésico)",
+    indicaciones: ["Inducción anestésica", "Anestesia general de corta duración"],
+    especies: {
+      perro: { dosisMin: 15, dosisMax: 25, unidad: "mg/kg", via: "IV exclusiva", frecuencia: "dosis única", notas: "Inducción de la narcosis antes de otros anestésicos generales, o anestesia general en intervenciones cortas. Fuente: ficha técnica CIMAVET (Tiobarbital Braun, nº registro 1249 ESP)." },
+      gato:  { dosisMin: 15, dosisMax: 25, unidad: "mg/kg", via: "IV exclusiva", frecuencia: "dosis única", notas: "Inducción de la narcosis antes de otros anestésicos generales, o anestesia general en intervenciones cortas. Fuente: ficha técnica CIMAVET (Tiobarbital Braun, nº registro 1249 ESP)." }
+    }
+  },
+  {
     id: "melarsomina",
     principioActivo: "Melarsomina",
     nombresComerciales: ["Immiticide"],
@@ -3920,6 +3931,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "telmisartan": "Telmisartán",
   "thiamazole": "Metimazol",
   "tiletamine/zolazepam": "Tiletamina + Zolazepam",
+  "thiopental": "Tiopental",
   "tolfenamic acid": "Ácido tolfenámico",
   "tramadolhydrochlorid": "Tramadol",
   "xylazine": "Xilazina",
