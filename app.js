@@ -1378,6 +1378,8 @@ const PRINCIPIO_ACTIVO_PUBMED_EN = {
   "Marbofloxacina": "marbofloxacin",
   "Mebendazol": "mebendazole",
   "Nitenpiram": "nitenpyram",
+  "Antimoniato de meglumina": "meglumine antimoniate",
+  "Gluconato cálcico": "calcium gluconate",
   "Miltefosina": "miltefosine",
   "Pregabalina": "pregabalin",
   "Mirtazapina": "mirtazapine",

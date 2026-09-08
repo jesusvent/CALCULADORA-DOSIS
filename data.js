@@ -1706,6 +1706,37 @@ const DRUGS = [
     }
   },
   {
+    id: "antimoniato-meglumina",
+    principioActivo: "Antimoniato de meglumina",
+    nombresComerciales: ["Antishmania"],
+    categoria: "Antiparasitario (leishmanicida)",
+    indicaciones: ["Leishmaniosis"],
+    especies: {
+      perro: { dosisMin: 100, dosisMax: 100, unidad: "mg/kg", via: "SC", frecuencia: "cada 24 h (o dividido en 2 inyecciones de 50 mg/kg cada 12 h), durante 3 semanas (prolongable 1 semana más si respuesta insuficiente)", notas: "Volúmenes >10 ml deben dividirse en 2 puntos de inyección distintos. Pueden ser necesarios tratamientos repetidos; frecuente asociar con alopurinol. Fuente: ficha técnica CIMAVET (Antishmania, nº registro 3368 ESP)." }
+    }
+  },
+  {
+    id: "gluconato-calcico",
+    principioActivo: "Gluconato cálcico",
+    nombresComerciales: ["Calciovet"],
+    categoria: "Suplemento mineral (calcio IV)",
+    indicaciones: ["Hipocalcemia", "Eclampsia/tetania puerperal"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "IV (lenta)", frecuencia: "dosis única, infusión lenta con monitorización cardiaca", notas: "9-15 mg de Ca/kg/hora, equivalente a 0,5-0,9 ml/kg de esta formulación (186,1 mg gluconato cálcico/ml); en urgencias puede administrarse en 10-30 min. Inyectar lentamente y en asepsia; monitorizar función cardiaca e interrumpir si hay arritmia/bradicardia. Solución debe estar a temperatura corporal antes de administrar. Fuente: ficha técnica CIMAVET (Calciovet S, nº registro 3856 ESP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "IV (lenta)", frecuencia: "dosis única, infusión lenta con monitorización cardiaca", notas: "9-15 mg de Ca/kg/hora, equivalente a 0,5-0,9 ml/kg de esta formulación (186,1 mg gluconato cálcico/ml); en urgencias puede administrarse en 10-30 min. Inyectar lentamente y en asepsia; monitorizar función cardiaca e interrumpir si hay arritmia/bradicardia. Fuente: ficha técnica CIMAVET (Calciovet S, nº registro 3856 ESP)." }
+    }
+  },
+  {
+    id: "ivermectina-pirantel",
+    principioActivo: "Ivermectina + Pirantel",
+    nombresComerciales: ["Cardotek"],
+    categoria: "Antiparasitario interno combinado (lactona macrocíclica + pirantel)",
+    indicaciones: ["Prevención de dirofilariosis", "Ascáridos", "Anquilostomas"],
+    especies: {
+      perro: { dosisMin: 0.006, dosisMax: 0.006, unidad: "mg/kg", via: "VO", frecuencia: "mensual", notas: "Dosis mínima recomendada: 6 mcg/kg de ivermectina + 5 mg/kg de pirantel (pamoato), a intervalos mensuales. No confundir con la dosis de ivermectina para sarna (0,2-0,6 mg/kg), muy superior. ⚠ Precaución en razas sensibles a la mutación MDR1 (Collie, Pastor Australiano, Pastor de Shetland y cruces). Fuente: ficha técnica CIMAVET (Cardotek 30 Plus, nº registro 1080-1082 ESP)." }
+    }
+  },
+  {
     id: "mebendazol",
     principioActivo: "Mebendazol",
     nombresComerciales: ["Telmin"],
@@ -4280,6 +4311,9 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "nitenpyram": "Nitenpiram",
   "miltefosine": "Miltefosina",
   "mebendazole": "Mebendazol",
+  "meglumine antimonate": "Antimoniato de meglumina",
+  "calcium gluconate": "Gluconato cálcico",
+  "ivermectine - pyrantel": "Ivermectina + Pirantel",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",
