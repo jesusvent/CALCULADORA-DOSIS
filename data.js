@@ -469,6 +469,28 @@ const DRUGS = [
     }
   },
   {
+    id: "fluralaner",
+    principioActivo: "Fluralaner",
+    nombresComerciales: ["Bravecto"],
+    categoria: "Antiparasitario externo (isoxazolina, comprimido masticable)",
+    indicaciones: ["Prevención de pulgas y garrapatas", "Demodicosis", "Sarna sarcóptica"],
+    especies: {
+      perro: {
+        tipoDosis: "banda",
+        via: "VO (con la comida)",
+        frecuencia: "una vez cada 12 semanas frente a pulgas y la mayoría de garrapatas (cada 8 semanas frente a Rhipicephalus sanguineus)",
+        notas: "Rango real 25-56 mg/kg dentro de cada tramo (el comprimido no debe partirse ni fraccionarse). Para perros de más de 56 kg, combinar dos comprimidos que más se aproximen al peso. También indicado en demodicosis (Demodex canis) y sarna sarcóptica: consultar pauta específica del veterinario para estos usos. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 01708/5014-5020 — equivalente al registro CIMAVET EU/2/13/158.",
+        bandas: [
+          { pesoMin: 2, pesoMax: 4.5, mg: 112.5, comprimidos: 1, descripcion: "1 comprimido de 112,5 mg" },
+          { pesoMin: 4.51, pesoMax: 10, mg: 250, comprimidos: 1, descripcion: "1 comprimido de 250 mg" },
+          { pesoMin: 10.1, pesoMax: 20, mg: 500, comprimidos: 1, descripcion: "1 comprimido de 500 mg" },
+          { pesoMin: 20.1, pesoMax: 40, mg: 1000, comprimidos: 1, descripcion: "1 comprimido de 1.000 mg" },
+          { pesoMin: 40.1, pesoMax: 56, mg: 1400, comprimidos: 1, descripcion: "1 comprimido de 1.400 mg" }
+        ]
+      }
+    }
+  },
+  {
     id: "tramadol",
     principioActivo: "Tramadol",
     nombresComerciales: ["Tralgiol", "Adolonta (uso humano)"],
@@ -3873,6 +3895,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "enrofloxacin": "Enrofloxacina",
   "phenylpropalin": "Fenilpropanolamina",
   "firocoxib": "Firocoxib",
+  "fluralaner": "Fluralaner",
   "marbofloxacin/clotrimazol/dexamethason": "Marbofloxacina + clotrimazol + dexametasona",
   "framycetin": "Fludrocortisona + framicetina + nistatina + tiabendazol",
   "chlorhexidine digluconate, miconazole nitrate": "Clorhexidina + miconazol",

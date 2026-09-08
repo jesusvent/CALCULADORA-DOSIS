@@ -1161,14 +1161,25 @@ function calcularReferenciaBanda(datos) {
     return;
   }
 
-  let cantidadTexto, mgTexto;
-  if (banda.formula) {
+  // Las bandas en comprimidos (ej. Bravecto: 1 comprimido fijo de una potencia concreta por
+  // tramo de peso, sin fraccionar) no tienen volumen en ml — se etiquetan como "Comprimidos a
+  // administrar" en vez de "Volumen a administrar", que solo tiene sentido para spot-on/inyectables.
+  const esComprimido = banda.comprimidos != null;
+
+  let cantidadTexto, mgTexto, etiquetaCantidad;
+  if (esComprimido) {
+    cantidadTexto = banda.comprimidos + (banda.comprimidos === 1 ? " comprimido" : " comprimidos");
+    mgTexto = banda.mg != null ? banda.mg + " mg" : null;
+    etiquetaCantidad = "Comprimidos a administrar";
+  } else if (banda.formula) {
     const ml = banda.mlPorKg * paciente.peso;
     cantidadTexto = formatNum(ml) + " ml";
     mgTexto = formatNum(ml * banda.concentracion) + " mg";
+    etiquetaCantidad = "Volumen a administrar";
   } else {
     cantidadTexto = banda.ml + (banda.ml === 1 ? " ml" : " ml");
     mgTexto = banda.mg != null ? banda.mg + " mg" : null;
+    etiquetaCantidad = "Volumen a administrar";
   }
 
   let html = `
@@ -1179,7 +1190,7 @@ function calcularReferenciaBanda(datos) {
         <span>·</span><span>${escapeHtml(datos.via)}</span>
         <span>·</span><span>${escapeHtml(datos.frecuencia)}</span>
       </div>
-      <div class="resultado-volumen">Volumen a administrar: <strong>${cantidadTexto}</strong> — ${escapeHtml(banda.descripcion)}</div>
+      <div class="resultado-volumen">${etiquetaCantidad}: <strong>${cantidadTexto}</strong> — ${escapeHtml(banda.descripcion)}</div>
       ${datos.notas ? `<p class="notas">${escapeHtml(datos.notas)}</p>` : ""}
       <button class="boton-anadir" data-origen="referencia-banda">+ Añadir al paciente (${cantidadTexto})</button>
     </div>
