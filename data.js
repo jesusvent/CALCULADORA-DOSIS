@@ -1665,12 +1665,34 @@ const DRUGS = [
   {
     id: "milbemicina-oxima",
     principioActivo: "Milbemicina oxima",
-    nombresComerciales: ["Milbemax", "Interceptor"],
+    nombresComerciales: ["Interceptor"],
     categoria: "Antiparasitario (lactona macrocíclica)",
     indicaciones: ["Prevención de dirofilariosis", "Desparasitación interna"],
     especies: {
       perro: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "mensual", notas: "Comprobar ausencia de microfilarias/dirofilariosis activa antes de iniciar prevención en zona endémica." },
       gato:  { dosisMin: 2, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "mensual", notas: "Formulación felina con concentración distinta a la canina; no intercambiar presentaciones." }
+    }
+  },
+  {
+    id: "imidacloprid-moxidectina",
+    principioActivo: "Imidacloprid + Moxidectina",
+    nombresComerciales: ["Advocate", "Prinovox", "Prinocate"],
+    categoria: "Antiparasitario externo e interno combinado (spot-on)",
+    indicaciones: ["Pulgas", "Sarna sarcóptica", "Sarna demodécica", "Otodectes", "Prevención de dirofilariosis", "Desparasitación interna (nematodos)"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Tópica (spot-on)", frecuencia: "mensual", notas: "Dosis mínima 10 mg/kg imidacloprid + 2,5 mg/kg moxidectina (0,1 ml/kg). Pipetas por tramo de peso: ≤4 kg → 0,4 ml (40+10 mg); >4-10 kg → 1,0 ml (100+25 mg); >10-25 kg → 2,5 ml (250+62,5 mg); >25-40 kg → 4,0 ml (400+100 mg); >40 kg → combinación de pipetas. Solo indicado cuando el tratamiento de pulgas coincide con otra indicación (no usar solo como antipulgas). Fuente: Summary of Product Characteristics, VMD (Reino Unido), equivalente al registro CIMAVET EU/2/03/039 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Tópica (spot-on)", frecuencia: "mensual", notas: "Dosis mínima 10 mg/kg imidacloprid + 1,0 mg/kg moxidectina (0,1 ml/kg). Pipetas por tramo de peso: ≤4 kg → 0,4 ml (40+4 mg); >4-8 kg → 0,8 ml (80+8 mg); >8 kg → combinación de pipetas. Solo indicado cuando el tratamiento de pulgas coincide con otra indicación. Fuente: Summary of Product Characteristics, VMD (Reino Unido), equivalente al registro CIMAVET EU/2/03/039 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "milbemicina-praziquantel",
+    principioActivo: "Milbemicina oxima + Praziquantel",
+    nombresComerciales: ["Milbemax", "Milbeguard", "Milprazon", "Milpro", "Alpramil", "Milbenin", "Milbeprazin"],
+    categoria: "Antiparasitario interno combinado (lactona macrocíclica + prazicuantel)",
+    indicaciones: ["Desparasitación interna", "Prevención de dirofilariosis", "Cestodos"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 0.5, unidad: "mg/kg", via: "VO", frecuencia: "dosis única (mensual en prevención de dirofilariosis)", notas: "Dosis expresada como milbemicina oxima; el comprimido asocia además 5 mg/kg de prazicuantel (proporción fija según tabla de peso de la ficha técnica: 5-25 kg → 1 comprimido de 12,5/125 mg, >25-50 kg → 2, >50-75 kg → 3; existe además presentación para perros pequeños/cachorros de 2,5/25 mg). Para Angiostrongylus vasorum, dar milbemicina 4 veces a intervalos semanales. Administrar con o después de la comida. Fuente: Summary of Product Characteristics, VMD (Reino Unido)." },
+      gato:  { dosisMin: 2, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "dosis única (mensual en prevención de dirofilariosis)", notas: "Dosis expresada como milbemicina oxima; el comprimido asocia además 5 mg/kg de prazicuantel (proporción fija según tabla de peso de la ficha técnica: 2-4 kg → 1/2 comprimido de 16/40 mg, >4-8 kg → 1, >8-12 kg → 1,5; existe además presentación para gatos pequeños/gatitos de 4/10 mg). Administrar con o después de la comida. Fuente: Summary of Product Characteristics, VMD (Reino Unido)." }
     }
   },
   {
@@ -4208,6 +4230,9 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "lotilaner": "Lotilaner",
   "afoxolaner": "Afoxolaner",
   "sarolaner": "Sarolaner",
+  "milbemycinoxim/praziquantel": "Milbemicina oxima + Praziquantel",
+  "imidacloprid/moxidectin": "Imidacloprid + Moxidectina",
+  "moxidectin/imidacloprid": "Imidacloprid + Moxidectina",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",
