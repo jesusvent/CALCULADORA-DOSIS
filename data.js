@@ -1364,6 +1364,36 @@ const DRUGS = [
     }
   },
   {
+    id: "enflicoxib",
+    principioActivo: "Enflicoxib",
+    nombresComerciales: ["Daxocox"],
+    categoria: "AINE (inhibidor selectivo de la COX-2, dosificación semanal)",
+    indicaciones: ["Dolor osteoarticular", "Osteoartritis"],
+    especies: {
+      perro: { dosisMin: 4, dosisMax: 8, unidad: "mg/kg", via: "VO", frecuencia: "una vez por semana: 1ª dosis 8 mg/kg, después mantenimiento 4 mg/kg cada 7 días", notas: "Dosificación SEMANAL, no diaria: 1ª toma a 8 mg/kg, siguientes tomas (cada 7 días) a 4 mg/kg. No combinar con corticoides ni otros AINE. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 32742/5005 — equivalente al registro CIMAVET EU/2/21/270 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "mavacoxib",
+    principioActivo: "Mavacoxib",
+    nombresComerciales: ["Trocoxil"],
+    categoria: "AINE (inhibidor selectivo de la COX-2, acción prolongada)",
+    indicaciones: ["Dolor osteoarticular", "Osteoartritis"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "⚠ NO es un AINE diario: 1ª toma, repetir a los 14 días, después cada mes; máximo 7 dosis (6,5 meses) por ciclo", notas: "Dar inmediatamente antes o con la comida principal. Vida media muy larga (14-19 días), por lo que un error de pauta (darlo a diario) es sobredosis grave. No usar en perros <5 kg ni <12 meses. No combinar con corticoides ni otros AINE. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 42058/5076 — equivalente al registro CIMAVET EU/2/08/084 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "cimicoxib",
+    principioActivo: "Cimicoxib",
+    nombresComerciales: ["Cimalgex"],
+    categoria: "AINE (inhibidor selectivo de la COX-2)",
+    indicaciones: ["Dolor osteoarticular", "Osteoartritis", "Dolor perioperatorio"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Dolor e inflamación por osteoartritis y manejo del dolor perioperatorio (cirugía ortopédica o de tejidos blandos). No usar en perros <10 semanas. No combinar con corticoides ni otros AINE (respetar periodo de lavado). Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 06462/5000 — equivalente al registro CIMAVET EU/2/10/119 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
     id: "atinvicitinib",
     principioActivo: "Atinvicitinib",
     nombresComerciales: ["Numelvi"],
@@ -4092,6 +4122,9 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "pregabalin": "Pregabalina",
   "mirtazapane": "Mirtazapina",
   "ropinirole hydrochloride": "Ropinirol",
+  "cimicoxib": "Cimicoxib",
+  "mavacoxib": "Mavacoxib",
+  "enflicoxib": "Enflicoxib",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",
