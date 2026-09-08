@@ -226,6 +226,17 @@ const DRUGS = [
     }
   },
   {
+    id: "tiletamina-zolazepam",
+    principioActivo: "Tiletamina + Zolazepam",
+    nombresComerciales: ["Zoletil"],
+    categoria: "Anestésico disociativo (combinación)",
+    indicaciones: ["Anestesia general"],
+    especies: {
+      perro: { dosisMin: 7, dosisMax: 25, unidad: "mg/kg", via: "IM (o IV, dosis menor: ver notas)", frecuencia: "dosis única según profundidad requerida (ver notas)", notas: "Dosis del producto total (partes iguales de tiletamina y zolazepam), reconstituido a 100 mg/ml. Vía IM: 7-10 mg/kg (exploración poco dolorosa), 10-15 mg/kg (cirugía menor), 15-25 mg/kg (cirugía mayor). Vía IV: 5 mg/kg, 7,5 mg/kg y 10 mg/kg para esas mismas indicaciones respectivamente. Mantenimiento: 1/3-1/2 de la dosis inicial (aprox. 2,5 mg/kg IV alarga la anestesia 40-60 min). Premedicar con atropina 0,05 mg/kg SC 15 min antes reduce sialorrea/riesgo vagal. Dosis letal descrita: 100 mg/kg IM. Fuente: ficha técnica CIMAVET (Zoletil, nº registro 2570 ESP)." },
+      gato:  { dosisMin: 5, dosisMax: 15, unidad: "mg/kg", via: "IM (o IV, dosis menor: ver notas)", frecuencia: "dosis única según profundidad requerida (ver notas)", notas: "Dosis del producto total (partes iguales de tiletamina y zolazepam), reconstituido a 100 mg/ml. Vía IM: 10 mg/kg (exploración poco dolorosa) o 15 mg/kg (cirugía mayor). Vía IV: 5 mg/kg o 7,5 mg/kg para esas mismas indicaciones. Mantenimiento: 1/3-1/2 de la dosis inicial. Premedicar con atropina 0,05 mg/kg SC 15 min antes reduce sialorrea/riesgo vagal. Dosis letal descrita: 100 mg/kg IM. Fuente: ficha técnica CIMAVET (Zoletil, nº registro 2570 ESP)." }
+    }
+  },
+  {
     id: "melarsomina",
     principioActivo: "Melarsomina",
     nombresComerciales: ["Immiticide"],
@@ -3908,6 +3919,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "spironolacton": "Espironolactona",
   "telmisartan": "Telmisartán",
   "thiamazole": "Metimazol",
+  "tiletamine/zolazepam": "Tiletamina + Zolazepam",
   "tolfenamic acid": "Ácido tolfenámico",
   "tramadolhydrochlorid": "Tramadol",
   "xylazine": "Xilazina",

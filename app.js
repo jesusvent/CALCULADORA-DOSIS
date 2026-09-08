@@ -1387,6 +1387,7 @@ const PRINCIPIO_ACTIVO_PUBMED_EN = {
   "Oxitetraciclina": "oxytetracycline",
   "Pentobarbital": "pentobarbital OR pentobarbitone",
   "Pimobendán": "pimobendan",
+  "Tiletamina + Zolazepam": "tiletamine + zolazepam",
   "Pradofloxacina": "pradofloxacin",
   "Prednisolona": "prednisolone",
   "Propentofilina": "propentofylline",
