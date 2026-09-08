@@ -1706,6 +1706,49 @@ const DRUGS = [
     }
   },
   {
+    id: "marbofloxacino-ketoconazol-prednisolona",
+    principioActivo: "Marbofloxacino + Ketoconazol + Prednisolona",
+    nombresComerciales: ["Triderm"],
+    categoria: "Antibiótico + antifúngico + corticoide tópico (pulverización cutánea)",
+    indicaciones: ["Piodermia", "Dermatitis"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Cutánea (pulverización)", frecuencia: "2 activaciones del atomizador, 2 veces al día, durante 7-14 días", notas: "Dosis por superficie de piel afectada (no por kg): 2 activaciones (~0,2 ml) cubren un cuadrado de 5x5 cm (pulverizando a ~10 cm) o 10x10 cm (a ~30 cm). Retirar pelo y suciedad antes de aplicar. Fuente: ficha técnica CIMAVET (Triderm, nº registro 3774 ESP)." }
+    }
+  },
+  {
+    id: "neomicina-polimixina-oftalmica",
+    principioActivo: "Neomicina + Polimixina B (oftálmica)",
+    nombresComerciales: ["Duomyxin"],
+    categoria: "Antibiótico oftálmico (colirio)",
+    indicaciones: ["Conjuntivitis", "Infección ocular bacteriana"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Oftálmica (colirio)", frecuencia: "2 gotas, 3-4 veces al día, durante 8-10 días", notas: "Tratar ambos ojos si es necesario, con la misma pauta. Fuente: ficha técnica CIMAVET (Duomyxin, nº registro 4148 ESP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Oftálmica (colirio)", frecuencia: "2 gotas, 3-4 veces al día, durante 8-10 días", notas: "Tratar ambos ojos si es necesario, con la misma pauta. Fuente: ficha técnica CIMAVET (Duomyxin, nº registro 4148 ESP)." }
+    }
+  },
+  {
+    id: "miconazol-prednisolona-polimixina",
+    principioActivo: "Miconazol + Prednisolona + Polimixina B",
+    nombresComerciales: ["Conofite"],
+    categoria: "Antifúngico + corticoide + antibiótico ótico/cutáneo",
+    indicaciones: ["Otitis externa", "Dermatitis"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica / cutánea", frecuencia: "3-5 gotas por oído, 2 veces al día, durante 7-14 días", notas: "Limpiar y secar el conducto auditivo antes de aplicar; masajear la base de la oreja tras instilar. Calentar el frasco a temperatura corporal antes de usar. Cortar el exceso de pelo en la zona. Fuente: ficha técnica CIMAVET (Conofite, nº registro 2347 ESP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica / cutánea", frecuencia: "3-5 gotas por oído, 2 veces al día, durante 7-14 días", notas: "Limpiar y secar el conducto auditivo antes de aplicar; masajear la base de la oreja tras instilar. Calentar el frasco a temperatura corporal antes de usar. Fuente: ficha técnica CIMAVET (Conofite, nº registro 2347 ESP)." }
+    }
+  },
+  {
+    id: "triamcinolona-acido-salicilico",
+    principioActivo: "Triamcinolona + Ácido salicílico",
+    nombresComerciales: ["Recicort", "Dermanolon"],
+    categoria: "Corticoide + queratolítico tópico",
+    indicaciones: ["Otitis externa", "Dermatitis"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica (Recicort) / cutánea en pulverización (Dermanolon)", frecuencia: "ótica: 8-10 gotas/oído 1-2 veces/día; cutánea: 1 pulsación/1,75 kg 2 veces/día", notas: "Vía ótica (Recicort): 8-10 gotas por oído 1-2 veces/día, sin superar 7 gotas/kg/día (cuidado en animales pequeños o si se tratan ambos oídos). Vía cutánea (Dermanolon): 1 pulsación del pulverizador por cada 1,75 kg de peso, 2 veces al día (mínimo 3,5 kg para poder dar 2 pulsaciones/día). Fuente: fichas técnicas CIMAVET (Recicort nº 3521 ESP; Dermanolon nº 3523 ESP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica (Recicort) / cutánea en pulverización (Dermanolon)", frecuencia: "ótica: 8-10 gotas/oído 1-2 veces/día; cutánea: 1 pulsación/1,75 kg 2 veces/día", notas: "Vía ótica (Recicort): 8-10 gotas por oído 1-2 veces/día, sin superar 7 gotas/kg/día. Vía cutánea (Dermanolon): 1 pulsación del pulverizador por cada 1,75 kg de peso, 2 veces al día (mínimo 3,5 kg para poder dar 2 pulsaciones/día). Fuente: fichas técnicas CIMAVET (Recicort nº 3521 ESP; Dermanolon nº 3523 ESP)." }
+    }
+  },
+  {
     id: "emodepsida-praziquantel",
     principioActivo: "Emodepsida + Praziquantel",
     nombresComerciales: ["Profender"],
@@ -4403,6 +4446,11 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "toltrazurile/emodepside": "Emodepsida + Toltrazurilo",
   "emodepside/prazicuantel/tigolaner": "Tigolaner + Emodepsida + Praziquantel",
   "emodepside/prazicuantel": "Emodepsida + Praziquantel",
+  "marbofloxacin/ketocanazol/prednisolone": "Marbofloxacino + Ketoconazol + Prednisolona",
+  "neomicine/polymixine": "Neomicina + Polimixina B (oftálmica)",
+  "prednisolone/polymyxin-b/miconazolnitrate": "Miconazol + Prednisolona + Polimixina B",
+  "triamcinolone + salicylic acid": "Triamcinolona + Ácido salicílico",
+  "triamcinolone + 2-hydroxybenzo acid + salicylic acid": "Triamcinolona + Ácido salicílico",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",
