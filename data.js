@@ -763,7 +763,13 @@ const DRUGS = [
   {
     id: "metamizol",
     principioActivo: "Metamizol",
-    nombresComerciales: ["Rivalgin"],
+    // Sin nombre comercial listado a propósito: en CIMAVET, todo lo registrado con metamizol
+    // (Rivalgin, Sympagesic, Spasmium Compositum...) es un producto multi-especie de grandes
+    // animales (bovino/caballos/porcino) con autorización incidental en perros y NUNCA en
+    // gatos — listar cualquiera de ellos aquí sugeriría que existe una marca propia para
+    // mascotas, cuando no la hay (por eso la búsqueda en vivo ya informa correctamente de que
+    // no hay nada autorizado como veterinario para la especie del paciente).
+    nombresComerciales: [],
     categoria: "Analgésico/antipirético/espasmolítico",
     indicaciones: ["Dolor", "Fiebre", "Dolor cólico/espasmódico"],
     especies: {
@@ -3815,6 +3821,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "ramipril": "Ramipril",
   "robenacoxib": "Robenacoxib",
   "selamectin": "Selamectina",
+  "spiramycine + metronidazole": "Espiramicina + Metronidazol",
   "spironolacton": "Espironolactona",
   "telmisartan": "Telmisartán",
   "thiamazole": "Metimazol",
