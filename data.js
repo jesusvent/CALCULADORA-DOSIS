@@ -1364,6 +1364,16 @@ const DRUGS = [
     }
   },
   {
+    id: "imepitoina",
+    principioActivo: "Imepitoina",
+    nombresComerciales: ["Pexion"],
+    categoria: "Anticonvulsivante",
+    indicaciones: ["Epilepsia idiopática", "Convulsiones", "Fobia a ruidos"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 30, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Epilepsia idiopática: iniciar a 10 mg/kg/12h, si no controla tras ≥1 semana subir en incrementos del 50-100% hasta máximo 30 mg/kg/12h. No funciona en clusters ni estatus epiléptico; puede pararse de golpe. Fobia a ruidos: dosis fija de 30 mg/kg/12h, iniciando 2 días antes del evento. No usar en reproductores machos ni en gestación/lactancia. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 61700/5063 — equivalente al registro CIMAVET EU/2/12/147 (Pexion, Boehringer)." }
+    }
+  },
+  {
     id: "bromuro-potasio",
     principioActivo: "Bromuro de potasio",
     nombresComerciales: ["Formulación magistral", "Kbrovet"],
@@ -4007,6 +4017,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "metoclopramid": "Metoclopramida",
   "metronidazole": "Metronidazol",
   "midazolam": "Midazolam",
+  "imepitoïne": "Imepitoina",
   "pentobarbital": "Pentobarbital",
   "pentobarbital natrium": "Pentobarbital",
   "phenobarbital": "Fenobarbital",

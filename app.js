@@ -1369,6 +1369,7 @@ const PRINCIPIO_ACTIVO_PUBMED_EN = {
   "Gentamicina": "gentamicin",
   "Gabapentina": "gabapentin",
   "Insulina glargina": "insulin glargine",
+  "Imepitoina": "imepitoin",
   "Itraconazol": "itraconazole",
   "Ivermectina": "ivermectin",
   "Ketamina": "ketamine",
