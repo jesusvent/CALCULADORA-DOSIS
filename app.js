@@ -1046,8 +1046,11 @@ function calcularReferencia() {
 
   // Fármacos sin dosis por kg (ej. dosis fija por tramo de peso escrita a mano: "0-10 kg: 1
   // comprimido, 10-20 kg: 2 comprimidos..."): no hay nada que calcular, así que se muestran
-  // directamente las notas en vez de intentar una operación con un valor inexistente.
-  if (datos.dosisMin == null || datos.dosisMax == null) {
+  // directamente las notas en vez de intentar una operación con un valor inexistente. Los de
+  // tipo "banda" (dosis fija por tramo, ej. anticuerpos monoclonales, spot-on antiparasitarios)
+  // tampoco rellenan dosisMin/dosisMax porque no aplica, así que se excluyen aquí explícitamente
+  // para que caigan en su propio cálculo por banda más abajo, no en este aviso genérico.
+  if (datos.tipoDosis !== "banda" && (datos.dosisMin == null || datos.dosisMax == null)) {
     resultadoReferenciaEl.innerHTML = `
       <div class="resultado-card">
         <p class="aviso-inline">⚠ Este fármaco no tiene una dosis por kg registrada para esta indicación. Pauta indicada por el usuario:</p>

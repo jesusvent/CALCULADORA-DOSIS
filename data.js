@@ -343,6 +343,36 @@ const DRUGS = [
     }
   },
   {
+    id: "fipronil",
+    principioActivo: "Fipronil",
+    nombresComerciales: ["Frontline", "Effipro", "Fiprosmet", "Dynacan", "Lifronil"],
+    categoria: "Antiparasitario externo (spot-on)",
+    indicaciones: ["Prevención de pulgas y garrapatas"],
+    especies: {
+      perro: {
+        tipoDosis: "banda",
+        via: "Tópica (spot-on)",
+        frecuencia: "una vez al mes",
+        notas: "Solución al 10% (100 mg/ml). Aplicar sobre la piel entre los omóplatos, evitando que el animal se lama la zona; en perros grandes, mantener inmovilizado 2 min tras aplicar. Fuente: ficha técnica CIMAVET (Frontline Spot On, nº registro 1230/4175/4176/4177 ESP).",
+        bandas: [
+          { pesoMin: 2, pesoMax: 10, mg: 67, ml: 0.67, concentracion: 100, descripcion: "1 pipeta de 0,67 ml (67 mg)" },
+          { pesoMin: 10.1, pesoMax: 20, mg: 134, ml: 1.34, concentracion: 100, descripcion: "1 pipeta de 1,34 ml (134 mg)" },
+          { pesoMin: 20.1, pesoMax: 40, mg: 268, ml: 2.68, concentracion: 100, descripcion: "1 pipeta de 2,68 ml (268 mg)" },
+          { pesoMin: 40.1, pesoMax: 999, mg: 402, ml: 4.02, concentracion: 100, descripcion: "1 pipeta de 4,02 ml (402 mg), para perros de más de 40 kg" }
+        ]
+      },
+      gato: {
+        tipoDosis: "banda",
+        via: "Tópica (spot-on)",
+        frecuencia: "una vez al mes",
+        notas: "Solución al 10% (100 mg/ml); pipeta de tamaño único, independiente del peso del gato. Aplicar repartido en 2 puntos (base del cuello y entre los hombros). Protección frente a pulgas hasta 5 semanas. Fuente: ficha técnica CIMAVET (Frontline Spot On Gato, nº registro 1163 ESP).",
+        bandas: [
+          { pesoMin: 0, pesoMax: 999, mg: 50, ml: 0.5, concentracion: 100, descripcion: "1 pipeta de 0,5 ml (50 mg), tamaño único" }
+        ]
+      }
+    }
+  },
+  {
     id: "tramadol",
     principioActivo: "Tramadol",
     nombresComerciales: ["Tralgiol", "Adolonta (uso humano)"],
@@ -3741,6 +3771,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "chlorhexidine digluconate, miconazole nitrate": "Clorhexidina + miconazol",
   "gentamicin/clotrimazol/betametasona": "Gentamicina + betametasona + clotrimazol",
   "praziquantel/pyrantel/fenbantel": "Praziquantel + pirantel + febantel",
+  "fipronil": "Fipronil",
   "fluoxetine": "Fluoxetina",
   "frunevetmab": "Frunevetmab",
   "aglepriston": "Aglepristona",
