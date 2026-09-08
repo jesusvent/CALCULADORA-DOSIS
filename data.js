@@ -21,7 +21,7 @@
 // -1 --format="%ai"` tras confirmarlo), no una hora aproximada. Se muestra en la cabecera de
 // la app para que cualquier usuario sepa si su copia está al día — no tocar por cambios que no
 // sean de contenido (ej. arreglos de app.js/estilos).
-const ULTIMA_ACTUALIZACION_BD = "2026-09-08T22:15:42";
+const ULTIMA_ACTUALIZACION_BD = "2026-09-08T22:18:48";
 
 const DRUGS = [
   {
