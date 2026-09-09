@@ -1706,6 +1706,16 @@ const DRUGS = [
     }
   },
   {
+    id: "butafosfan-cianocobalamina",
+    principioActivo: "Butafosfán + Cianocobalamina",
+    nombresComerciales: ["Catosal"],
+    categoria: "Suplemento (fósforo orgánico + vitamina B12)",
+    indicaciones: ["Hipofosfatemia", "Deficiencia de vitamina B12", "Tratamiento de apoyo/reconstituyente"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 15, unidad: "mg/kg", via: "IV/IM/SC", frecuencia: "repetir según necesidad", notas: "Dosis expresada como butafosfán (0,1-0,15 ml/kg de este preparado); aporta además 0,005-0,0075 mg/kg de cianocobalamina (vitamina B12). Calentar a temperatura corporal antes de administrar. Precaución en insuficiencia renal crónica (valorar riesgo-beneficio). Fuente: ficha técnica CIMAVET (Catosal, nº registro 3893 ESP)." }
+    }
+  },
+  {
     id: "hidrocortisona-miconazol-gentamicina",
     principioActivo: "Hidrocortisona + Miconazol + Gentamicina",
     nombresComerciales: ["Easotic"],
@@ -4506,6 +4516,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "terbinafin/florfenicol/momethason": "Florfenicol + Terbinafina + Mometasona",
   "terbinafin/florfenicol/betamethason": "Terbinafina + Florfenicol + Betametasona",
   "orbiflo/posaconazol/momethason": "Orbifloxacino + Mometasona + Posaconazol",
+  "vitamin b12 / butafosfan": "Butafosfán + Cianocobalamina",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",
