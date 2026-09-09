@@ -2979,16 +2979,16 @@ async function buscarProductoParaComponenteProtocolo(texto, key, contenedorEl) {
     cimavetResultados = filtrarCimavetPorEspecie(data.resultados || []).slice(0, 10);
   } catch (e) { /* si CIMAVET falla, seguimos con lo demás */ }
 
-  // CIMA (medicina humana) solo se consulta como respaldo si CIMAVET no tiene nada para este
-  // texto: la mayoría de fármacos SÍ están autorizados como veterinarios, y mezclar ambas
-  // fuentes siempre añade ruido (marcas humanas que no aportan nada si ya hay veterinarias).
+  // CIMA (medicina humana) se consulta SIEMPRE, no solo cuando CIMAVET no tiene nada: hay
+  // fármacos con presentación veterinaria autorizada pero solo en una vía/forma (ej. fenobarbital
+  // veterinario es oral únicamente), y para una urgencia puede hacer falta la vía inyectable de
+  // uso humano aunque exista un producto veterinario oral. Mezclar ambas fuentes es justo lo que
+  // se necesita aquí, igual que en el buscador general de CIMAVET y CIMA.
   let cimaResultados = [];
-  if (!cimavetResultados.length) {
-    try {
-      const data = await buscarCima(texto);
-      cimaResultados = (data.resultados || []).slice(0, 8);
-    } catch (e) { /* si CIMA falla, seguimos con lo demás */ }
-  }
+  try {
+    const data = await buscarCima(texto);
+    cimaResultados = (data.resultados || []).slice(0, 8);
+  } catch (e) { /* si CIMA falla, seguimos con lo demás */ }
 
   if (input.value.trim() !== texto) return; // el usuario ha seguido escribiendo mientras tanto
 
@@ -3017,6 +3017,12 @@ async function buscarProductoParaComponenteProtocolo(texto, key, contenedorEl) {
     return;
   }
 
+  // Los resultados de "tu base de datos" (principio activo genérico, sin producto concreto)
+  // nunca traen concentración detectable, así que si van primero tapan justo los resultados
+  // de CIMAVET/CIMA que sí permiten calcular el volumen solos. Se anteponen aquí los que
+  // tienen presentación detectada (orden estable: no reordena dentro de cada grupo).
+  items.sort((a, b) => (a.presentacion ? 0 : 1) - (b.presentacion ? 0 : 1));
+
   const principioActivoParaFavoritos = contenedorEl.dataset.principioActivo || texto;
   const { lista: itemsOrdenados, esFavorito } = marcarYOrdenarFavoritos(items, principioActivoParaFavoritos);
   items = itemsOrdenados;
@@ -3036,7 +3042,38 @@ async function buscarProductoParaComponenteProtocolo(texto, key, contenedorEl) {
     li.addEventListener("click", () => {
       const it = items[Number(li.dataset.idx)];
       protocoloPresentacionesElegidas[key] = { presentacion: it.presentacion, nombreProducto: it.nombre, fuente: it.fuente };
+      // renderProtocolos() regenera todo el HTML de la lista de protocolos, incluidos los
+      // campos de "indica la concentración manualmente" de TODOS los demás componentes que
+      // aún no tienen un producto elegido — sin este guardado/restaurado, elegir un producto
+      // para un fármaco borraba silenciosamente cualquier concentración ya escrita a mano en
+      // otro fármaco del mismo protocolo (había que volver a escribirla, o directamente
+      // parecía que "no calculaba" al pulsar "Añadir todos al paciente").
+      const valoresGuardados = capturarConcentracionesManualesProtocolos();
       renderProtocolos();
+      restaurarConcentracionesManualesProtocolos(valoresGuardados);
+    });
+  });
+}
+
+// Ver comentario en el listener de selección de producto de arriba: preserva lo que el
+// usuario ya haya escrito en los campos de concentración manual de CUALQUIER protocolo/
+// componente visible, para restaurarlo tras un renderProtocolos() disparado por elegir un
+// producto en OTRO componente distinto.
+function capturarConcentracionesManualesProtocolos() {
+  const valores = {};
+  protocolosListaEl.querySelectorAll(".protocolo-card").forEach((card) => {
+    card.querySelectorAll(".protocolo-concentracion-input").forEach((input) => {
+      if (input.value) valores[card.dataset.id + "::" + input.dataset.idx] = input.value;
+    });
+  });
+  return valores;
+}
+
+function restaurarConcentracionesManualesProtocolos(valores) {
+  protocolosListaEl.querySelectorAll(".protocolo-card").forEach((card) => {
+    card.querySelectorAll(".protocolo-concentracion-input").forEach((input) => {
+      const guardado = valores[card.dataset.id + "::" + input.dataset.idx];
+      if (guardado != null) input.value = guardado;
     });
   });
 }
