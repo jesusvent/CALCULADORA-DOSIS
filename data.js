@@ -1706,6 +1706,166 @@ const DRUGS = [
     }
   },
   {
+    id: "fipronil-permetrina",
+    principioActivo: "Fipronilo + Permetrina",
+    nombresComerciales: ["Effitix"],
+    categoria: "Antiparasitario externo combinado (spot-on)",
+    indicaciones: ["Pulgas", "Garrapatas"],
+    especies: {
+      perro: {
+        tipoDosis: "banda",
+        pesoMinimo: 1.5,
+        via: "Tópica (spot-on)",
+        frecuencia: "una vez al mes (actividad 4 semanas)",
+        notas: "Dosis mínima 6,7 mg/kg fipronilo + 60 mg/kg permetrina. Útil en estrategias de tratamiento de dermatitis alérgica a la picadura de pulgas (DAPP) ya diagnosticada. No usar en gatos (permetrina). Dosis fija por tramo de peso según ficha técnica, no mg/kg lineal. Fuente: ficha técnica CIMAVET (Effitix, nº registro 3100 ESP).",
+        bandas: [
+          { pesoMin: 1.5, pesoMax: 4.0, mg: 26.8, ml: 1, descripcion: "1 pipeta de 26,8 mg fipronilo + 240 mg permetrina" },
+          { pesoMin: 4.1, pesoMax: 10.0, mg: 67, ml: 1, descripcion: "1 pipeta de 67 mg fipronilo + 600 mg permetrina" },
+          { pesoMin: 10.1, pesoMax: 20.0, mg: 134, ml: 1, descripcion: "1 pipeta de 134 mg fipronilo + 1200 mg permetrina" },
+          { pesoMin: 20.1, pesoMax: 40.0, mg: 268, ml: 1, descripcion: "1 pipeta de 268 mg fipronilo + 2400 mg permetrina" },
+          { pesoMin: 40.1, pesoMax: 60.0, mg: 402, ml: 1, descripcion: "1 pipeta de 402 mg fipronilo + 3600 mg permetrina" }
+        ]
+      }
+    }
+  },
+  {
+    id: "imidacloprid-permetrina",
+    principioActivo: "Imidacloprid + Permetrina",
+    nombresComerciales: ["Advantix"],
+    categoria: "Antiparasitario externo combinado (spot-on)",
+    indicaciones: ["Pulgas", "Garrapatas"],
+    especies: {
+      perro: {
+        tipoDosis: "banda",
+        pesoMinimo: 0,
+        via: "Tópica (spot-on)",
+        frecuencia: "una vez al mes",
+        notas: "Dosis mínima 10 mg/kg imidacloprid + 50 mg/kg permetrina. Actividad persistente frente a garrapatas 3-4 semanas. No usar en gatos (permetrina). Dosis fija por tramo de peso según ficha técnica, no mg/kg lineal. Fuente: ficha técnica CIMAVET (Advantix, nº registro 61-68 CP).",
+        bandas: [
+          { pesoMin: 0, pesoMax: 4.0, mg: 40, ml: 0.4, descripcion: "1 pipeta de 40 mg imidacloprid + 200 mg permetrina (0,4 ml)" },
+          { pesoMin: 4.1, pesoMax: 10.0, mg: 100, ml: 1.0, descripcion: "1 pipeta de 100 mg imidacloprid + 500 mg permetrina (1,0 ml)" },
+          { pesoMin: 10.1, pesoMax: 25.0, mg: 250, ml: 2.5, descripcion: "1 pipeta de 250 mg imidacloprid + 1250 mg permetrina (2,5 ml)" },
+          { pesoMin: 25.1, pesoMax: 40.0, mg: 400, ml: 4.0, descripcion: "1 pipeta de 400 mg imidacloprid + 2000 mg permetrina (4,0 ml)" },
+          { pesoMin: 40.1, pesoMax: 60.0, mg: 600, ml: 6.0, descripcion: "1 pipeta de 600 mg imidacloprid + 3000 mg permetrina (6,0 ml)" }
+        ]
+      }
+    }
+  },
+  {
+    id: "deltametrina",
+    principioActivo: "Deltametrina",
+    nombresComerciales: ["Merlin"],
+    categoria: "Antiparasitario externo (collar, piretroide)",
+    indicaciones: ["Garrapatas", "Flebotomos (prevención de leishmaniosis)"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Tópica (collar)", frecuencia: "1 collar; control de garrapatas 6 meses, de flebotomos 5,5 meses", notas: "Dosis fija por collar (no por kg): 0,77 g para perros pequeños y medianos, 1,04 g para perros grandes. No usar en cachorros <7 semanas. Ajustar sin apretar (deben caber 2 dedos entre el collar y el cuello). Fuente: ficha técnica CIMAVET (Merlin, nº registro 3714/4025 ESP)." }
+    }
+  },
+  {
+    id: "dinotefuran-piriproxifeno-permetrina",
+    principioActivo: "Dinotefuran + Piriproxifeno + Permetrina",
+    nombresComerciales: ["Vectra 3D"],
+    categoria: "Antiparasitario externo combinado (spot-on)",
+    indicaciones: ["Pulgas", "Garrapatas", "Mosquitos/flebotomos (repelente)"],
+    especies: {
+      perro: {
+        tipoDosis: "banda",
+        pesoMinimo: 1.5,
+        via: "Tópica (spot-on)",
+        frecuencia: "una vez al mes (actividad 4 semanas)",
+        notas: "Dosis mínima 6,4 mg/kg dinotefuran + 0,6 mg/kg piriproxifeno + 46,6 mg/kg permetrina (0,12 ml/kg). No usar en gatos (permetrina). Dosis fija por tramo de peso según ficha técnica, no mg/kg lineal. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/13/156 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE).",
+        bandas: [
+          { pesoMin: 1.5, pesoMax: 4.0, mg: 44, ml: 0.8, descripcion: "1 pipeta amarilla (0,8 ml): 44 mg dinotefuran + 3,9 mg piriproxifeno + 317 mg permetrina" },
+          { pesoMin: 4.1, pesoMax: 10.0, mg: 87, ml: 1.6, descripcion: "1 pipeta verde azulada (1,6 ml): 87 mg dinotefuran + 7,7 mg piriproxifeno + 635 mg permetrina" },
+          { pesoMin: 10.1, pesoMax: 25.0, mg: 196, ml: 3.6, descripcion: "1 pipeta azul (3,6 ml): 196 mg dinotefuran + 17,4 mg piriproxifeno + 1429 mg permetrina" },
+          { pesoMin: 25.1, pesoMax: 40.0, mg: 256, ml: 4.7, descripcion: "1 pipeta púrpura (4,7 ml): 256 mg dinotefuran + 22,7 mg piriproxifeno + 1865 mg permetrina" },
+          { pesoMin: 40.1, pesoMax: 90.0, mg: 436, ml: 8.0, descripcion: "1 pipeta roja (8,0 ml): 436 mg dinotefuran + 38,7 mg piriproxifeno + 3175 mg permetrina" }
+        ]
+      }
+    }
+  },
+  {
+    id: "lotilaner-milbemicina",
+    principioActivo: "Lotilaner + Milbemicina oxima",
+    nombresComerciales: ["Credelio Plus"],
+    categoria: "Antiparasitario externo e interno combinado (comprimido masticable)",
+    indicaciones: ["Pulgas", "Garrapatas", "Prevención de dirofilariosis", "Nematodos"],
+    especies: {
+      perro: { dosisMin: 20, dosisMax: 41, unidad: "mg/kg", via: "VO", frecuencia: "una vez al mes", notas: "Dosis expresada como lotilaner; el mismo comprimido aporta además 0,75-1,53 mg/kg de milbemicina oxima, según tabla de peso de la ficha técnica (5 concentraciones distintas). Prevención de dirofilariosis y angiostrongilosis, nematodos gastrointestinales, pulgas y garrapatas. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/21/271 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "esafoxolaner-eprinomectina-praziquantel",
+    principioActivo: "Esafoxolaner + Eprinomectina + Praziquantel",
+    nombresComerciales: ["Nexgard Combo"],
+    categoria: "Antiparasitario externo e interno combinado (spot-on)",
+    indicaciones: ["Pulgas", "Garrapatas", "Sarna notoédrica", "Otodectes", "Nematodos", "Cestodos", "Prevención de dirofilariosis"],
+    especies: {
+      gato: {
+        tipoDosis: "banda",
+        pesoMinimo: 0.8,
+        via: "Tópica (spot-on)",
+        frecuencia: "una vez al mes",
+        notas: "Dosis mínima 1,44 mg/kg esafoxolaner + 0,48 mg/kg eprinomectina + 10 mg/kg praziquantel. Cubre echinococcosis (zoonosis de declaración obligatoria: seguir pautas específicas de tratamiento). Dosis fija por tramo de peso según ficha técnica, no mg/kg lineal. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/20/267 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE).",
+        bandas: [
+          { pesoMin: 0.8, pesoMax: 2.5, mg: 3.6, ml: 0.3, descripcion: "1 pipeta (0,3 ml): 3,6 mg esafoxolaner + 1,2 mg eprinomectina + 24,9 mg praziquantel" },
+          { pesoMin: 2.6, pesoMax: 7.5, mg: 10.8, ml: 0.9, descripcion: "1 pipeta (0,9 ml): 10,8 mg esafoxolaner + 3,6 mg eprinomectina + 74,7 mg praziquantel" }
+        ]
+      }
+    }
+  },
+  {
+    id: "afoxolaner-milbemicina",
+    principioActivo: "Afoxolaner + Milbemicina oxima",
+    nombresComerciales: ["Nexgard Spectra"],
+    categoria: "Antiparasitario externo e interno combinado (comprimido masticable)",
+    indicaciones: ["Pulgas", "Garrapatas", "Prevención de dirofilariosis", "Nematodos"],
+    especies: {
+      perro: { dosisMin: 2.5, dosisMax: 6.94, unidad: "mg/kg", via: "VO", frecuencia: "una vez al mes", notas: "Dosis expresada como afoxolaner; el mismo comprimido aporta además 0,5-1,39 mg/kg de milbemicina oxima, según tabla de peso de la ficha técnica. Prevención de dirofilariosis y angiostrongilosis, nematodos gastrointestinales, pulgas y garrapatas. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/14/177 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "sarolaner-moxidectina-pirantel",
+    principioActivo: "Sarolaner + Moxidectina + Pirantel",
+    nombresComerciales: ["Simparica Trio"],
+    categoria: "Antiparasitario externo e interno combinado (comprimido masticable)",
+    indicaciones: ["Pulgas", "Garrapatas", "Prevención de dirofilariosis", "Nematodos"],
+    especies: {
+      perro: { dosisMin: 1.2, dosisMax: 2.4, unidad: "mg/kg", via: "VO", frecuencia: "una vez al mes", notas: "Dosis expresada como sarolaner; el mismo comprimido aporta además 0,024-0,048 mg/kg de moxidectina y 5-10 mg/kg de pirantel (pamoato), según tabla de peso de la ficha técnica (comprimidos de 6 concentraciones distintas). Prevención de dirofilariosis, tratamiento de ascáridos y anquilostomas, pulgas y garrapatas. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/19/243 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "dinotefuran-piriproxifeno",
+    principioActivo: "Dinotefuran + Piriproxifeno",
+    nombresComerciales: ["Vectra Felis"],
+    categoria: "Antiparasitario externo combinado (spot-on)",
+    indicaciones: ["Pulgas"],
+    especies: {
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Tópica (spot-on)", frecuencia: "una vez al mes", notas: "Dosis fija por gato (no por kg): 1 pipeta de 423 mg dinotefuran + 42,3 mg piriproxifeno, válida para gatos de 0,6 a 10 kg (a mayor peso, menor mg/kg efectivo). No usar en gatitos <7 semanas o <0,6 kg. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/14/165 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "imidacloprid-flumetrina",
+    principioActivo: "Imidacloprid + Flumetrina",
+    nombresComerciales: ["Seresto"],
+    categoria: "Antiparasitario externo (collar)",
+    indicaciones: ["Pulgas", "Garrapatas"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Tópica (collar)", frecuencia: "1 collar, protección 7-8 meses", notas: "Dosis fija por tramo de peso (no por kg): ≤8 kg → collar de 1,25 g + 0,56 g; >8 kg → collar de 4,50 g + 2,03 g. Ajustar sin apretar (dejar espacio de 2 dedos entre el collar y el cuello); retirar al finalizar el periodo de protección. Fuente: ficha técnica CIMAVET (Seresto, nº registro 56/57/60 IP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Tópica (collar)", frecuencia: "1 collar, protección 8 meses", notas: "Dosis fija por collar (no por kg): collar único de 38 cm (1,25 g + 0,56 g) independientemente del peso. Llevar de forma continua los 8 meses; comprobar el ajuste periódicamente, especialmente en gatitos en crecimiento. Fuente: ficha técnica CIMAVET (Seresto, nº registro 2348 ESP)." }
+    }
+  },
+  {
+    id: "permetrina-collar",
+    principioActivo: "Permetrina (collar)",
+    nombresComerciales: ["Taberdog"],
+    categoria: "Antiparasitario externo (collar, piretroide)",
+    indicaciones: ["Pulgas", "Garrapatas"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Tópica (collar)", frecuencia: "1 collar por animal, dura 4 meses", notas: "Dosis fija por collar (no por kg), en tallas medianos/grandes. No usar en gatos (permetrina). Ajustar sin apretar (deben caber 2 dedos entre el collar y el cuello). Fuente: ficha técnica CIMAVET (Taberdog Collar Permetrina, nº registro 4294/4295 ESP)." }
+    }
+  },
+  {
     id: "butafosfan-cianocobalamina",
     principioActivo: "Butafosfán + Cianocobalamina",
     nombresComerciales: ["Catosal"],
@@ -4517,6 +4677,17 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "terbinafin/florfenicol/betamethason": "Terbinafina + Florfenicol + Betametasona",
   "orbiflo/posaconazol/momethason": "Orbifloxacino + Mometasona + Posaconazol",
   "vitamin b12 / butafosfan": "Butafosfán + Cianocobalamina",
+  "fipronil/permethrin": "Fipronilo + Permetrina",
+  "deltamethrin": "Deltametrina",
+  "permethrin": "Permetrina (collar)",
+  "imidacloprid, permetrin": "Imidacloprid + Permetrina",
+  "imidacloprid/flumethrin": "Imidacloprid + Flumetrina",
+  "dinotefuran/piriproxifen": "Dinotefuran + Piriproxifeno",
+  "dinotefuran/piriproxifen/permetrine": "Dinotefuran + Piriproxifeno + Permetrina",
+  "sarolaner, moxidectine pyrantel": "Sarolaner + Moxidectina + Pirantel",
+  "afoxolaner/milbemycinoxim": "Afoxolaner + Milbemicina oxima",
+  "eprinomectin, combinations": "Esafoxolaner + Eprinomectina + Praziquantel",
+  "lotilaner, milbemicine": "Lotilaner + Milbemicina oxima",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",
