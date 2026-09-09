@@ -1731,7 +1731,7 @@ const DRUGS = [
   {
     id: "imidacloprid-permetrina",
     principioActivo: "Imidacloprid + Permetrina",
-    nombresComerciales: ["Advantix"],
+    nombresComerciales: ["Advantix", "Ataxxa"],
     categoria: "Antiparasitario externo combinado (spot-on)",
     indicaciones: ["Pulgas", "Garrapatas"],
     especies: {
@@ -1782,6 +1782,161 @@ const DRUGS = [
           { pesoMin: 40.1, pesoMax: 90.0, mg: 436, ml: 8.0, descripcion: "1 pipeta roja (8,0 ml): 436 mg dinotefuran + 38,7 mg piriproxifeno + 3175 mg permetrina" }
         ]
       }
+    }
+  },
+  {
+    id: "hidrocortisona-aceponato-otica",
+    principioActivo: "Hidrocortisona aceponato (ótica)",
+    nombresComerciales: ["Cortotic"],
+    categoria: "Corticoide tópico ótico (pulverización)",
+    indicaciones: ["Otitis externa (componente inflamatorio)"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Ótica (pulverización)", frecuencia: "0,44 ml (2 pulsaciones) por oído, una vez al día durante 7 días (extensible a 14 si no hay curación completa)", notas: "Respuesta clínica máxima puede no verse hasta 28 días tras la primera aplicación. Limpiar y secar el conducto auditivo antes del primer tratamiento. Fuente: ficha técnica CIMAVET (Cortotic, nº registro 4137 ESP)." }
+    }
+  },
+  {
+    id: "hidrocortisona-aceponato-cutanea",
+    principioActivo: "Hidrocortisona aceponato (cutánea)",
+    nombresComerciales: ["Cortavance", "Aceponato de Hidrocortisona Ecuphar"],
+    categoria: "Corticoide tópico (pulverización cutánea, leave-on)",
+    indicaciones: ["Dermatitis atópica", "Dermatosis inflamatorias/pruriginosas"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Cutánea (pulverización, leave-on)", frecuencia: "1 vez al día", notas: "Dosis por superficie de piel afectada (no por kg): 1,52 mcg/cm²/día, lograble con 2 pulsaciones del pulverizador sobre un cuadrado de 10x10 cm, a ~10 cm de distancia. Dermatosis inflamatorias/pruriginosas: 7 días consecutivos. Dermatitis atópica: 14-28 días consecutivos, con control veterinario intermedio a los 14 días (vigilar supresión del eje hipotálamo-hipófiso-adrenal y atrofia cutánea, ambas pueden ser asintomáticas). Evitar pulverizar cerca de los ojos. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/06/069 (Cortavance) y EU/2/18/230 (Aceponato de Hidrocortisona Ecuphar), ambos bloqueados por CAPTCHA al ser autorización centralizada UE." }
+    }
+  },
+  {
+    id: "lotrifen",
+    principioActivo: "Lotrifén",
+    nombresComerciales: ["Privaprol"],
+    categoria: "Antigestágeno",
+    indicaciones: ["Interrupción de la gestación (perras)"],
+    especies: {
+      perro: { dosisMin: 2.5, dosisMax: 2.5, unidad: "mg/kg", via: "IM profunda", frecuencia: "dosis única, entre el día de la cópula y el día 15 de gestación", notas: "Solo en perras (no usar en machos ni en otras especies). No usar pasados 15 días de gestación, ni en enfermedad hepática/renal/gastrointestinal o mal estado general. Administrar exclusivamente IM profunda en el muslo — por vía SC o en espacios aponeuróticos puede perder eficacia. No repetir la administración. Fuente: ficha técnica CIMAVET (Privaprol, nº registro 3470 ESP)." }
+    }
+  },
+  {
+    id: "fipronil-s-metopreno",
+    principioActivo: "Fipronilo + S-metopreno",
+    nombresComerciales: ["Dynacan"],
+    categoria: "Antiparasitario externo combinado (spot-on)",
+    indicaciones: ["Pulgas", "Garrapatas"],
+    especies: {
+      perro: { dosisMin: 6.7, dosisMax: 6.7, unidad: "mg/kg", via: "Tópica (spot-on)", frecuencia: "una vez al mes (intervalo mínimo 4 semanas)", notas: "Dosis mínima 6,7 mg/kg fipronilo + 6 mg/kg (S)-metopreno. Pipetas por tramo de peso: 2-10 kg → 0,67 ml; existen presentaciones equivalentes para 10-20 kg, 20-40 kg y >40 kg. Aplicación mensual recomendada en riesgo alto de reinfestación, alergia a picaduras de pulgas (DAPP) o si se requiere control de garrapatas. Fuente: ficha técnica CIMAVET (Dynacan, nº registro 3858-3861 ESP)." },
+      gato:  { dosisMin: 5, dosisMax: 5, unidad: "mg/kg", via: "Tópica (spot-on)", frecuencia: "una vez al mes", notas: "Dosis mínima 5 mg/kg fipronilo + 6 mg/kg (S)-metopreno. Pipeta fija de 0,5 ml por gato, independientemente del peso. Fuente: ficha técnica CIMAVET (Dynacan 50 mg/60 mg, nº registro 3857 ESP)." }
+    }
+  },
+  {
+    id: "interferon-omega-felino",
+    principioActivo: "Interferón omega felino recombinante",
+    nombresComerciales: ["Virbagen Omega"],
+    categoria: "Inmunomodulador (antiviral)",
+    indicaciones: ["Parvovirosis", "Leucemia felina (FeLV)", "Inmunodeficiencia felina (FIV)"],
+    especies: {
+      perro: { dosisMin: 2.5, dosisMax: 2.5, unidad: "MU/kg", via: "IV", frecuencia: "una vez al día durante 3 días consecutivos", notas: "Reduce la mortalidad y los signos clínicos de la parvovirosis (forma entérica) en perros desde 1 mes de edad. Reconstituir solo con el disolvente específico. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/01/030 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." },
+      gato:  { dosisMin: 1, dosisMax: 1, unidad: "MU/kg", via: "SC", frecuencia: "una vez al día durante 5 días consecutivos, repetido en 3 ciclos (día 0, día 14 y día 60)", notas: "Indicado en infecciones por FeLV y/o FIV (asintomáticas o con signos clínicos leves no relacionados con neoplasia o insuficiencia renal/orgánica grave). Reconstituir solo con el disolvente específico. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/01/030 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "tigilanol-tiglato",
+    principioActivo: "Tigilanol tiglato",
+    nombresComerciales: ["Stelfonta"],
+    categoria: "Antineoplásico (uso intratumoral)",
+    indicaciones: ["Mastocitoma"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Intratumoral", frecuencia: "dosis única (puede repetirse una vez a las 4 semanas si es necesario)", notas: "Dosis basada en el VOLUMEN DEL TUMOR, no en el peso del paciente: 0,5 mg/cm³ (= 0,5 ml/cm³), calculando el volumen como largo x ancho x alto x 0,5. Dosis mínima 0,1 ml independientemente del volumen. Solo para mastocitomas cutáneos no resecables/recurrentes con volumen ≤8 cm³, no en mucosas ni submucosos. Inyección exclusivamente intratumoral, en abanico, evitando manipular el tumor. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/19/248 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "pimobendan-benazepril",
+    principioActivo: "Pimobendán + Benazepril",
+    nombresComerciales: ["Fortekor Plus"],
+    categoria: "Cardiovascular combinado (inotrópico + IECA)",
+    indicaciones: ["Insuficiencia cardíaca congestiva"],
+    especies: {
+      perro: { dosisMin: 0.25, dosisMax: 0.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h (dividido en 2 tomas diarias), ~1 h antes de la comida", notas: "Dosis expresada como pimobendán; el mismo comprimido aporta además 0,5-1 mg/kg/día de benazepril repartido en las 2 tomas. Producto de combinación fija: usar solo cuando el paciente requiere ambos principios activos simultáneamente. Comprimidos ranurados, partibles. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/15/185 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+    }
+  },
+  {
+    id: "moxidectina",
+    principioActivo: "Moxidectina",
+    nombresComerciales: ["Afilaria"],
+    categoria: "Antiparasitario interno (lactona macrocíclica, liberación prolongada)",
+    indicaciones: ["Prevención de dirofilariosis", "Nematodos"],
+    especies: {
+      perro: { dosisMin: 0.17, dosisMax: 0.17, unidad: "mg/kg", via: "SC", frecuencia: "dosis única (inyección de liberación prolongada)", notas: "Equivale a 0,05 ml/kg de suspensión reconstituida. Prevención de dirofilariosis (D. immitis, D. repens) y tratamiento de anquilostomas. En cachorros de 12 semanas a 9 meses, dosificar según el peso en el momento del tratamiento (no anticipar el peso futuro); puede requerir tratamiento adicional por el rápido crecimiento. Fuente: ficha técnica CIMAVET (Afilaria, nº registro 3807 ESP)." }
+    }
+  },
+  {
+    id: "oxitetraciclina",
+    principioActivo: "Oxitetraciclina",
+    nombresComerciales: ["Bimodula"],
+    categoria: "Antibiótico (tetraciclina)",
+    indicaciones: ["Infección bacteriana sensible"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 10, unidad: "mg/kg", via: "SC/IM", frecuencia: "cada 24 h durante 3-5 días", notas: "Solo la pauta de dosificación de 24 h está recomendada en perros y gatos (la pauta de acción prolongada de 10-20 mg/kg no se recomienda en esta especie). Fuente: ficha técnica CIMAVET (Bimodula, nº registro 3908 ESP)." },
+      gato:  { dosisMin: 10, dosisMax: 10, unidad: "mg/kg", via: "SC/IM", frecuencia: "cada 24 h durante 3-5 días", notas: "Solo la pauta de dosificación de 24 h está recomendada en perros y gatos (la pauta de acción prolongada de 10-20 mg/kg no se recomienda en esta especie). Fuente: ficha técnica CIMAVET (Bimodula, nº registro 3908 ESP)." }
+    }
+  },
+  {
+    id: "clindamicina-topica",
+    principioActivo: "Clindamicina (tópica)",
+    nombresComerciales: ["Clindacutin"],
+    categoria: "Antibiótico tópico (lincosamida)",
+    indicaciones: ["Heridas infectadas superficiales", "Pioderma interdigital"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Cutánea (pomada)", frecuencia: "3-4 veces al día", notas: "Capa fina cubriendo la lesión todo el día. Heridas infectadas superficiales: máximo 7 días. Pioderma interdigital superficial: máximo 14 días. Fuente: ficha técnica CIMAVET (Clindacutin, nº registro 4026 ESP)." }
+    }
+  },
+  {
+    id: "epsiprantel-pirantel",
+    principioActivo: "Epsiprantel + Pirantel",
+    nombresComerciales: ["Dosalid"],
+    categoria: "Antiparasitario interno combinado (cestodos + nematodos)",
+    indicaciones: ["Desparasitación interna", "Cestodos", "Nematodos"],
+    especies: {
+      perro: { dosisMin: 5.5, dosisMax: 5.5, unidad: "mg/kg", via: "VO", frecuencia: "dosis única", notas: "Dosis expresada como epsiprantel; el mismo comprimido aporta además 5,0 mg/kg de pirantel (embonato) — equivale a 1 comprimido por cada 18 kg. No requiere ayuno previo. Fuente: ficha técnica CIMAVET (Dosalid, nº registro 1818 ESP)." }
+    }
+  },
+  {
+    id: "menbutona",
+    principioActivo: "Menbutona",
+    nombresComerciales: ["Indigest"],
+    categoria: "Colerético / estimulante digestivo",
+    indicaciones: ["Trastornos digestivos", "Estimulación de la motilidad gastrointestinal"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 10, unidad: "mg/kg", via: "IM profunda/IV lenta", frecuencia: "una vez al día, duración según respuesta clínica", notas: "Margen de seguridad desconocido: respetar rigurosamente la dosis (riesgo de bloqueo cardíaco en sobredosis; tratar con un cardiotónico si ocurre). No indicado en gatos según ficha técnica. Fuente: ficha técnica CIMAVET (Indigest, nº registro 1018 ESP)." }
+    }
+  },
+  {
+    id: "acido-fusidico-betametasona-gel",
+    principioActivo: "Ácido fusídico + Betametasona (gel)",
+    nombresComerciales: ["Isaderm"],
+    categoria: "Antibiótico + corticoide tópico",
+    indicaciones: ["Pioderma superficial", "Dermatitis"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Cutánea (gel)", frecuencia: "2 veces al día, mínimo 5 días, máximo 7 días", notas: "Cortar el pelo y limpiar la zona antes de aplicar; capa fina. Continuar 2 días tras la curación de las lesiones. Si no hay respuesta a los 3 días, reevaluar el diagnóstico. Fuente: ficha técnica CIMAVET (Isaderm, nº registro 1544 ESP)." }
+    }
+  },
+  {
+    id: "lidocaina-cloranfenicol-prednisolona",
+    principioActivo: "Lidocaína + Cloranfenicol + Prednisolona (oftálmica)",
+    nombresComerciales: ["Oftalmovet"],
+    categoria: "Anestésico + antibiótico + corticoide oftálmico",
+    indicaciones: ["Conjuntivitis", "Inflamación ocular"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Oftálmica (colirio)", frecuencia: "2-3 gotas cada 6-12 h", notas: "Prolongar 24-48 h tras la remisión completa de los síntomas. Si no hay mejoría clara a los 2-3 días, reconsiderar diagnóstico y tratamiento. Fuente: ficha técnica CIMAVET (Oftalmovet, nº registro 4246 ESP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Oftálmica (colirio)", frecuencia: "2-3 gotas cada 6-12 h", notas: "Prolongar 24-48 h tras la remisión completa de los síntomas. Si no hay mejoría clara a los 2-3 días, reconsiderar diagnóstico y tratamiento. Fuente: ficha técnica CIMAVET (Oftalmovet, nº registro 4246 ESP)." }
+    }
+  },
+  {
+    id: "procaina",
+    principioActivo: "Procaína",
+    nombresComerciales: ["Procamidor"],
+    categoria: "Anestésico local",
+    indicaciones: ["Anestesia local por infiltración", "Anestesia de conducción"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "SC/perineural/epidural", frecuencia: "dosis única según técnica", notas: "Anestesia por infiltración: 1-5 ml (20-100 mg de hidrocloruro de procaína) según tamaño de la zona a tratar, no estrictamente por kg. Fuente: ficha técnica CIMAVET (Procamidor 20 mg/ml, nº registro 2921 ESP)." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "SC/perineural/epidural", frecuencia: "dosis única según técnica", notas: "Anestesia por infiltración: 1-5 ml (20-100 mg de hidrocloruro de procaína) según tamaño de la zona a tratar, no estrictamente por kg. Fuente: ficha técnica CIMAVET (Procamidor 20 mg/ml, nº registro 2921 ESP)." }
     }
   },
   {
@@ -4155,7 +4310,7 @@ const PRODUCTOS_HOSPITAL = [
   { marca: "Antishmania", laboratorio: "Fatro", composicion: "Meglumine Antimonate", orden: "Recomendado" },
   { marca: "Apelka Vet", laboratorio: "Boehringer", composicion: "Thiamazole", orden: "Recomendado" },
   { marca: "Apoquel", laboratorio: "Zoetis", composicion: "Oclacitinib", orden: "Recomendado" },
-  { marca: "Ataxxa", laboratorio: "Labiana", composicion: "Imidacloprid", orden: "Fuera de Acuerdo" },
+  { marca: "Ataxxa", laboratorio: "Labiana", composicion: "Imidacloprid, Permetrin", orden: "Fuera de Acuerdo" },
   { marca: "Atopica", laboratorio: "Elanco", composicion: "Cyclosporine", orden: "Recomendado" },
   { marca: "Aurizon", laboratorio: "Vetoquinol", composicion: "Marbofloxacin/Clotrimazol/Dexamethason", orden: "Recomendado" },
   { marca: "Banacep", laboratorio: "Calier", composicion: "Benazepril", orden: "Fuera de Acuerdo" },
@@ -4219,7 +4374,7 @@ const PRODUCTOS_HOSPITAL = [
   { marca: "Contralac", laboratorio: "Virbac", composicion: "Metergoline", orden: "Según Necesidad" },
   { marca: "Convenia", laboratorio: "Zoetis", composicion: "Cefovecin", orden: "Según Necesidad" },
   { marca: "Cortavance", laboratorio: "Virbac", composicion: "Hydrocortison", orden: "Recomendado" },
-  { marca: "Cortotic", laboratorio: "Virbac", composicion: "Hydrocortison", orden: "Recomendado" },
+  { marca: "Cortotic", laboratorio: "Virbac", composicion: "Hydrocortison (otic)", orden: "Recomendado" },
   { marca: "Cosacthen", laboratorio: "Dechra", composicion: "Tetracosactid", orden: "Recomendado" },
   { marca: "Coxatab", laboratorio: "Karizoo", composicion: "Firocoxib", orden: "Fuera de Acuerdo" },
   { marca: "Credelio", laboratorio: "Elanco", composicion: "Lotilaner", orden: "Según Necesidad" },
@@ -4688,6 +4843,21 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "afoxolaner/milbemycinoxim": "Afoxolaner + Milbemicina oxima",
   "eprinomectin, combinations": "Esafoxolaner + Eprinomectina + Praziquantel",
   "lotilaner, milbemicine": "Lotilaner + Milbemicina oxima",
+  "moxidectin": "Moxidectina",
+  "chloroxitetracycline": "Oxitetraciclina",
+  "clindamycin topic use": "Clindamicina (tópica)",
+  "pyrantel/epsiprantel": "Epsiprantel + Pirantel",
+  "menbutone": "Menbutona",
+  "fucidic acid": "Ácido fusídico + Betametasona (gel)",
+  "prednisolone eyedrops": "Lidocaína + Cloranfenicol + Prednisolona (oftálmica)",
+  "procaine": "Procaína",
+  "benazapril/pimobendan": "Pimobendán + Benazepril",
+  "tigilanoltiglat": "Tigilanol tiglato",
+  "interferone omega, recombinant": "Interferón omega felino recombinante",
+  "fipronil, combinations": "Fipronilo + S-metopreno",
+  "lotrifen": "Lotrifén",
+  "hydrocortison": "Hidrocortisona aceponato (cutánea)",
+  "hydrocortison (otic)": "Hidrocortisona aceponato (ótica)",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",
