@@ -1666,6 +1666,9 @@ function filaCimaHtml(med, textoBuscado) {
   const ft = (med.docs || []).find((d) => d.tipo === 1);
   const prospecto = (med.docs || []).find((d) => d.tipo === 2);
   const principioActivo = med.vtm ? med.vtm.nombre : null;
+  const principioActivoCapitalizado = principioActivo
+    ? principioActivo.charAt(0).toUpperCase() + principioActivo.slice(1).toLowerCase()
+    : (textoBuscado ? textoBuscado.charAt(0).toUpperCase() + textoBuscado.slice(1) : "");
   return `
     <div class="cimavet-fila">
       <div class="cimavet-nombre">${escapeHtml(med.nombre)} <span class="badge-humano">Uso humano</span></div>
@@ -1683,9 +1686,34 @@ function filaCimaHtml(med, textoBuscado) {
         ${ft ? `<a href="${ft.url}" target="_blank" rel="noopener">📄 Ficha técnica</a>` : ""}
         ${prospecto ? `<a href="${prospecto.url}" target="_blank" rel="noopener">📄 Prospecto</a>` : ""}
         <a href="${urlPubMedTexto(textoBuscado || med.nombre, principioActivo, paciente.especie)}" target="_blank" rel="noopener">🔎 Buscar en PubMed</a>
+        <button type="button" class="boton-enlace boton-anadir-cima-bd"
+          data-nombre="${escapeHtml(marcaCorta(med.nombre) || med.nombre)}"
+          data-principio="${escapeHtml(principioActivoCapitalizado)}"
+          data-composicion="${escapeHtml(med.formaFarmaceutica ? med.formaFarmaceutica.nombre : "")}"
+          data-nregistro="${escapeHtml(med.nregistro || "")}"
+        >+ Añadir a Mi base de datos</button>
       </div>
     </div>`;
 }
+
+// Delegado: el botón "+ Añadir a Mi base de datos" de cada fila de CIMA (uso humano) puede
+// aparecer en varios listados generados por innerHTML (respaldo de la Calculadora, Buscador
+// general), así que se engancha aquí una sola vez en vez de repetir addEventListener cada
+// vez que se regenera el HTML. Abre el formulario de "Mi base de datos" precargado con el
+// principio activo, el nombre comercial y una nota recordando que es de uso humano (off-label),
+// dejando solo la dosis por rellenar.
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".boton-anadir-cima-bd");
+  if (!btn) return;
+  document.querySelector('.tab-principal[data-vista="misfarmacos"]').click();
+  abrirFormulario();
+  cfPrincipioActivo.value = btn.dataset.principio || "";
+  cfComerciales.value = btn.dataset.nombre || "";
+  cfComposicion.value = btn.dataset.composicion || "";
+  const notaOffLabel = `Medicamento de uso humano (CIMA${btn.dataset.nregistro ? ", nº registro " + btn.dataset.nregistro : ""}), no autorizado como veterinario. Uso en animales fuera de ficha técnica (off-label), bajo prescripción y responsabilidad del veterinario. Verifica y completa la dosis antes de guardar.`;
+  const primeraFilaNotas = cfPatologiasLista.querySelector(".pf-notas");
+  if (primeraFilaNotas) primeraFilaNotas.value = notaOffLabel;
+});
 
 async function buscarEnCimaComoRespaldo(texto, contenedorEl, principioActivo, nombreComercialBuscado) {
   contenedorEl.innerHTML = `<p class="placeholder">No autorizado como veterinario. Buscando en CIMA (medicina humana)...</p>`;
