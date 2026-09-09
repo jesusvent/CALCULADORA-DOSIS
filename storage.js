@@ -2,7 +2,7 @@
 // Todo queda guardado únicamente en este dispositivo/navegador (no hay servidor).
 
 const DB_NAME = "vetDosisDB";
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 let dbPromise = null;
 
 function abrirDB() {
@@ -32,6 +32,14 @@ function abrirDB() {
         // para pedir siempre el mismo producto a la farmacia. id = nombre del producto
         // normalizado (minúsculas, sin acentos).
         db.createObjectStore("favoritosCri", { keyPath: "id" });
+      }
+      if (!db.objectStoreNames.contains("protocolosOcultos")) {
+        // Protocolos PREDEFINIDOS (compartidos, del código) que este dispositivo ha decidido
+        // ocultar/eliminar de su lista — p. ej. si otro hospital usa esta misma base de datos
+        // y quiere quitar protocolos que no le aplican, o si hay varios protocolos parecidos y
+        // solo se quiere usar uno. No borra el protocolo del código (sigue existiendo para
+        // todos los demás dispositivos), solo lo oculta en este. id = protocolo.id.
+        db.createObjectStore("protocolosOcultos", { keyPath: "id" });
       }
     };
     req.onsuccess = (e) => {

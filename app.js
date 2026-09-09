@@ -188,7 +188,7 @@ document.querySelectorAll(".tab-principal").forEach((btn) => {
     document.querySelectorAll(".vista").forEach((v) => v.classList.add("oculto"));
     document.getElementById("vista-" + btn.dataset.vista).classList.remove("oculto");
     if (btn.dataset.vista === "protocolos") renderProtocolos();
-    if (btn.dataset.vista === "misfarmacos") renderMisFarmacos();
+    if (btn.dataset.vista === "misfarmacos") { renderMisFarmacos(); renderProtocolosOcultos(); }
     if (btn.dataset.vista === "cri") actualizarCri();
   });
 });
@@ -2373,6 +2373,40 @@ async function cargarCustomProtocols() {
   customProtocols = await dbGetAll("customProtocols");
 }
 
+// Protocolos PREDEFINIDOS ocultados en este dispositivo (ver comentario en storage.js):
+// no se borran del código, solo se dejan de mostrar aquí.
+let protocolosOcultos = new Set();
+async function cargarProtocolosOcultos() {
+  const filas = await dbGetAll("protocolosOcultos");
+  protocolosOcultos = new Set(filas.map((f) => f.id));
+}
+
+const protocolosOcultosListaEl = document.getElementById("protocolos-ocultos-lista");
+const protocolosOcultosTarjetaEl = document.getElementById("protocolos-ocultos-tarjeta");
+
+async function renderProtocolosOcultos() {
+  const filas = await dbGetAll("protocolosOcultos");
+  protocolosOcultosTarjetaEl.classList.toggle("oculto", !filas.length);
+  if (!filas.length) {
+    protocolosOcultosListaEl.innerHTML = "";
+    return;
+  }
+  protocolosOcultosListaEl.innerHTML = filas.map((f) => `
+    <div class="protocolo-componente">
+      <span class="protocolo-componente-nombre">${escapeHtml(f.nombre || f.id)}</span>
+      <button type="button" class="boton-secundario boton-restaurar-protocolo" data-id="${escapeHtml(f.id)}">↩ Restaurar</button>
+    </div>
+  `).join("");
+  protocolosOcultosListaEl.querySelectorAll(".boton-restaurar-protocolo").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      await dbDelete("protocolosOcultos", btn.dataset.id);
+      await cargarProtocolosOcultos();
+      renderProtocolos();
+      renderProtocolosOcultos();
+    });
+  });
+}
+
 // Un "componente" es o bien el id de un fármaco de DRUGS (protocolos predefinidos,
 // con dosis por especie), o bien un objeto ya con su propia dosis (protocolos
 // personalizados, dosis fija indicada por el usuario para cualquiera de las especies).
@@ -2488,7 +2522,8 @@ function renderTarjetaProtocolo(protocolo) {
           ${esPersonalizado
             ? `<button type="button" class="boton-secundario boton-editar-protocolo" data-id="${protocolo.id}">Editar</button>
                <button type="button" class="boton-secundario boton-eliminar-protocolo" data-id="${protocolo.id}">Eliminar</button>`
-            : `<button type="button" class="boton-secundario boton-copiar-protocolo" data-id="${protocolo.id}">📋 Copiar y editar</button>`}
+            : `<button type="button" class="boton-secundario boton-copiar-protocolo" data-id="${protocolo.id}">📋 Copiar y editar</button>
+               <button type="button" class="boton-secundario boton-ocultar-protocolo" data-id="${protocolo.id}">🗑 Eliminar</button>`}
         </div>
       </div>
     `;
@@ -2566,7 +2601,8 @@ function renderTarjetaProtocolo(protocolo) {
         ${esPersonalizado
           ? `<button type="button" class="boton-secundario boton-editar-protocolo" data-id="${protocolo.id}">Editar</button>
              <button type="button" class="boton-secundario boton-eliminar-protocolo" data-id="${protocolo.id}">Eliminar</button>`
-          : `<button type="button" class="boton-secundario boton-copiar-protocolo" data-id="${protocolo.id}">📋 Copiar y editar</button>`}
+          : `<button type="button" class="boton-secundario boton-copiar-protocolo" data-id="${protocolo.id}">📋 Copiar y editar</button>
+             <button type="button" class="boton-secundario boton-ocultar-protocolo" data-id="${protocolo.id}">🗑 Eliminar</button>`}
       </div>
     </div>
   `;
@@ -2596,7 +2632,7 @@ function renderProtocolos() {
   const filtro = normalizar(protocolosBuscadorEl.value.trim());
   const coincide = (p) => !filtro || textoBusquedaProtocolo(p).includes(filtro);
   const customFiltrados = customProtocols.filter(coincide);
-  const predefinidosFiltrados = PROTOCOLS.filter(coincide);
+  const predefinidosFiltrados = PROTOCOLS.filter((p) => !protocolosOcultos.has(p.id)).filter(coincide);
 
   if (filtro && !customFiltrados.length && !predefinidosFiltrados.length) {
     protocolosListaEl.innerHTML = `<p class="placeholder">Ningún protocolo coincide con "${escapeHtml(protocolosBuscadorEl.value.trim())}".</p>`;
@@ -2644,6 +2680,22 @@ function renderProtocolos() {
         componentes: protocolo.componentes.map((c) => convertirComponenteAEditable(c, protocolo.especies))
       });
       editandoProtocoloId = null; // se guarda como protocolo personalizado nuevo, no sobrescribe el original
+    });
+  });
+  // Ocultar un protocolo PREDEFINIDO en este dispositivo (ver comentario en storage.js): no
+  // borra nada del código compartido, solo deja de mostrarse aquí. Útil cuando hay varios
+  // protocolos parecidos y solo se quiere usar uno, o si otro hospital usa esta misma base de
+  // datos y quiere quitar protocolos que no le aplican. Se puede deshacer desde "Mi base de
+  // datos" → Protocolos ocultados.
+  protocolosListaEl.querySelectorAll(".boton-ocultar-protocolo").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const protocolo = PROTOCOLS.find((p) => p.id === btn.dataset.id);
+      if (!protocolo) return;
+      if (!confirm(`¿Eliminar "${protocolo.nombre}" de tu lista de protocolos? Solo se ocultará en este dispositivo (no se borra del código compartido ni afecta a otros dispositivos); puedes recuperarlo luego desde "Mi base de datos".`)) return;
+      await dbPut("protocolosOcultos", { id: protocolo.id, nombre: protocolo.nombre });
+      await cargarProtocolosOcultos();
+      renderProtocolos();
+      if (typeof renderProtocolosOcultos === "function") renderProtocolosOcultos();
     });
   });
   protocolosListaEl.querySelectorAll(".boton-eliminar-protocolo").forEach((btn) => {
@@ -3782,12 +3834,13 @@ const importarComparacionContinuarBoton = document.getElementById("importar-comp
 const importarComparacionCancelarBoton = document.getElementById("importar-comparacion-cancelar");
 
 exportarDatosBoton.addEventListener("click", async () => {
-  const [drugs, protocolos, favoritos, favoritosCriExport, imagenes] = await Promise.all([
+  const [drugs, protocolos, favoritos, favoritosCriExport, imagenes, protocolosOcultosExport] = await Promise.all([
     dbGetAll("customDrugs"),
     dbGetAll("customProtocols"),
     dbGetAll("favoritosHospital"),
     dbGetAll("favoritosCri"),
-    dbGetAll("imagenes")
+    dbGetAll("imagenes"),
+    dbGetAll("protocolosOcultos")
   ]);
   const backup = {
     tipo: "calculadora-dosis-backup",
@@ -3797,7 +3850,8 @@ exportarDatosBoton.addEventListener("click", async () => {
     customProtocols: protocolos,
     favoritosHospital: favoritos,
     favoritosCri: favoritosCriExport,
-    imagenes
+    imagenes,
+    protocolosOcultos: protocolosOcultosExport
   };
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -3814,7 +3868,7 @@ exportarDatosBoton.addEventListener("click", async () => {
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
-  importarDatosEstadoEl.textContent = `Exportado: ${drugs.length} fármaco(s), ${protocolos.length} protocolo(s), ${favoritos.length} favorito(s) del hospital, ${favoritosCriExport.length} favorito(s) de CRI y ${imagenes.length} imagen(es).`;
+  importarDatosEstadoEl.textContent = `Exportado: ${drugs.length} fármaco(s), ${protocolos.length} protocolo(s), ${favoritos.length} favorito(s) del hospital, ${favoritosCriExport.length} favorito(s) de CRI, ${protocolosOcultosExport.length} protocolo(s) ocultado(s) y ${imagenes.length} imagen(es).`;
 });
 
 importarDatosBoton.addEventListener("click", () => importarDatosInput.click());
@@ -3828,15 +3882,18 @@ async function ejecutarImportacion(backup) {
   for (const fav of backup.favoritosHospital || []) await dbPut("favoritosHospital", fav);
   for (const fav of backup.favoritosCri || []) await dbPut("favoritosCri", fav);
   for (const img of backup.imagenes || []) await dbPut("imagenes", img);
+  for (const oc of backup.protocolosOcultos || []) await dbPut("protocolosOcultos", oc);
   await cargarCustomDrugs();
   await cargarCustomProtocols();
   await cargarFavoritosHospital();
   await cargarFavoritosCri();
+  await cargarProtocolosOcultos();
   renderMisFarmacos();
   renderProtocolos();
+  renderProtocolosOcultos();
   try { localStorage.setItem(CLAVE_ULTIMA_IMPORTACION, new Date().toISOString()); } catch (e) { /* localStorage no disponible: se ignora */ }
   actualizarIndicadorUltimaActualizacion();
-  importarDatosEstadoEl.textContent = `Importado: ${(backup.customDrugs || []).length} fármaco(s), ${(backup.customProtocols || []).length} protocolo(s), ${(backup.favoritosHospital || []).length} favorito(s) del hospital, ${(backup.favoritosCri || []).length} favorito(s) de CRI y ${(backup.imagenes || []).length} imagen(es).`;
+  importarDatosEstadoEl.textContent = `Importado: ${(backup.customDrugs || []).length} fármaco(s), ${(backup.customProtocols || []).length} protocolo(s), ${(backup.favoritosHospital || []).length} favorito(s) del hospital, ${(backup.favoritosCri || []).length} favorito(s) de CRI, ${(backup.protocolosOcultos || []).length} protocolo(s) ocultado(s) y ${(backup.imagenes || []).length} imagen(es).`;
 }
 
 // Fármacos de "Mi base de datos" en este dispositivo que el archivo a importar (todavía sin
@@ -3974,6 +4031,7 @@ function actualizarIndicadorUltimaActualizacion() {
 actualizarPaciente();
 cargarCustomDrugs().then(renderMisFarmacos);
 cargarCustomProtocols();
+cargarProtocolosOcultos();
 cargarFavoritosHospital();
 cargarFavoritosCri();
 actualizarIndicadorUltimaActualizacion();
