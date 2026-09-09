@@ -3262,7 +3262,7 @@ crearBuscadorFarmacoCri(criANombreInput, criASugerenciasEl, criAConcentracionEst
 crearBuscadorFarmacoCri(criBNombreInput, criBSugerenciasEl, criBConcentracionEstadoEl, criBUnidadFarmacoSelect, criBDosisUnidadSelect, criBConcVialInput, calcularCriB);
 
 document.addEventListener("click", (e) => {
-  [criASugerenciasEl, criBSugerenciasEl].forEach((ul) => {
+  [criASugerenciasEl, criBSugerenciasEl, criCSugerenciasEl].forEach((ul) => {
     if (!ul.classList.contains("oculto") && !ul.contains(e.target) && e.target !== ul.previousElementSibling) {
       ul.classList.add("oculto");
     }
@@ -3391,6 +3391,9 @@ function calcularCriB() {
 // va a usar (jeringa de un perfusor de 12/15/20/24/48 ml, bolsa de 100 ml...), y se calcula
 // tanto el volumen de fármaco a extraer como el ritmo resultante de la bomba. Reutiliza el
 // mismo sistema de unidades/factores que A y B (CRI_UNIDADES_DOSIS / factorDosisCri).
+const criCNombreInput = document.getElementById("cri-c-nombre");
+const criCSugerenciasEl = document.getElementById("cri-c-sugerencias");
+const criCConcentracionEstadoEl = document.getElementById("cri-c-concentracion-estado");
 const criCFarmacoListaSelect = document.getElementById("cri-c-farmaco-lista");
 const criCFarmacoNotasEl = document.getElementById("cri-c-farmaco-notas");
 const criCUnidadFarmacoSelect = document.getElementById("cri-c-unidad-farmaco");
@@ -3403,6 +3406,11 @@ const criCResultadoEl = document.getElementById("cri-c-resultado");
 
 poblarUnidadesDosisCri(criCUnidadFarmacoSelect, criCDosisUnidadSelect);
 criCUnidadFarmacoSelect.addEventListener("change", () => { poblarUnidadesDosisCri(criCUnidadFarmacoSelect, criCDosisUnidadSelect); calcularCriC(); });
+
+// El nombre del fármaco busca en vivo en CIMAVET/CIMA igual que en las calculadoras A y B,
+// para poder enlazar con un producto real y detectar su concentración automáticamente; el
+// desplegable de abajo es solo un atajo para precargar dosis/notas de la guía de CRI.
+crearBuscadorFarmacoCri(criCNombreInput, criCSugerenciasEl, criCConcentracionEstadoEl, criCUnidadFarmacoSelect, criCDosisUnidadSelect, criCConcVialInput, calcularCriC);
 
 // Agrupa el desplegable por categoría (Analgesia, Vasopresores e inotropos...) para que sea
 // fácil de recorrer con ~35 fármacos.
@@ -3426,6 +3434,8 @@ criCFarmacoListaSelect.addEventListener("change", () => {
   // Si el fármaco tiene rango específico por especie (ej. fentanilo, propofol, lidocaína) y
   // se conoce la especie del paciente activo, se usa ese rango; si no, se muestran ambos.
   const rango = f.dosis.ambas || f.dosis[paciente.especie] || f.dosis.perro || f.dosis.gato;
+  criCNombreInput.value = f.nombre;
+  criCConcentracionEstadoEl.textContent = "";
   criCUnidadFarmacoSelect.value = f.unidadFarmaco;
   poblarUnidadesDosisCri(criCUnidadFarmacoSelect, criCDosisUnidadSelect);
   criCDosisUnidadSelect.value = f.dosisUnidad;
@@ -3494,8 +3504,8 @@ function calcularCriC() {
   `;
   document.getElementById("cri-c-anadir-boton").addEventListener("click", () => {
     añadirAlPaciente({
-      principioActivo: criCFarmacoListaSelect.value || "CRI",
-      principioActivoReal: criCFarmacoListaSelect.value || null,
+      principioActivo: criCNombreInput.value.trim() || criCFarmacoListaSelect.value || "CRI",
+      principioActivoReal: criCNombreInput.value.trim() || criCFarmacoListaSelect.value || null,
       categoria: "CRI (infusión a ritmo constante)",
       dosisTexto: `${formatNum(mlFarmaco)} ml de fármaco + ${formatNum(mlSsf)} ml SSF (${formatNum(volFinal)} ml)`,
       detalle: `Dura ${formatNum(duracionHoras)} h a ${formatNum(ritmoMlH)} ml/h · dosis ${dosisValor} ${criCDosisUnidadSelect.selectedOptions[0].textContent}`,

@@ -355,8 +355,14 @@
       <div class="tarjeta">
         <h3 class="titulo-tarjeta">Preparar una jeringa/bolsa para que dure un tiempo determinado</h3>
         <p class="ayuda">Ej. "quiero una jeringa de 24 ml en el perfusor que dure 24 h" → elige el fármaco, indica cuántos ml final quieres (jeringa de 12/15/20/24/48 ml, bolsa de 100 ml...) y cuántas horas debe durar, y te digo cuánto fármaco extraer y con cuánto SSF completar.</p>
+        <div class="campo campo-busqueda">
+          <label for="cri-c-nombre">Fármaco (nombre comercial o principio activo)</label>
+          <input type="text" id="cri-c-nombre" placeholder="Busca en tu base de datos, CIMAVET o CIMA..." autocomplete="off" />
+          <ul class="cri-sugerencias sugerencias oculto" id="cri-c-sugerencias"></ul>
+          <p class="ayuda" id="cri-c-concentracion-estado"></p>
+        </div>
         <div class="campo">
-          <label for="cri-c-farmaco-lista">Fármaco (de la guía de CRI de hospitalización/UCI)</label>
+          <label for="cri-c-farmaco-lista">…o elige uno de la guía de CRI de hospitalización/UCI (rellena dosis y notas orientativas)</label>
           <select id="cri-c-farmaco-lista">
             <option value="">— Elige un fármaco —</option>
           </select>
