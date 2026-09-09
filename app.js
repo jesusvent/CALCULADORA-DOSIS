@@ -3112,6 +3112,8 @@ const CRI_UNIDADES_DOSIS = {
     { value: "mgkgdia", label: "mg/kg/día", factor: 1 / 1440 }
   ],
   UI: [
+    { value: "uikgmin", label: "UI/kg/min", factor: 1 },
+    { value: "mukgmin", label: "mU/kg/min", factor: 1 / 1000 },
     { value: "uikgh", label: "UI/kg/h", factor: 1 / 60 },
     { value: "uikgdia", label: "UI/kg/día", factor: 1 / 1440 }
   ]
@@ -3280,6 +3282,7 @@ function actualizarCri() {
   criAvisoPesoEl.classList.toggle("oculto", !!(paciente.peso && paciente.peso > 0));
   calcularCriA();
   calcularCriB();
+  calcularCriC();
 }
 
 // Calculadora A: mezcla ya preparada (concentración conocida) -> ritmo de la bomba (ml/h)
@@ -3377,6 +3380,125 @@ function calcularCriB() {
       categoria: "CRI (infusión a ritmo constante)",
       dosisTexto: `${formatNum(cantidadAnadir)} ${unidadFarmaco}${volDelVialTexto}`,
       detalle: `Añadido a ${formatNum(volTotal)} ml, a pasar a ${formatNum(ritmoMlH)} ml/h · dosis ${dosisValor} ${criBDosisUnidadSelect.selectedOptions[0].textContent}`,
+      origen: "CRI"
+    });
+  });
+}
+
+// ---- Calculadora C: preparar una jeringa/bolsa para que dure un tiempo determinado ----
+// A diferencia de A (mezcla ya preparada -> ritmo) y B (ritmo ya fijado -> cantidad), aquí
+// se parte de CUÁNTO SE QUIERE QUE DURE la preparación (horas) y de QUÉ VOLUMEN FINAL se
+// va a usar (jeringa de un perfusor de 12/15/20/24/48 ml, bolsa de 100 ml...), y se calcula
+// tanto el volumen de fármaco a extraer como el ritmo resultante de la bomba. Reutiliza el
+// mismo sistema de unidades/factores que A y B (CRI_UNIDADES_DOSIS / factorDosisCri).
+const criCFarmacoListaSelect = document.getElementById("cri-c-farmaco-lista");
+const criCFarmacoNotasEl = document.getElementById("cri-c-farmaco-notas");
+const criCUnidadFarmacoSelect = document.getElementById("cri-c-unidad-farmaco");
+const criCConcVialInput = document.getElementById("cri-c-conc-vial");
+const criCDosisValorInput = document.getElementById("cri-c-dosis-valor");
+const criCDosisUnidadSelect = document.getElementById("cri-c-dosis-unidad");
+const criCDuracionInput = document.getElementById("cri-c-duracion");
+const criCVolFinalInput = document.getElementById("cri-c-vol-final");
+const criCResultadoEl = document.getElementById("cri-c-resultado");
+
+poblarUnidadesDosisCri(criCUnidadFarmacoSelect, criCDosisUnidadSelect);
+criCUnidadFarmacoSelect.addEventListener("change", () => { poblarUnidadesDosisCri(criCUnidadFarmacoSelect, criCDosisUnidadSelect); calcularCriC(); });
+
+// Agrupa el desplegable por categoría (Analgesia, Vasopresores e inotropos...) para que sea
+// fácil de recorrer con ~35 fármacos.
+(function poblarListaCriC() {
+  const categorias = [...new Set(CRI_FARMACOS_UCI.map((f) => f.categoria))];
+  criCFarmacoListaSelect.innerHTML = `<option value="">— Elige un fármaco —</option>` +
+    categorias.map((cat) => {
+      const items = CRI_FARMACOS_UCI.filter((f) => f.categoria === cat);
+      return `<optgroup label="${escapeHtml(cat)}">` +
+        items.map((f, i) => `<option value="${escapeHtml(f.nombre)}">${escapeHtml(f.nombre)}</option>`).join("") +
+        `</optgroup>`;
+    }).join("");
+})();
+
+criCFarmacoListaSelect.addEventListener("change", () => {
+  const f = CRI_FARMACOS_UCI.find((x) => x.nombre === criCFarmacoListaSelect.value);
+  if (!f) {
+    criCFarmacoNotasEl.textContent = "";
+    return;
+  }
+  // Si el fármaco tiene rango específico por especie (ej. fentanilo, propofol, lidocaína) y
+  // se conoce la especie del paciente activo, se usa ese rango; si no, se muestran ambos.
+  const rango = f.dosis.ambas || f.dosis[paciente.especie] || f.dosis.perro || f.dosis.gato;
+  criCUnidadFarmacoSelect.value = f.unidadFarmaco;
+  poblarUnidadesDosisCri(criCUnidadFarmacoSelect, criCDosisUnidadSelect);
+  criCDosisUnidadSelect.value = f.dosisUnidad;
+  criCDosisValorInput.value = (rango.min + rango.max) / 2;
+  criCConcVialInput.value = f.concentracionSugerida != null ? f.concentracionSugerida : "";
+
+  const rangoTexto = f.dosis.ambas
+    ? `${formatNum(rango.min)}-${formatNum(rango.max)}`
+    : Object.entries(f.dosis).map(([esp, r]) => `${esp}: ${formatNum(r.min)}-${formatNum(r.max)}`).join(" · ");
+  criCFarmacoNotasEl.textContent = `Rango habitual: ${rangoTexto} ${criCDosisUnidadSelect.selectedOptions[0].textContent}. ${f.notas}`;
+  calcularCriC();
+});
+
+[criCUnidadFarmacoSelect, criCConcVialInput, criCDosisValorInput, criCDosisUnidadSelect, criCDuracionInput, criCVolFinalInput].forEach((el) => {
+  el.addEventListener("input", calcularCriC);
+  el.addEventListener("change", calcularCriC);
+});
+
+function calcularCriC() {
+  const peso = paciente.peso;
+  const unidadFarmaco = criCUnidadFarmacoSelect.value;
+  const concVial = parseFloat(criCConcVialInput.value);
+  const dosisValor = parseFloat(criCDosisValorInput.value);
+  const duracionHoras = parseFloat(criCDuracionInput.value);
+  const volFinal = parseFloat(criCVolFinalInput.value);
+  const factor = factorDosisCri(unidadFarmaco, criCDosisUnidadSelect.value);
+
+  if (!peso || !concVial || !dosisValor || !duracionHoras || !volFinal || !factor) {
+    criCResultadoEl.classList.add("oculto");
+    criCResultadoEl.innerHTML = "";
+    return;
+  }
+
+  const dosisPorKgMin = dosisValor * factor;
+  const dosisTotalPorMin = dosisPorKgMin * peso;
+  const cantidadFarmacoNecesaria = dosisTotalPorMin * 60 * duracionHoras; // mg o UI totales para toda la duración
+  const mlFarmaco = cantidadFarmacoNecesaria / concVial;
+  const ritmoMlH = volFinal / duracionHoras;
+
+  if (!isFinite(mlFarmaco) || mlFarmaco <= 0) {
+    criCResultadoEl.classList.add("oculto");
+    criCResultadoEl.innerHTML = "";
+    return;
+  }
+
+  criCResultadoEl.classList.remove("oculto");
+
+  if (mlFarmaco > volFinal) {
+    // El volumen de fármaco necesario ya supera el volumen final elegido: no cabe SSF (o
+    // directamente no cabe el fármaco). Se avisa en vez de mostrar un resultado imposible.
+    criCResultadoEl.innerHTML = `
+      <p class="aviso-inline">⚠ Para esa dosis y duración harían falta ${formatNum(mlFarmaco)} ml de fármaco, que no caben en un volumen final de ${formatNum(volFinal)} ml. Prueba con una jeringa/bolsa más grande, menos horas de duración, o un vial más concentrado.</p>
+    `;
+    return;
+  }
+
+  const mlSsf = volFinal - mlFarmaco;
+
+  criCResultadoEl.innerHTML = `
+    <div class="resultado-dosis">${formatNum(mlFarmaco)} ml de fármaco</div>
+    <div class="resultado-detalle">
+      <span>+ ${formatNum(mlSsf)} ml de SSF hasta completar ${formatNum(volFinal)} ml</span>
+    </div>
+    <div class="resultado-volumen">Programa la bomba/perfusor a <strong>${formatNum(ritmoMlH)} ml/h</strong> para que dure ${formatNum(duracionHoras)} h, en un paciente de ${formatNum(peso)} kg.</div>
+    <button class="boton-anadir" id="cri-c-anadir-boton">+ Añadir al paciente</button>
+  `;
+  document.getElementById("cri-c-anadir-boton").addEventListener("click", () => {
+    añadirAlPaciente({
+      principioActivo: criCFarmacoListaSelect.value || "CRI",
+      principioActivoReal: criCFarmacoListaSelect.value || null,
+      categoria: "CRI (infusión a ritmo constante)",
+      dosisTexto: `${formatNum(mlFarmaco)} ml de fármaco + ${formatNum(mlSsf)} ml SSF (${formatNum(volFinal)} ml)`,
+      detalle: `Dura ${formatNum(duracionHoras)} h a ${formatNum(ritmoMlH)} ml/h · dosis ${dosisValor} ${criCDosisUnidadSelect.selectedOptions[0].textContent}`,
       origen: "CRI"
     });
   });
