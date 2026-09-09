@@ -1785,6 +1785,16 @@ const DRUGS = [
     }
   },
   {
+    id: "acido-fenoxi-metilpropionico",
+    principioActivo: "Ácido 2-fenoxi-2-metilpropiónico",
+    nombresComerciales: ["Liverfine"],
+    categoria: "Hepatoprotector",
+    indicaciones: ["Apoyo hepático"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 10, unidad: "mg/kg", via: "IM profunda/IP/IV lenta", frecuencia: "cada 24 h, a criterio veterinario", notas: "Equivale a 1 ml/10 kg. No se conocen síntomas de sobredosis. Fuente: ficha técnica CIMAVET (Liverfine, nº registro 1918 ESP)." }
+    }
+  },
+  {
     id: "hidrocortisona-aceponato-otica",
     principioActivo: "Hidrocortisona aceponato (ótica)",
     nombresComerciales: ["Cortotic"],
@@ -4858,6 +4868,7 @@ const ALIAS_COMPOSICION_HOSPITAL = {
   "lotrifen": "Lotrifén",
   "hydrocortison": "Hidrocortisona aceponato (cutánea)",
   "hydrocortison (otic)": "Hidrocortisona aceponato (ótica)",
+  "poly (2-propenal, 2-propenoic acid)": "Ácido 2-fenoxi-2-metilpropiónico",
   "estriol": "Estriol",
   "atinvicitinib": "Atinvicitinib",
   "deslorelon": "Deslorelina",
