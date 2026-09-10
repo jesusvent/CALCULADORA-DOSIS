@@ -1,0 +1,26 @@
+#!/bin/sh
+# Actualiza automaticamente ULTIMA_ACTUALIZACION_BD (data.js) cada vez que un commit cambia
+# contenido real de la base de datos compartida (farmacos en DRUGS, protocolos en PROTOCOLS,
+# productos del hospital, etc.). Sin esto había que acordarse de bumpear la fecha a mano en un
+# commit aparte tras cada cambio de contenido, y si se olvidaba, dos ordenadores con codigo
+# distinto podían mostrar la misma fecha de "ultima actualizacion" sin forma de detectarlo.
+#
+# Instalacion en un ordenador nuevo (una sola vez, tras clonar el repo):
+#   git config core.hooksPath hooks
+#
+# Compara el data.js que se va a commitear con el de HEAD, ignorando la propia linea de
+# ULTIMA_ACTUALIZACION_BD (para no entrar en un bucle bumpeandose a si mismo). Si hay
+# cualquier otra diferencia, se asume que es contenido nuevo y se pone la fecha/hora actual.
+
+if git diff --cached --name-only | grep -q '^data\.js$'; then
+  staged=$(git show :data.js | grep -v 'const ULTIMA_ACTUALIZACION_BD')
+  anterior=$(git show HEAD:data.js 2>/dev/null | grep -v 'const ULTIMA_ACTUALIZACION_BD')
+
+  if [ "$staged" != "$anterior" ]; then
+    ahora=$(date '+%Y-%m-%dT%H:%M:%S')
+    sed -i.bak "s/const ULTIMA_ACTUALIZACION_BD = \"[^\"]*\";/const ULTIMA_ACTUALIZACION_BD = \"$ahora\";/" data.js
+    rm -f data.js.bak
+    git add data.js
+    echo "pre-commit: contenido de data.js modificado -> ULTIMA_ACTUALIZACION_BD actualizado a $ahora"
+  fi
+fi
