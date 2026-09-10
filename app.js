@@ -60,11 +60,25 @@ let INDICE = [];
 
 function construirIndice(farmacos) {
   const indice = [];
+  const porPrincipioActivo = new Map();
   for (const f of farmacos) {
     indice.push({ termino: f.principioActivo, tipo: "Principio activo", farmaco: f });
     for (const nc of f.nombresComerciales) {
       indice.push({ termino: nc, tipo: "Nombre comercial", farmaco: f });
     }
+    porPrincipioActivo.set(normalizar(f.principioActivo), f);
+  }
+  // Las marcas del formulario del hospital (PRODUCTOS_HOSPITAL, ej. "Nelio") no siempre están
+  // registradas también como nombre comercial del fármaco correspondiente en la base de datos
+  // interna (ej. benazepril solo tiene "Fortekor" y "Benefortin" en nombresComerciales) — se
+  // indexan igualmente aquí, resolviendo su composición a través de ALIAS_COMPOSICION_HOSPITAL,
+  // para que buscar cualquier marca del hospital encuentre el fármaco, su dosis, sus alternativas
+  // en CIMAVET y el resto de marcas recomendadas/fuera de acuerdo, igual que con Fortekor.
+  for (const p of PRODUCTOS_HOSPITAL) {
+    const alias = ALIAS_COMPOSICION_HOSPITAL[p.composicion.trim().toLowerCase()];
+    if (!alias) continue;
+    const f = porPrincipioActivo.get(normalizar(alias));
+    if (f) indice.push({ termino: p.marca, tipo: "Nombre comercial", farmaco: f });
   }
   return indice;
 }
