@@ -15,13 +15,14 @@
 //   }
 // }
 
-// Fecha Y HORA del último cambio de CONTENIDO en este archivo (fármaco o protocolo añadido/
-// editado): actualizar a mano (formato ISO "AAAA-MM-DDTHH:MM:SS", hora local) cada vez que se
-// modifique DRUGS o PROTOCOLS y se suba a GitHub — usar la hora real del commit (ej. `git log
-// -1 --format="%ai"` tras confirmarlo), no una hora aproximada. Se muestra en la cabecera de
-// la app para que cualquier usuario sepa si su copia está al día — no tocar por cambios que no
-// sean de contenido (ej. arreglos de app.js/estilos).
-const ULTIMA_ACTUALIZACION_BD = "2026-09-09T19:26:37";
+// Fecha/hora y número de versión del último cambio de CONTENIDO en este archivo (fármaco o
+// protocolo añadido/editado). Se actualizan solos: el hook de git en hooks/pre-commit detecta
+// cualquier cambio real en este archivo (aparte de estas dos líneas) y al confirmar el commit
+// pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
+// en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
+// saber si su copia de la base de datos compartida está al día.
+const ULTIMA_ACTUALIZACION_BD = "2026-09-11T00:55:59";
+const VERSION_BD = 1;
 
 const DRUGS = [
   {

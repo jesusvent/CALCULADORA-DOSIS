@@ -3860,6 +3860,10 @@ exportarDatosBoton.addEventListener("click", async () => {
     tipo: "calculadora-dosis-backup",
     version: 1,
     exportadoEl: new Date().toISOString(),
+    // Versión de la base de datos COMPARTIDA (data.js) que tenía este dispositivo al exportar
+    // — no de los datos personales de este backup. Sirve para avisar al importar en otro
+    // ordenador si ese backup se hizo con una versión distinta del código/contenido compartido.
+    versionBD: VERSION_BD,
     customDrugs: drugs,
     customProtocols: protocolos,
     favoritosHospital: favoritos,
@@ -3882,7 +3886,7 @@ exportarDatosBoton.addEventListener("click", async () => {
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
-  importarDatosEstadoEl.textContent = `Exportado: ${drugs.length} fármaco(s), ${protocolos.length} protocolo(s), ${favoritos.length} favorito(s) del hospital, ${favoritosCriExport.length} favorito(s) de CRI, ${protocolosOcultosExport.length} protocolo(s) ocultado(s) y ${imagenes.length} imagen(es).`;
+  importarDatosEstadoEl.textContent = `Exportado (base de datos compartida v${VERSION_BD}): ${drugs.length} fármaco(s), ${protocolos.length} protocolo(s), ${favoritos.length} favorito(s) del hospital, ${favoritosCriExport.length} favorito(s) de CRI, ${protocolosOcultosExport.length} protocolo(s) ocultado(s) y ${imagenes.length} imagen(es).`;
 });
 
 importarDatosBoton.addEventListener("click", () => importarDatosInput.click());
@@ -3907,7 +3911,10 @@ async function ejecutarImportacion(backup) {
   renderProtocolosOcultos();
   try { localStorage.setItem(CLAVE_ULTIMA_IMPORTACION, new Date().toISOString()); } catch (e) { /* localStorage no disponible: se ignora */ }
   actualizarIndicadorUltimaActualizacion();
-  importarDatosEstadoEl.textContent = `Importado: ${(backup.customDrugs || []).length} fármaco(s), ${(backup.customProtocols || []).length} protocolo(s), ${(backup.favoritosHospital || []).length} favorito(s) del hospital, ${(backup.favoritosCri || []).length} favorito(s) de CRI, ${(backup.protocolosOcultos || []).length} protocolo(s) ocultado(s) y ${(backup.imagenes || []).length} imagen(es).`;
+  const avisoVersion = (typeof backup.versionBD === "number" && backup.versionBD !== VERSION_BD)
+    ? ` ⚠ Este archivo se exportó con la base de datos compartida v${backup.versionBD}; este dispositivo tiene v${VERSION_BD} — actualiza la app en el ordenador que se haya quedado atrás para evitar diferencias.`
+    : "";
+  importarDatosEstadoEl.textContent = `Importado: ${(backup.customDrugs || []).length} fármaco(s), ${(backup.customProtocols || []).length} protocolo(s), ${(backup.favoritosHospital || []).length} favorito(s) del hospital, ${(backup.favoritosCri || []).length} favorito(s) de CRI, ${(backup.protocolosOcultos || []).length} protocolo(s) ocultado(s) y ${(backup.imagenes || []).length} imagen(es).${avisoVersion}`;
 }
 
 // Fármacos de "Mi base de datos" en este dispositivo que el archivo a importar (todavía sin
@@ -4036,7 +4043,11 @@ function actualizarIndicadorUltimaActualizacion() {
   const usarImport = fechaImport && !isNaN(fechaImport) && fechaImport > fechaBD;
   const fecha = usarImport ? fechaImport : fechaBD;
   const origen = usarImport ? "última importación de tus datos en este dispositivo" : "base de datos compartida";
-  el.textContent = `Última actualización: ${formatearFechaHora(fecha)} (${origen})`;
+  // VERSION_BD identifica el contenido de data.js que trae este dispositivo (independiente de
+  // si además se muestra la fecha de una importación personal más reciente): comparándola con
+  // la de otro ordenador se sabe al instante si ambos tienen la misma base de datos compartida,
+  // sin tener que fijarse en la hora exacta.
+  el.textContent = `Última actualización: ${formatearFechaHora(fecha)} (${origen}) · v${VERSION_BD}`;
 }
 
 // ============================================================
