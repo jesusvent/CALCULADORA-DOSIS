@@ -21,8 +21,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-11T00:55:59";
-const VERSION_BD = 1;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-13T20:46:25";
+const VERSION_BD = 2;
 
 const DRUGS = [
   {
@@ -2039,6 +2039,22 @@ const DRUGS = [
     indicaciones: ["Hipofosfatemia", "Deficiencia de vitamina B12", "Tratamiento de apoyo/reconstituyente"],
     especies: {
       perro: { dosisMin: 10, dosisMax: 15, unidad: "mg/kg", via: "IV/IM/SC", frecuencia: "repetir según necesidad", notas: "Dosis expresada como butafosfán (0,1-0,15 ml/kg de este preparado); aporta además 0,005-0,0075 mg/kg de cianocobalamina (vitamina B12). Calentar a temperatura corporal antes de administrar. Precaución en insuficiencia renal crónica (valorar riesgo-beneficio). Fuente: ficha técnica CIMAVET (Catosal, nº registro 3893 ESP)." }
+    }
+  },
+  {
+    id: "cianocobalamina",
+    // OJO: principioActivo debe quedarse en el nombre químico limpio, sin paréntesis — se usa
+    // tal cual para buscar en CIMAVET/CIMA (ver principioActivoCorto), y un paréntesis como
+    // "(vitamina B12)" en la propia cadena de búsqueda hace que ambas búsquedas no encuentren
+    // nada (confirmado en vivo). El sinónimo "Vitamina B12" se añade en nombresComerciales para
+    // que siga siendo buscable por ese nombre habitual.
+    principioActivo: "Cianocobalamina",
+    nombresComerciales: ["Optovite B12 (uso humano)", "Vitamina B12"],
+    categoria: "Vitamina (cobalamina/B12)",
+    indicaciones: ["Hipocobalaminemia", "Enfermedad gastrointestinal crónica (EII, SIBO, insuficiencia pancreática exocrina)", "Enteropatía con pérdida de proteínas"],
+    especies: {
+      perro: { dosisMin: 50, dosisMax: 50, unidad: "mcg/kg", via: "SC", frecuencia: "1 vez/semana durante 6 semanas, luego 1 dosis al mes; reevaluar cobalamina sérica antes del 2º mes", notas: "Si la cobalamina sigue baja tras la reevaluación, mantenimiento crónico cada 3 semanas. Alternativa por vía oral (sin riesgo de sobredosificación, útil para mantenimiento en casa): 50 µg/kg VO cada 24 h, hasta 300 µg totales en perros grandes. No se encuentra como tal en CIMAVET; Optovite B12 es un preparado de uso humano registrado en CIMA (no en CIMAVET)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mcg", via: "SC", frecuencia: "cada 7 días × 6 semanas → cada 14 días × 6 semanas → mensual hasta resolver la causa", notas: "Dosis FIJA por animal en hipocobalaminemia confirmada, no por kg: 250 µg/gato SC. Alternativa por vía oral: 50 µg/kg VO cada 24 h. No se encuentra como tal en CIMAVET; Optovite B12 es un preparado de uso humano registrado en CIMA (no en CIMAVET)." }
     }
   },
   {
