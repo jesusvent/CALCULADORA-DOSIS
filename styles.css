@@ -351,6 +351,19 @@ input:focus, select:focus {
 .boton-pubmed:hover { background: #dbe8ff; }
 .boton-pubmed-general { background: var(--gris-fondo); color: var(--gris-texto); }
 
+/* ---- Bibliografía (PubMed, búsqueda automática) ---- */
+.bibliografia-articulo { border-top: 1px solid var(--gris-borde); padding: 12px 0; }
+.bibliografia-articulo:first-of-type { border-top: none; }
+.bibliografia-titulo { display: block; font-weight: 700; font-size: 0.92rem; color: var(--azul-oscuro); text-decoration: none; }
+.bibliografia-titulo:hover { text-decoration: underline; }
+.bibliografia-meta { color: var(--gris-texto); font-size: 0.8rem; margin-top: 2px; }
+.bibliografia-dosis-lista { margin: 8px 0 0; padding-left: 18px; font-size: 0.85rem; }
+.bibliografia-dosis-lista li { margin-bottom: 4px; }
+.bibliografia-dosis-lista strong { color: var(--verde); }
+.bibliografia-contexto { color: var(--gris-texto); font-style: italic; }
+.bibliografia-sin-dosis { margin-top: 10px; }
+.bibliografia-sin-dosis summary { cursor: pointer; color: var(--gris-texto); font-size: 0.85rem; }
+
 /* ---- CIMAVET ---- */
 .cimavet-fila {
   border-top: 1px solid var(--gris-borde);

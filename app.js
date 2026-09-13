@@ -174,6 +174,7 @@ const concentracionCimavetEstadoEl = document.getElementById("concentracion-cima
 
 const cimavetFarmacoResultadoEl = document.getElementById("cimavet-farmaco-resultado");
 const bibliografiaBotonesEl = document.getElementById("bibliografia-botones");
+const bibliografiaResultadosEl = document.getElementById("bibliografia-resultados");
 
 const imagenDescripcionInput = document.getElementById("imagen-descripcion");
 const imagenInput = document.getElementById("imagen-input");
@@ -216,6 +217,9 @@ document.querySelectorAll(".subtab").forEach((btn) => {
     document.getElementById(btn.dataset.panel).classList.remove("oculto");
     if (btn.dataset.panel === "panel-cimavet-farmaco" && farmacoActivo) {
       cargarCimavetParaFarmaco(farmacoActivo);
+    }
+    if (btn.dataset.panel === "panel-bibliografia" && farmacoActivo) {
+      cargarBibliografiaPubMed(farmacoActivo);
     }
     if (btn.dataset.panel === "panel-imagenes" && farmacoActivo) {
       renderImagenes();
@@ -1569,7 +1573,14 @@ const INDICACION_PUBMED_EN = {
 // AND la indicación ya traducida al inglés. Se evita encadenar muchos conceptos obligatorios
 // a la vez (cada AND adicional reduce drásticamente los resultados), por eso NO se exige
 // además la palabra "dose"/"dosage": basta con el fármaco + la especie (+ la indicación).
-function urlPubMed(farmaco, especie, indicacion) {
+// Construye solo el término de búsqueda (sin la URL), para poder reutilizarlo tanto en el
+// enlace manual a pubmed.ncbi.nlm.nih.gov como en la llamada en vivo a la API de NCBI
+// (esearch.fcgi) que hace la búsqueda automática de dosis en panel-bibliografia.
+// Nombres (genérico traducido + comerciales) por los que un artículo en inglés probablemente
+// se refiera a este fármaco — se reutiliza tanto para construir la consulta de PubMed como
+// para, ya en el resumen de cada artículo encontrado, comprobar que una dosis detectada esté
+// realmente cerca de una mención de ESTE fármaco (y no de otro citado en el mismo resumen).
+function terminosBusquedaFarmaco(farmaco) {
   // El nombre en español apenas encuentra nada en PubMed (literatura casi toda en inglés):
   // se traduce si está en el diccionario, y si no, se usa tal cual (funciona igual para
   // nombres ya parecidos en ambos idiomas). terminosPubMed() separa ingredientes combinados
@@ -1577,13 +1588,21 @@ function urlPubMed(farmaco, especie, indicacion) {
   // "Augmentin (uso humano)" o "Producto de levadura (Saccharomyces cerevisiae)"), que si no
   // rompen el anidamiento de la consulta y la vacían por completo.
   const principioActivoEn = PRINCIPIO_ACTIVO_PUBMED_EN[farmaco.principioActivo] || farmaco.principioActivo;
-  const nombres = [...new Set([...terminosPubMed(principioActivoEn), ...(farmaco.nombresComerciales || []).flatMap(terminosPubMed)])];
+  return [...new Set([...terminosPubMed(principioActivoEn), ...(farmaco.nombresComerciales || []).flatMap(terminosPubMed)])];
+}
+
+function terminoPubMedQuery(farmaco, especie, indicacion) {
+  const nombres = terminosBusquedaFarmaco(farmaco);
   const nombreTerm = nombres.length > 1 ? `(${nombres.join(" OR ")})` : nombres[0];
   const especieEn = especie === "gato" ? "(cat OR feline)" : "(dog OR canine)";
   const partes = [nombreTerm, especieEn];
   const sinonimos = indicacion ? INDICACION_PUBMED_EN[indicacion] : null;
   if (sinonimos && sinonimos.length) partes.push(`(${sinonimos.join(" OR ")})`);
-  return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(partes.join(" AND "));
+  return partes.join(" AND ");
+}
+
+function urlPubMed(farmaco, especie, indicacion) {
+  return "https://pubmed.ncbi.nlm.nih.gov/?term=" + encodeURIComponent(terminoPubMedQuery(farmaco, especie, indicacion));
 }
 
 function renderBibliografia(farmaco) {
@@ -1599,6 +1618,136 @@ function renderBibliografia(farmaco) {
       🔎 Búsqueda general en ${especieLabel} — PubMed
     </a>`;
   bibliografiaBotonesEl.innerHTML = html;
+  // La búsqueda automática de dosis (bibliografiaResultadosEl) es más costosa (llamadas en
+  // vivo a la API de NCBI) y se difiere a cuando el usuario abre esa sub-pestaña — aquí solo
+  // se limpia el resultado del fármaco anterior para no dejarlo visible por error.
+  if (bibliografiaResultadosEl) bibliografiaResultadosEl.innerHTML = `<p class="placeholder">Abre esta pestaña para buscar dosis sugeridas en PubMed.</p>`;
+}
+
+// ============================================================
+// Bibliografía — búsqueda automática de dosis en PubMed (API E-utilities de NCBI, en vivo)
+// ============================================================
+// Detecta menciones de dosis por kg en un texto libre (resumen de un artículo). Es una
+// extracción "a ojo" por patrón de texto, no un análisis clínico: cubre los formatos más
+// habituales en abstracts en inglés (mg/kg, mcg/kg, µg/kg, UI o U/kg, con o sin rango y con o
+// sin frecuencia tipo "/day"), pero puede no detectar redacciones distintas o dar falsos
+// positivos (ej. una dosis de otro fármaco citado en el mismo resumen) — por eso siempre se
+// muestra junto al fragmento de texto donde apareció, para que el veterinario lo valore él
+// mismo en contexto, nunca como una cifra ya verificada.
+const RE_DOSIS_PUBMED = /\d+(?:[.,]\d+)?(?:\s?(?:-|–|to)\s?\d+(?:[.,]\d+)?)?\s?(?:mg|mcg|µg|ug|IU|U)\s?\/\s?kg(?:\s?(?:\/|per)\s?(?:day|d|24\s?h|dose|hr|h))?/gi;
+
+// terminosFarmaco (nombres en inglés del fármaco buscado, ver terminosBusquedaFarmaco): si se
+// pasan, una dosis solo se cuenta cuando alguno de esos nombres aparece cerca (misma frase
+// aprox.) — muchos abstracts comparan varios fármacos a la vez (ej. un analgésico de estudio
+// junto con la premedicación), y sin este filtro se atribuirían al fármaco buscado dosis que en
+// realidad son de otro citado en el mismo resumen.
+function extraerDosisDeTexto(texto, terminosFarmaco) {
+  if (!texto) return [];
+  const patronesFarmaco = (terminosFarmaco || []).map((t) => normalizar(t)).filter(Boolean);
+  const textoNorm = normalizar(texto);
+  const vistos = new Set();
+  const resultados = [];
+  let m;
+  RE_DOSIS_PUBMED.lastIndex = 0;
+  while ((m = RE_DOSIS_PUBMED.exec(texto)) !== null) {
+    const clave = m[0].toLowerCase().replace(/\s+/g, "");
+    if (vistos.has(clave)) continue;
+    const inicio = Math.max(0, m.index - 80);
+    const fin = Math.min(texto.length, m.index + m[0].length + 40);
+    if (patronesFarmaco.length) {
+      const ventana = textoNorm.slice(inicio, fin);
+      if (!patronesFarmaco.some((p) => ventana.includes(p))) continue;
+    }
+    vistos.add(clave);
+    let contexto = texto.slice(inicio, fin).trim();
+    if (inicio > 0) contexto = "…" + contexto;
+    if (fin < texto.length) contexto = contexto + "…";
+    resultados.push({ dosis: m[0], contexto });
+    if (resultados.length >= 4) break; // no saturar con menciones repetidas del mismo artículo
+  }
+  return resultados;
+}
+
+function filaBibliografiaHtml(articulo) {
+  const metaPartes = [articulo.revista, articulo.anio].filter(Boolean).join(" · ");
+  const url = `https://pubmed.ncbi.nlm.nih.gov/${articulo.pmid}/`;
+  return `
+    <div class="bibliografia-articulo">
+      <a class="bibliografia-titulo" href="${url}" target="_blank" rel="noopener">${escapeHtml(articulo.titulo)}</a>
+      <div class="bibliografia-meta">${metaPartes ? escapeHtml(metaPartes) + " · " : ""}PMID ${escapeHtml(articulo.pmid)}</div>
+      ${articulo.dosisEncontradas.length ? `
+        <ul class="bibliografia-dosis-lista">
+          ${articulo.dosisEncontradas.map((d) => `<li><strong>${escapeHtml(d.dosis)}</strong> — <span class="bibliografia-contexto">"${escapeHtml(d.contexto)}"</span></li>`).join("")}
+        </ul>
+      ` : ""}
+      <a class="boton-enlace" href="${url}" target="_blank" rel="noopener">Ver artículo en PubMed →</a>
+    </div>
+  `;
+}
+
+let bibliografiaRequestId = 0;
+
+// Búsqueda EN VIVO (sin réplica local, igual que CIMAVET/CIMA): se lanza solo al abrir la
+// sub-pestaña "Bibliografía" con un fármaco activo (no en cada tecleo ni en cada cálculo de
+// dosis), para no bombardear la API de NCBI. Añade "AND (dose OR dosage OR dosing OR
+// posology)" a la búsqueda general del fármaco+especie (a diferencia de los botones de arriba,
+// aquí SÍ interesa sesgar hacia artículos que hablen de dosis, ya que es justo lo que se va a
+// intentar extraer del resumen).
+async function cargarBibliografiaPubMed(farmaco) {
+  const requestId = ++bibliografiaRequestId;
+  if (!bibliografiaResultadosEl) return;
+  bibliografiaResultadosEl.innerHTML = `<p class="placeholder">Buscando dosis en artículos de PubMed...</p>`;
+  try {
+    const query = terminoPubMedQuery(farmaco, paciente.especie, null) + " AND (dose OR dosage OR dosing OR posology)";
+    const esearchUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmax=12&sort=relevance&retmode=json&term=" + encodeURIComponent(query);
+    const esearchRes = await fetch(esearchUrl, { cache: "no-store" });
+    if (requestId !== bibliografiaRequestId) return;
+    if (!esearchRes.ok) throw new Error("esearch " + esearchRes.status);
+    const esearchData = await esearchRes.json();
+    const ids = (esearchData.esearchresult && esearchData.esearchresult.idlist) || [];
+
+    if (!ids.length) {
+      bibliografiaResultadosEl.innerHTML = `<p class="placeholder">No se han encontrado artículos en PubMed para esta búsqueda. Prueba con los enlaces de búsqueda manual de arriba.</p>`;
+      return;
+    }
+
+    const efetchUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&rettype=abstract&retmode=xml&id=" + ids.join(",");
+    const efetchRes = await fetch(efetchUrl, { cache: "no-store" });
+    if (requestId !== bibliografiaRequestId) return;
+    if (!efetchRes.ok) throw new Error("efetch " + efetchRes.status);
+    const xmlTexto = await efetchRes.text();
+    const xml = new DOMParser().parseFromString(xmlTexto, "text/xml");
+    const articulosXml = Array.from(xml.querySelectorAll("PubmedArticle"));
+
+    const terminosFarmaco = terminosBusquedaFarmaco(farmaco);
+    const articulos = articulosXml.map((art) => {
+      const pmid = art.querySelector("PMID")?.textContent || "";
+      const titulo = art.querySelector("ArticleTitle")?.textContent || "(sin título)";
+      const abstractTexto = Array.from(art.querySelectorAll("AbstractText")).map((n) => n.textContent).join(" ");
+      const revista = art.querySelector("Journal ISOAbbreviation")?.textContent || art.querySelector("Journal Title")?.textContent || "";
+      const anio = art.querySelector("PubDate Year")?.textContent || art.querySelector("PubDate MedlineDate")?.textContent || "";
+      return { pmid, titulo, revista, anio, dosisEncontradas: extraerDosisDeTexto(abstractTexto, terminosFarmaco) };
+    }).filter((a) => a.pmid);
+
+    if (requestId !== bibliografiaRequestId) return;
+
+    const conDosis = articulos.filter((a) => a.dosisEncontradas.length);
+    const sinDosis = articulos.filter((a) => !a.dosisEncontradas.length);
+
+    let html = "";
+    if (conDosis.length) {
+      html += conDosis.map(filaBibliografiaHtml).join("");
+    } else {
+      html += `<p class="placeholder">Ninguno de los artículos encontrados menciona una dosis explícita (mg/kg, mcg/kg...) en su resumen — puede que solo aparezca en el texto completo.</p>`;
+    }
+    if (sinDosis.length) {
+      html += `<details class="bibliografia-sin-dosis"><summary>${sinDosis.length} artículo(s) más sin dosis detectada en el resumen</summary>${sinDosis.map(filaBibliografiaHtml).join("")}</details>`;
+    }
+    bibliografiaResultadosEl.innerHTML = html;
+  } catch (err) {
+    if (requestId !== bibliografiaRequestId) return;
+    bibliografiaResultadosEl.innerHTML = `<p class="aviso-inline">⚠ No se ha podido conectar con PubMed ahora mismo. Comprueba tu conexión a internet e inténtalo de nuevo.</p>`;
+  }
 }
 
 // ============================================================
