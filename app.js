@@ -1429,6 +1429,11 @@ const PRINCIPIO_ACTIVO_PUBMED_EN = {
   "Oxitocina": "oxytocin",
   "Ondansetrón": "ondansetron",
   "Oxitetraciclina": "oxytetracycline",
+  // "Acetaminophen" (no "paracetamol") es el término casi universal en la literatura en
+  // inglés, sobre todo estadounidense — con una coma en vez de "/" se trata como sinónimo
+  // independiente (ver terminosPubMed) tanto en la búsqueda como en el filtro de proximidad de
+  // dosis de panel-bibliografia, no como un fármaco combinado.
+  "Paracetamol": "Paracetamol, Acetaminophen",
   "Pentobarbital": "pentobarbital OR pentobarbitone",
   "Pimobendán": "pimobendan",
   "Tiletamina + Zolazepam": "tiletamine + zolazepam",
@@ -1668,6 +1673,24 @@ function extraerDosisDeTexto(texto, terminosFarmaco) {
   return resultados;
 }
 
+// Traduce un texto corto (título o fragmento de resumen) al español con una API pública
+// gratuita (MyMemory, sin necesidad de clave) — no es una traducción profesional, solo ayuda a
+// leer rápido el resumen en español; el enlace al artículo original en PubMed siempre permite
+// comprobar el texto exacto en inglés. Si falla (sin conexión, límite de la API...) se devuelve
+// el texto original en inglés sin bloquear el resto de la pestaña.
+async function traducirAEspanol(texto) {
+  if (!texto) return texto;
+  try {
+    const url = "https://api.mymemory.translated.net/get?q=" + encodeURIComponent(texto) + "&langpair=en|es";
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) return texto;
+    const j = await r.json();
+    return (j.responseData && j.responseData.translatedText) ? j.responseData.translatedText : texto;
+  } catch (e) {
+    return texto;
+  }
+}
+
 function filaBibliografiaHtml(articulo) {
   const metaPartes = [articulo.revista, articulo.anio].filter(Boolean).join(" · ");
   const url = `https://pubmed.ncbi.nlm.nih.gov/${articulo.pmid}/`;
@@ -1696,7 +1719,7 @@ let bibliografiaRequestId = 0;
 async function cargarBibliografiaPubMed(farmaco) {
   const requestId = ++bibliografiaRequestId;
   if (!bibliografiaResultadosEl) return;
-  bibliografiaResultadosEl.innerHTML = `<p class="placeholder">Buscando dosis en artículos de PubMed...</p>`;
+  bibliografiaResultadosEl.innerHTML = `<p class="placeholder">Buscando y traduciendo dosis de artículos de PubMed...</p>`;
   try {
     const query = terminoPubMedQuery(farmaco, paciente.especie, null) + " AND (dose OR dosage OR dosing OR posology)";
     const esearchUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmax=12&sort=relevance&retmode=json&term=" + encodeURIComponent(query);
@@ -1728,6 +1751,19 @@ async function cargarBibliografiaPubMed(farmaco) {
       const anio = art.querySelector("PubDate Year")?.textContent || art.querySelector("PubDate MedlineDate")?.textContent || "";
       return { pmid, titulo, revista, anio, dosisEncontradas: extraerDosisDeTexto(abstractTexto, terminosFarmaco) };
     }).filter((a) => a.pmid);
+
+    if (requestId !== bibliografiaRequestId) return;
+
+    // Los abstracts de PubMed están casi siempre en inglés: se traduce el título de cada
+    // artículo y, de los que tienen dosis detectada, el fragmento de contexto de cada una (los
+    // que no tienen dosis no llevan fragmento que traducir). En paralelo para no encadenar
+    // decenas de peticiones secuenciales.
+    await Promise.all(articulos.map(async (a) => {
+      a.titulo = await traducirAEspanol(a.titulo);
+      await Promise.all(a.dosisEncontradas.map(async (d) => {
+        d.contexto = await traducirAEspanol(d.contexto);
+      }));
+    }));
 
     if (requestId !== bibliografiaRequestId) return;
 

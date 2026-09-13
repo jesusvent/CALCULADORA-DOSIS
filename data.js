@@ -21,8 +21,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-13T20:46:25";
-const VERSION_BD = 2;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-13T22:04:02";
+const VERSION_BD = 3;
 
 const DRUGS = [
   {
@@ -89,6 +89,17 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 0.1, dosisMax: 0.2, unidad: "mg/kg", via: "VO/SC", frecuencia: "cada 24 h (dosis inicial 0.2, mantenimiento 0.1)", notas: "No combinar con otros AINEs ni corticoides. Con alimento." },
       gato:  { dosisMin: 0.05, dosisMax: 0.1, unidad: "mg/kg", via: "VO/SC", frecuencia: "cada 24 h (dosis inicial única, luego reducir)", notas: "Uso crónico solo dosis de mantenimiento muy bajas; vigilar función renal." }
+    }
+  },
+  {
+    id: "paracetamol",
+    principioActivo: "Paracetamol",
+    nombresComerciales: ["Perfalgan (uso humano)", "Gelocatil (uso humano)", "Apiretal (uso humano)"],
+    categoria: "Analgésico/antipirético (no AINE clásico)",
+    indicaciones: ["Dolor", "Dolor postquirúrgico", "Fiebre"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 15, unidad: "mg/kg", via: "VO/IV lenta (>15 min)", frecuencia: "cada 8-12 h", notas: "Uso off-label: preparados de uso humano, no autorizado como medicamento veterinario en España. Suele combinarse con opioides u otros analgésicos para dolor moderado-severo (analgesia multimodal). No combinar con AINEs sin valorar el riesgo gastrointestinal/renal conjunto. NUNCA administrar a gatos." },
+      gato:  { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "-", frecuencia: "-", notas: "⚠ CONTRAINDICADO EN GATOS: carecen de la enzima (glucuronil-transferasa) necesaria para metabolizarlo con seguridad. Causa metahemoglobinemia, daño hepático y puede ser mortal incluso a dosis bajas. No existe una dosis segura." }
     }
   },
   {
