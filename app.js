@@ -1805,6 +1805,114 @@ function estadoTexto(estado) {
   return "Desconocido";
 }
 
+// ============================================================
+// Cuadro plegable "Calcular dosis" para una fila de CIMAVET o CIMA: detecta automáticamente
+// la concentración/comprimido del producto a partir de su nombre (extraerPresentacionMed) y,
+// con la dosis en mg/kg que indique el usuario y el peso del paciente activo, calcula ml o
+// fracción de comprimidos — sin necesitar que el fármaco ya esté en la base de datos interna.
+// Pensado sobre todo para medicamentos que solo existen en CIMA (uso humano), que buscarLocal
+// no encuentra y que hasta ahora se mostraban como simple ficha informativa sin poder calcular
+// nada con ellos.
+// ============================================================
+let cajaCalculoDosisContador = 0;
+
+function cajaCalculoDosisHtml(med, principioActivo, nombreCorto) {
+  const id = ++cajaCalculoDosisContador;
+  const p = extraerPresentacionMed(med);
+  const detectadoTexto = p
+    ? `Detectado en el nombre del producto: ${etiquetaPresentacion(p)}.`
+    : "No se ha podido detectar la concentración automáticamente en el nombre del producto — indícala tú abajo.";
+  const mostrarConcManual = !p || p.tipo === "liquido";
+  return `
+    <details class="calculo-dosis-detalle">
+      <summary>🧮 Calcular dosis con este medicamento</summary>
+      <div class="calculo-dosis-caja" data-tipo="${p ? p.tipo : ""}" data-valor="${p ? p.valor : ""}" data-principio="${escapeHtml(principioActivo || "")}" data-nombre="${escapeHtml(nombreCorto || "")}">
+        <p class="ayuda">${detectadoTexto}</p>
+        <div class="fila">
+          <div class="campo">
+            <label for="calculo-dosis-valor-${id}">Dosis (mg/kg)</label>
+            <input type="number" id="calculo-dosis-valor-${id}" class="calculo-dosis-valor" min="0" step="any" placeholder="Ej. 5" />
+          </div>
+          ${mostrarConcManual ? `
+          <div class="campo">
+            <label for="calculo-dosis-conc-${id}">${p ? "Concentración (si prefieres indicarla tú)" : "Concentración (mg/ml)"}</label>
+            <input type="number" id="calculo-dosis-conc-${id}" class="calculo-dosis-conc" min="0" step="any" placeholder="${p ? formatNum(p.valor) : "Ej. 10"}" />
+          </div>` : ""}
+        </div>
+        <div class="calculo-dosis-resultado"><p class="placeholder">${paciente.peso ? "Indica la dosis en mg/kg." : "Introduce antes el peso del paciente en la pestaña Calculadora."}</p></div>
+      </div>
+    </details>`;
+}
+
+function recalcularCajaDosis(inputEl) {
+  const caja = inputEl.closest(".calculo-dosis-caja");
+  if (!caja) return;
+  const resultadoEl = caja.querySelector(".calculo-dosis-resultado");
+  const dosisMgKg = parseFloat(caja.querySelector(".calculo-dosis-valor").value);
+  const tipo = caja.dataset.tipo;
+  const valorAuto = caja.dataset.valor ? parseFloat(caja.dataset.valor) : null;
+  const nombreCorto = caja.dataset.nombre || "este medicamento";
+
+  if (!paciente.peso || paciente.peso <= 0) {
+    resultadoEl.innerHTML = `<p class="placeholder">Introduce el peso del paciente en la pestaña Calculadora.</p>`;
+    return;
+  }
+  if (!dosisMgKg || dosisMgKg <= 0) {
+    resultadoEl.innerHTML = `<p class="placeholder">Indica la dosis en mg/kg.</p>`;
+    return;
+  }
+  const dosisTotalMg = dosisMgKg * paciente.peso;
+
+  if (tipo === "solido" && valorAuto) {
+    const cantidad = dosisTotalMg / valorAuto;
+    const texto = textoComprimidos(cantidad, cantidad);
+    resultadoEl.innerHTML = `
+      <div class="resultado-volumen">${formatNum(dosisTotalMg)} mg totales ÷ ${formatNum(valorAuto)} mg/comprimido = <strong>${texto}</strong></div>
+      <button type="button" class="boton-anadir calculo-dosis-anadir">+ Añadir al paciente (${texto})</button>`;
+    caja.dataset.dosisTexto = `${formatNum(dosisTotalMg)} mg totales (${formatNum(dosisMgKg)} mg/kg)`;
+    caja.dataset.detalle = `${texto} de ${nombreCorto}`;
+    return;
+  }
+
+  const concInput = caja.querySelector(".calculo-dosis-conc");
+  const concManual = concInput ? parseFloat(concInput.value) : NaN;
+  const concentracion = !isNaN(concManual) && concManual > 0 ? concManual : (tipo === "liquido" ? valorAuto : null);
+  if (!concentracion) {
+    resultadoEl.innerHTML = `<p class="aviso-inline">⚠ Indica la concentración (mg/ml) para poder calcular el volumen a administrar.</p>`;
+    delete caja.dataset.dosisTexto;
+    return;
+  }
+  const ml = dosisTotalMg / concentracion;
+  resultadoEl.innerHTML = `
+    <div class="resultado-volumen">${formatNum(dosisTotalMg)} mg totales ÷ ${formatNum(concentracion)} mg/ml = <strong>${formatNum(ml)} ml</strong></div>
+    <button type="button" class="boton-anadir calculo-dosis-anadir">+ Añadir al paciente (${formatNum(ml)} ml)</button>`;
+  caja.dataset.dosisTexto = `${formatNum(dosisTotalMg)} mg totales (${formatNum(dosisMgKg)} mg/kg)`;
+  caja.dataset.detalle = `${formatNum(ml)} ml de ${nombreCorto}`;
+}
+
+document.addEventListener("input", (e) => {
+  if (e.target.classList.contains("calculo-dosis-valor") || e.target.classList.contains("calculo-dosis-conc")) {
+    recalcularCajaDosis(e.target);
+  }
+});
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".calculo-dosis-anadir");
+  if (!btn) return;
+  const caja = btn.closest(".calculo-dosis-caja");
+  if (!caja || !caja.dataset.dosisTexto) return;
+  añadirAlPaciente({
+    principioActivo: caja.dataset.principio || caja.dataset.nombre || "Medicamento",
+    principioActivoReal: caja.dataset.principio || null,
+    categoria: null,
+    dosisTexto: caja.dataset.dosisTexto,
+    detalle: caja.dataset.detalle,
+    origen: "Calculado desde CIMAVET/CIMA"
+  });
+  btn.textContent = "✓ Añadido al resumen del paciente";
+  btn.disabled = true;
+});
+
 function filaCimavetHtml(med, textoBuscado) {
   const especies = (med.especies || []).map((e) => e.nombre).join(", ");
   const principios = med.pactivos || (med.principiosActivos || []).map((p) => p.nombre).join(", ");
@@ -1828,6 +1936,7 @@ function filaCimavetHtml(med, textoBuscado) {
         ${prospecto ? `<a href="${prospecto.url}" target="_blank" rel="noopener">📄 Prospecto</a>` : ""}
         <a href="${urlPubMedTexto(textoBuscado || med.nombre, principios, paciente.especie)}" target="_blank" rel="noopener">🔎 Buscar en PubMed</a>
       </div>
+      ${cajaCalculoDosisHtml(med, principios, marcaCorta(med.nombre) || med.nombre)}
     </div>`;
 }
 
@@ -1868,6 +1977,14 @@ function filaCimaHtml(med, textoBuscado) {
   const principioActivoCapitalizado = principioActivo
     ? principioActivo.charAt(0).toUpperCase() + principioActivo.slice(1).toLowerCase()
     : (textoBuscado ? textoBuscado.charAt(0).toUpperCase() + textoBuscado.slice(1) : "");
+  // Para el campo "Composición" de Mi base de datos, la concentración YA detectada en el
+  // nombre (ej. "50 mg/ml") es mucho más útil que el texto genérico de forma farmacéutica
+  // (ej. "solución inyectable"): así, si luego se busca este fármaco personalizado, la
+  // concentración se detecta sola en vez de tener que volver a indicarla a mano.
+  const presentacionDetectada = extraerPresentacionMed(med);
+  const composicionTexto = presentacionDetectada
+    ? etiquetaPresentacion(presentacionDetectada)
+    : (med.formaFarmaceutica ? med.formaFarmaceutica.nombre : "");
   return `
     <div class="cimavet-fila">
       <div class="cimavet-nombre">${escapeHtml(med.nombre)} <span class="badge-humano">Uso humano</span></div>
@@ -1888,10 +2005,11 @@ function filaCimaHtml(med, textoBuscado) {
         <button type="button" class="boton-enlace boton-anadir-cima-bd"
           data-nombre="${escapeHtml(marcaCorta(med.nombre) || med.nombre)}"
           data-principio="${escapeHtml(principioActivoCapitalizado)}"
-          data-composicion="${escapeHtml(med.formaFarmaceutica ? med.formaFarmaceutica.nombre : "")}"
+          data-composicion="${escapeHtml(composicionTexto)}"
           data-nregistro="${escapeHtml(med.nregistro || "")}"
         >+ Añadir a Mi base de datos</button>
       </div>
+      ${cajaCalculoDosisHtml(med, principioActivoCapitalizado, marcaCorta(med.nombre) || med.nombre)}
     </div>`;
 }
 
@@ -1910,8 +2028,24 @@ document.addEventListener("click", (e) => {
   cfComerciales.value = btn.dataset.nombre || "";
   cfComposicion.value = btn.dataset.composicion || "";
   const notaOffLabel = `Medicamento de uso humano (CIMA${btn.dataset.nregistro ? ", nº registro " + btn.dataset.nregistro : ""}), no autorizado como veterinario. Uso en animales fuera de ficha técnica (off-label), bajo prescripción y responsabilidad del veterinario. Verifica y completa la dosis antes de guardar.`;
-  const primeraFilaNotas = cfPatologiasLista.querySelector(".pf-notas");
-  if (primeraFilaNotas) primeraFilaNotas.value = notaOffLabel;
+  const primeraFila = cfPatologiasLista.querySelector(".patologia-fila");
+  if (primeraFila) {
+    const notasInput = primeraFila.querySelector(".pf-notas");
+    if (notasInput) notasInput.value = notaOffLabel;
+    // Si ya se calculó una dosis (mg/kg) en el cuadro "Calcular dosis" de esta misma fila, se
+    // precarga también aquí en vez de dejarla en blanco para que el usuario tenga que
+    // volver a escribirla.
+    const cajaValor = btn.closest(".cimavet-fila")?.querySelector(".calculo-dosis-valor");
+    const dosisValor = cajaValor ? parseFloat(cajaValor.value) : NaN;
+    if (!isNaN(dosisValor) && dosisValor > 0) {
+      const minInput = primeraFila.querySelector(".pf-min");
+      const maxInput = primeraFila.querySelector(".pf-max");
+      const especieSelect = primeraFila.querySelector(".pf-especie");
+      if (minInput) minInput.value = dosisValor;
+      if (maxInput) maxInput.value = dosisValor;
+      if (especieSelect) especieSelect.value = paciente.especie;
+    }
+  }
 });
 
 async function buscarEnCimaComoRespaldo(texto, contenedorEl, principioActivo, nombreComercialBuscado) {
