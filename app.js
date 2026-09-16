@@ -1641,34 +1641,65 @@ function renderBibliografia(farmaco) {
 // mismo en contexto, nunca como una cifra ya verificada.
 const RE_DOSIS_PUBMED = /\d+(?:[.,]\d+)?(?:\s?(?:-|–|to)\s?\d+(?:[.,]\d+)?)?\s?(?:mg|mcg|µg|ug|IU|U)\s?\/\s?kg(?:\s?(?:\/|per)\s?(?:day|d|24\s?h|dose|hr|h))?/gi;
 
+// Divide un resumen en frases (separador: punto/interrogación/exclamación seguido de espacio y
+// mayúscula o paréntesis). Es una heurística simple —no distingue abreviaturas como "e.g." o
+// "vs."—, pero suficiente para resúmenes científicos en inglés y muchísimo más legible que
+// cortar por un número fijo de caracteres a mitad de palabra o de frase.
+function dividirEnFrases(texto) {
+  return texto.split(/(?<=[.!?])\s+(?=[A-Z(])/);
+}
+
+// Recorta una frase alrededor de una posición, respetando límites de palabra (nunca a mitad de
+// palabra), para que una frase excepcionalmente larga siga siendo concisa de leer.
+function recortarPorPalabra(frase, centro, largoMax) {
+  if (frase.length <= largoMax) return frase;
+  const mitad = Math.floor(largoMax / 2);
+  let inicio = Math.max(0, centro - mitad);
+  let fin = Math.min(frase.length, centro + mitad);
+  if (inicio > 0) inicio = frase.indexOf(" ", inicio) + 1 || inicio;
+  if (fin < frase.length) {
+    const corte = frase.lastIndexOf(" ", fin);
+    if (corte > inicio) fin = corte;
+  }
+  let recorte = frase.slice(inicio, fin).trim();
+  if (inicio > 0) recorte = "…" + recorte;
+  if (fin < frase.length) recorte = recorte + "…";
+  return recorte;
+}
+
 // terminosFarmaco (nombres en inglés del fármaco buscado, ver terminosBusquedaFarmaco): si se
-// pasan, una dosis solo se cuenta cuando alguno de esos nombres aparece cerca (misma frase
-// aprox.) — muchos abstracts comparan varios fármacos a la vez (ej. un analgésico de estudio
-// junto con la premedicación), y sin este filtro se atribuirían al fármaco buscado dosis que en
-// realidad son de otro citado en el mismo resumen.
+// pasan, una dosis solo se cuenta cuando alguno de esos nombres aparece PEGADO a la propia
+// dosis (ventana corta, no toda la frase) — muchos abstracts comparan varios fármacos en la
+// misma frase (ej. "acetaminophen (10 mg/kg) was compared with buprenorphine (20 µg/kg)"), y
+// comprobar solo que el nombre esté "en algún punto de la frase" atribuiría al fármaco buscado
+// dosis que en realidad son de otro citado justo al lado. El CONTEXTO que se muestra, en
+// cambio, sí es la frase completa (recortada solo si es muy larga, por palabra entera): así se
+// lee de corrido y se traduce mejor, en vez de un trozo cortado a mitad de frase.
 function extraerDosisDeTexto(texto, terminosFarmaco) {
   if (!texto) return [];
   const patronesFarmaco = (terminosFarmaco || []).map((t) => normalizar(t)).filter(Boolean);
-  const textoNorm = normalizar(texto);
+  const frases = dividirEnFrases(texto);
   const vistos = new Set();
   const resultados = [];
-  let m;
-  RE_DOSIS_PUBMED.lastIndex = 0;
-  while ((m = RE_DOSIS_PUBMED.exec(texto)) !== null) {
-    const clave = m[0].toLowerCase().replace(/\s+/g, "");
-    if (vistos.has(clave)) continue;
-    const inicio = Math.max(0, m.index - 80);
-    const fin = Math.min(texto.length, m.index + m[0].length + 40);
-    if (patronesFarmaco.length) {
-      const ventana = textoNorm.slice(inicio, fin);
-      if (!patronesFarmaco.some((p) => ventana.includes(p))) continue;
+  for (const frase of frases) {
+    const fraseNorm = normalizar(frase);
+    RE_DOSIS_PUBMED.lastIndex = 0;
+    let m;
+    while ((m = RE_DOSIS_PUBMED.exec(frase)) !== null) {
+      const clave = m[0].toLowerCase().replace(/\s+/g, "");
+      if (vistos.has(clave)) continue;
+      if (patronesFarmaco.length) {
+        const inicioVentana = Math.max(0, m.index - 50);
+        const finVentana = Math.min(frase.length, m.index + m[0].length + 30);
+        const ventana = fraseNorm.slice(inicioVentana, finVentana);
+        if (!patronesFarmaco.some((p) => ventana.includes(p))) continue;
+      }
+      vistos.add(clave);
+      const contexto = recortarPorPalabra(frase.trim(), m.index, 200);
+      resultados.push({ dosis: m[0], contexto });
+      if (resultados.length >= 4) break; // no saturar con menciones repetidas del mismo artículo
     }
-    vistos.add(clave);
-    let contexto = texto.slice(inicio, fin).trim();
-    if (inicio > 0) contexto = "…" + contexto;
-    if (fin < texto.length) contexto = contexto + "…";
-    resultados.push({ dosis: m[0], contexto });
-    if (resultados.length >= 4) break; // no saturar con menciones repetidas del mismo artículo
+    if (resultados.length >= 4) break;
   }
   return resultados;
 }
