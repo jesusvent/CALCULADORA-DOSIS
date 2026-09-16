@@ -393,6 +393,7 @@ input:focus, select:focus {
 .cimavet-enlaces a { color: var(--azul); font-size: 0.82rem; font-weight: 600; text-decoration: none; }
 .cimavet-enlaces a:hover { text-decoration: underline; }
 
+.calculo-dosis-detalle-bibliografia { margin: 4px 0 18px; padding-bottom: 14px; border-bottom: 1px solid var(--gris-borde); }
 .calculo-dosis-detalle { margin-top: 10px; }
 .calculo-dosis-detalle summary { cursor: pointer; color: var(--azul); font-size: 0.85rem; font-weight: 600; }
 .calculo-dosis-caja { margin-top: 10px; padding: 10px 12px; background: var(--gris-fondo); border-radius: 10px; }

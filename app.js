@@ -381,10 +381,13 @@ function actualizarAvisoNoEnBd(valor, localResultados) {
     avisoNoEnBdEl.classList.add("oculto");
     return;
   }
+  // El enlace "Buscar en PubMed" no se repite aquí: el respaldo de CIMA/CIMAVET que se carga
+  // justo debajo (cargarComercialesParaTexto) ya trae su propio enlace de PubMed específico
+  // por cada producto encontrado — o, si tampoco hay nada en CIMA, uno genérico igualmente —
+  // así que ponerlo también aquí solo duplicaba el mismo enlace dos veces en pantalla.
   avisoNoEnBdEl.classList.remove("oculto");
   avisoNoEnBdEl.innerHTML = `"${escapeHtml(valor)}" no está en tu base de datos de dosis. ` +
-    `<button type="button" class="boton-enlace" id="anadir-no-en-bd-boton">+ Añadirlo a Mi base de datos</button> · ` +
-    `<a class="boton-enlace" target="_blank" rel="noopener" href="${urlPubMedTexto(valor, null, paciente.especie)}">🔎 Buscar en PubMed</a>`;
+    `<button type="button" class="boton-enlace" id="anadir-no-en-bd-boton">+ Añadirlo a Mi base de datos</button>`;
   document.getElementById("anadir-no-en-bd-boton").addEventListener("click", () => {
     document.querySelector('.tab-principal[data-vista="misfarmacos"]').click();
     abrirFormulario();
@@ -1747,10 +1750,15 @@ let bibliografiaRequestId = 0;
 // posology)" a la búsqueda general del fármaco+especie (a diferencia de los botones de arriba,
 // aquí SÍ interesa sesgar hacia artículos que hablen de dosis, ya que es justo lo que se va a
 // intentar extraer del resumen).
-async function cargarBibliografiaPubMed(farmaco) {
+// contenedorEl es opcional (por defecto el de la sub-pestaña Bibliografía de la ficha de un
+// fármaco); se puede pasar otro para reutilizar la misma búsqueda+extracción+traducción en
+// cualquier otro sitio donde aparezcan resultados de CIMAVET/CIMA (ver
+// cargarBibliografiaPubMedParaTexto, para medicamentos que no están en la base de datos interna).
+async function cargarBibliografiaPubMed(farmaco, contenedorEl) {
+  const el = contenedorEl || bibliografiaResultadosEl;
   const requestId = ++bibliografiaRequestId;
-  if (!bibliografiaResultadosEl) return;
-  bibliografiaResultadosEl.innerHTML = `<p class="placeholder">Buscando y traduciendo dosis de artículos de PubMed...</p>`;
+  if (!el) return;
+  el.innerHTML = `<p class="placeholder">Buscando y traduciendo dosis de artículos de PubMed...</p>`;
   try {
     const query = terminoPubMedQuery(farmaco, paciente.especie, null) + " AND (dose OR dosage OR dosing OR posology)";
     const esearchUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmax=12&sort=relevance&retmode=json&term=" + encodeURIComponent(query);
@@ -1761,7 +1769,7 @@ async function cargarBibliografiaPubMed(farmaco) {
     const ids = (esearchData.esearchresult && esearchData.esearchresult.idlist) || [];
 
     if (!ids.length) {
-      bibliografiaResultadosEl.innerHTML = `<p class="placeholder">No se han encontrado artículos en PubMed para esta búsqueda. Prueba con los enlaces de búsqueda manual de arriba.</p>`;
+      el.innerHTML = `<p class="placeholder">No se han encontrado artículos en PubMed para esta búsqueda.</p>`;
       return;
     }
 
@@ -1810,11 +1818,20 @@ async function cargarBibliografiaPubMed(farmaco) {
     if (sinDosis.length) {
       html += `<details class="bibliografia-sin-dosis"><summary>${sinDosis.length} artículo(s) más sin dosis detectada en el resumen</summary>${sinDosis.map(filaBibliografiaHtml).join("")}</details>`;
     }
-    bibliografiaResultadosEl.innerHTML = html;
+    el.innerHTML = html;
   } catch (err) {
     if (requestId !== bibliografiaRequestId) return;
-    bibliografiaResultadosEl.innerHTML = `<p class="aviso-inline">⚠ No se ha podido conectar con PubMed ahora mismo. Comprueba tu conexión a internet e inténtalo de nuevo.</p>`;
+    el.innerHTML = `<p class="aviso-inline">⚠ No se ha podido conectar con PubMed ahora mismo. Comprueba tu conexión a internet e inténtalo de nuevo.</p>`;
   }
+}
+
+// Para un texto que no corresponde a ningún fármaco de la base de datos interna (ej.
+// "Metalgial", solo encontrado en CIMA): monta un fármaco "de mentira" solo con ese texto para
+// reutilizar toda la búsqueda+extracción+traducción ya construida para panel-bibliografia,
+// dentro del propio respaldo de CIMA/CIMAVET (ver buscarEnCimaComoRespaldo) — así se puede
+// calcular una dosis rápidamente sin tener que añadir antes el fármaco a la base de datos.
+function cargarBibliografiaPubMedParaTexto(texto, contenedorEl) {
+  cargarBibliografiaPubMed({ principioActivo: texto, nombresComerciales: [] }, contenedorEl);
 }
 
 // ============================================================
@@ -2087,6 +2104,25 @@ async function buscarEnCimaComoRespaldo(texto, contenedorEl, principioActivo, no
     // devolver cientos de marcas/combinaciones, y un corte a los primeros 20-30 (orden
     // básicamente alfabético) escondía casi todas las marcas habituales sin ningún criterio.
     const resultados = data.resultados || [];
+    // Fármaco que NO está en la base de datos interna (si lo estuviera, farmacoActivo ya
+    // tendría su propia sub-pestaña "Bibliografía" con esta misma búsqueda — repetirla aquí
+    // solo duplicaría contenido): el texto buscado no tiene ninguna dosis por kg conocida por
+    // la app, así que se busca también en PubMed la dosis (igual que en panel-bibliografia)
+    // para poder calcularla rápido con el cuadro "Calcular dosis" de cada producto de abajo,
+    // en vez de tener que añadir antes el fármaco a mano solo para consultar una dosis
+    // orientativa. El principio activo real que trae CIMA en el primer resultado (ej.
+    // "METAMIZOL SODICO" para la marca "Metalgial") busca en PubMed mucho mejor que el nombre
+    // comercial español, que ahí casi nunca aparece citado.
+    const principioActivoDetectado = resultados.length && resultados[0].vtm && resultados[0].vtm.nombre
+      ? resultados[0].vtm.nombre.charAt(0).toUpperCase() + resultados[0].vtm.nombre.slice(1).toLowerCase()
+      : null;
+    const terminoBibliografia = principioActivoDetectado || principioActivo || nombreComercialBuscado || texto;
+    const bibliografiaHtml = farmacoActivo ? "" : `
+      <div class="calculo-dosis-detalle-bibliografia">
+        <h3 class="subtitulo">Dosis sugeridas encontradas en PubMed</h3>
+        <p class="ayuda">Este fármaco no está en tu base de datos de dosis, así que no hay una pauta propia con la que comparar — estas son solo menciones de dosis detectadas en resúmenes de PubMed, con su artículo de origen. Verifica siempre antes de usar cualquiera.</p>
+        <div class="bibliografia-busqueda-resultados"><p class="placeholder">Buscando en PubMed...</p></div>
+      </div>`;
     if (!resultados.length) {
       // Sin resultados en CIMAVET ni en CIMA (habitual en suplementos/nutracéuticos que no
       // son medicamento autorizado bajo ningún nombre): se ofrece igualmente un enlace a
@@ -2095,11 +2131,15 @@ async function buscarEnCimaComoRespaldo(texto, contenedorEl, principioActivo, no
       // CIMA/CIMAVET (ej. "Caseína hidrolizada (alfa-casozepina)") y buscar solo por ese
       // texto en PubMed es mucho menos fiable que por el nombre comercial real del producto.
       contenedorEl.innerHTML = `<p class="placeholder">"${escapeHtml(texto)}" no se ha encontrado ni como medicamento veterinario (CIMAVET) ni como medicamento de uso humano (CIMA).</p>` +
-        `<a class="boton-enlace" target="_blank" rel="noopener" href="${urlPubMedTexto(nombreComercialBuscado || texto, principioActivo, paciente.especie)}">🔎 Buscar en PubMed</a>`;
+        `<a class="boton-enlace" target="_blank" rel="noopener" href="${urlPubMedTexto(nombreComercialBuscado || texto, principioActivo, paciente.especie)}">🔎 Buscar en PubMed</a>` +
+        bibliografiaHtml;
+      if (!farmacoActivo) cargarBibliografiaPubMedParaTexto(terminoBibliografia, contenedorEl.querySelector(".bibliografia-busqueda-resultados"));
       return;
     }
     contenedorEl.innerHTML = `<p class="aviso-inline">⚠ "${escapeHtml(texto)}" no es un medicamento veterinario autorizado en España, pero sí existe como medicamento de uso humano en CIMA (${resultados.length} resultado(s)). Su uso en animales sería fuera de ficha técnica (off-label), bajo prescripción y responsabilidad del veterinario.</p>` +
+      bibliografiaHtml +
       resultados.map((m) => filaCimaHtml(m, texto)).join("");
+    if (!farmacoActivo) cargarBibliografiaPubMedParaTexto(terminoBibliografia, contenedorEl.querySelector(".bibliografia-busqueda-resultados"));
   } catch (err) {
     contenedorEl.innerHTML += `<p class="aviso-inline">⚠ No se ha podido conectar con CIMA (${escapeHtml(err.message)}).</p>`;
   }
