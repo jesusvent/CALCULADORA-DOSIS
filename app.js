@@ -1,3 +1,7 @@
+// Calculadora de Dosis Veterinaria — © 2026 Jesús Ventura. Todos los derechos reservados.
+// Software propietario — ver LICENSE en la raíz del repositorio. Prohibida su copia,
+// modificación, distribución o reutilización, total o parcial, sin autorización por escrito.
+
 // ============================================================
 // Utilidades generales
 // ============================================================

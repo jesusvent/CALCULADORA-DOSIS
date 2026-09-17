@@ -1,3 +1,7 @@
+// Calculadora de Dosis Veterinaria — © 2026 Jesús Ventura. Todos los derechos reservados.
+// Software propietario — ver LICENSE en la raíz del repositorio. Prohibida su copia,
+// modificación, distribución o reutilización, total o parcial, sin autorización por escrito.
+//
 // Base de datos de fármacos veterinarios (perro y gato).
 // IMPORTANTE: datos orientativos de ejemplo. Verifica siempre con una fuente
 // actualizada (ej. Plumb's Veterinary Drug Handbook) antes de administrar.
@@ -21,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-13T22:04:02";
-const VERSION_BD = 3;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-17T10:57:25";
+const VERSION_BD = 4;
 
 const DRUGS = [
   {

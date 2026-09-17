@@ -1,3 +1,7 @@
+/* Calculadora de Dosis Veterinaria — © 2026 Jesús Ventura. Todos los derechos reservados.
+   Software propietario — ver LICENSE en la raíz del repositorio. Prohibida su copia,
+   modificación, distribución o reutilización, total o parcial, sin autorización por escrito. */
+
 :root {
   --azul: #2563eb;
   --azul-oscuro: #1e40af;
@@ -55,6 +59,20 @@ header .ultima-actualizacion {
   margin-top: 4px;
   opacity: 0.75;
 }
+
+.app-footer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid var(--gris-borde);
+}
+.app-footer p {
+  color: var(--gris-texto);
+  font-size: 0.75rem;
+  margin: 0;
+  line-height: 1.5;
+}
+.app-footer a { color: var(--gris-texto); }
 
 /* ---- Pestañas principales ---- */
 .tabs-principales {
