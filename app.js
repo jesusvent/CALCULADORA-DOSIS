@@ -2341,16 +2341,21 @@ comercialSelect.addEventListener("change", () => {
 // Incluye microgramos/mcg/µg (ej. "FENTADON 50 microgramos/ml..."), muy habituales en CRI
 // (fentanilo, dexmedetomidina...); se convierten a mg/ml para mantener un único sistema de
 // unidades de concentración en toda la app (igual que ya se hace con las dosis en mcg/kg).
-const PATRON_CONCENTRACION_LIQUIDA = /(\d+(?:[.,]\d+)?)\s*(mg|mcg|[uµ]g|microgramos?|UI)\s*\/\s*ml/i;
+// "g" (gramos, sin la "m") va el último en la alternancia a propósito: como las alternativas se
+// prueban en orden en cada posición, "mg"/"mcg"/etc. se intentan primero y solo caen a "g" suelto
+// cuando de verdad no hay una "m" delante (ej. "NOLOTIL 0,4 g/ml", metamizol de uso humano) — así
+// no hay ambigüedad entre "50 mg/ml" y "2 g/ml" aunque ambos acaben en "g".
+const PATRON_CONCENTRACION_LIQUIDA = /(\d+(?:[.,]\d+)?)\s*(mg|mcg|[uµ]g|microgramos?|UI|g)\s*\/\s*ml/i;
 const PATRON_MG_COMPRIMIDO = /(\d+(?:[.,]\d+)?)\s*mg\b/i;
 
 // A partir del match de PATRON_CONCENTRACION_LIQUIDA, devuelve { valor, unidad } ya
-// normalizado a mg/ml o UI/ml (convirtiendo microgramos/mcg/µg dividiendo entre 1000).
+// normalizado a mg/ml o UI/ml (convirtiendo gramos ×1000 y microgramos/mcg/µg ÷1000).
 function normalizarConcentracionLiquida(match) {
   const valorBruto = parseFloat(match[1].replace(",", "."));
   const unidadRaw = match[2].toLowerCase();
   if (unidadRaw === "ui") return { valor: valorBruto, unidad: "UI/ml" };
   if (unidadRaw === "mg") return { valor: valorBruto, unidad: "mg/ml" };
+  if (unidadRaw === "g") return { valor: valorBruto * 1000, unidad: "mg/ml" };
   return { valor: valorBruto / 1000, unidad: "mg/ml" }; // mcg, µg, ug, microgramo(s)
 }
 
