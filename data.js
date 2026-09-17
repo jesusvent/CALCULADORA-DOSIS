@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T00:43:16";
-const VERSION_BD = 6;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T00:45:15";
+const VERSION_BD = 7;
 
 const DRUGS = [
   {
@@ -1184,6 +1184,73 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 0.01, dosisMax: 0.02, unidad: "mg/kg", via: "IV/IM/SC", frecuencia: "cada 6-8 h", notas: "Analgesia de inicio lento (20-30 min) pero más prolongada que butorfanol." },
       gato:  { dosisMin: 0.01, dosisMax: 0.02, unidad: "mg/kg", via: "IV/IM/SC/OTM", frecuencia: "cada 6-8 h", notas: "Buena absorción por vía transmucosa oral (OTM) en gatos." }
+    }
+  },
+  // ---- Fármacos de "Descripción de especialidades: Aparato muscular" (Guía terapéutica del
+  // animal de compañía, ConsultaVet, 8ª ed., Rejas López y cols.). ----
+  {
+    id: "codeina",
+    principioActivo: "Codeína",
+    nombresComerciales: ["Codeisan (uso humano)", "Histaverin (uso humano)"],
+    categoria: "Antitusivo opioide",
+    indicaciones: ["Tos"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Presentación de uso humano (Codeisan/Fludan Codeína/Histaverin solución 1,27-2 mg/mL; Codeisan comprimidos 28,7 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.25, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Usar con precaución (rango de dosis amplio citado en la fuente). Presentación de uso humano (Codeisan/Fludan Codeína/Histaverin solución 1,27-2 mg/mL; Codeisan comprimidos 28,7 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "petidina",
+    principioActivo: "Petidina",
+    nombresComerciales: ["Dolantina (uso humano)"],
+    categoria: "Opioide agonista puro",
+    indicaciones: ["Dolor"],
+    especies: {
+      perro: { dosisMin: 3, dosisMax: 5, unidad: "mg/kg", via: "SC", frecuencia: "cada 1-2 h", notas: "Presentación de uso humano (Dolantina, viales SC/IM/IV de 50 y 100 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 3, dosisMax: 5, unidad: "mg/kg", via: "SC", frecuencia: "cada 1-2 h", notas: "Presentación de uso humano (Dolantina, viales SC/IM/IV de 50 y 100 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "remifentanilo",
+    principioActivo: "Remifentanilo",
+    nombresComerciales: ["Ultiva (uso humano)"],
+    categoria: "Opioide agonista puro (ultracorta duración)",
+    indicaciones: ["Dolor intraoperatorio"],
+    especies: {
+      perro: { dosisMin: 0.25, dosisMax: 1, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto (mcg/kg/min)", notas: "Infusión a ritmo constante (CRI): 0,25-1,00 mcg/kg al minuto, no una dosis única — usar la calculadora de CRI para preparar la mezcla. Presentación de uso humano (Ultiva, viales IV de 1, 2 y 5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.25, dosisMax: 1, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto (mcg/kg/min)", notas: "Infusión a ritmo constante (CRI): 0,25-1,00 mcg/kg al minuto, no una dosis única — usar la calculadora de CRI para preparar la mezcla. Presentación de uso humano (Ultiva, viales IV de 1, 2 y 5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "acido-acetilsalicilico",
+    principioActivo: "Ácido acetilsalicílico",
+    nombresComerciales: ["AAS (uso humano)", "Adiro (uso humano)"],
+    categoria: "Antiagregante plaquetario (AINE)",
+    indicaciones: ["Trombosis (antiagregante)"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 0.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Dosis antiagregante/antitrombótica (baja), no la dosis analgésica/antiinflamatoria clásica de aspirina. No administrar con insuficiencia renal, discrasia sanguínea o úlcera gastrointestinal. Presentación de uso humano (AAS, Adiro, Bioplak, comprimidos de 100-500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "piroxicam",
+    principioActivo: "Piroxicam",
+    nombresComerciales: ["Feldene (uso humano)"],
+    categoria: "AINE (oxicam)",
+    indicaciones: ["Rinitis alérgica o linfoplasmocitaria"],
+    especies: {
+      perro: { dosisMin: 0.3, dosisMax: 0.3, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "No administrar con insuficiencia renal o úlcera gastrointestinal. Presentación de uso humano (Feldene, cápsulas de 10 y 20 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.3, dosisMax: 0.3, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "No administrar con insuficiencia renal o úlcera gastrointestinal. Presentación de uso humano (Feldene, cápsulas de 10 y 20 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "metocarbamol",
+    principioActivo: "Metocarbamol",
+    nombresComerciales: ["Robaxin (uso humano)"],
+    categoria: "Miorrelajante (no benzodiazepínico)",
+    indicaciones: ["Espasmo muscular"],
+    especies: {
+      perro: { dosisMin: 20, dosisMax: 20, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", notas: "Presentación de uso humano (Robaxin, comprimidos de 500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 20, dosisMax: 20, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", notas: "Presentación de uso humano (Robaxin, comprimidos de 500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
