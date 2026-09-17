@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:04:39";
-const VERSION_BD = 13;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:08:05";
+const VERSION_BD = 14;
 
 const DRUGS = [
   {
@@ -1398,6 +1398,228 @@ const DRUGS = [
       gato:  { dosisMin: 2, dosisMax: 3, unidad: "mg/kg", via: "IV", frecuencia: "administrar lento hasta efecto (dosis única)", notas: "Dosis menor si hay premedicación previa." }
     }
   },
+  // ---- Fármacos de "Descripción de especialidades: Sistema nervioso" (Guía terapéutica del
+  // animal de compañía, ConsultaVet, 8ª ed., Rejas López y cols.) — muchos de este capítulo ya
+  // estaban en la base de datos (Tiopental, Ketamina, Propofol, Bupivacaína, Fenobarbital,
+  // Levetiracetam, Zonisamida, Diazepam, Midazolam, Acepromazina, Dexmedetomidina, Medetomidina,
+  // Gabapentina, Pregabalina, Clomipramina, Fluoxetina, Metamizol, Paracetamol,
+  // Propentofilina), no se han tocado. ----
+  {
+    id: "etomidato",
+    principioActivo: "Etomidato",
+    nombresComerciales: ["Hypnomidate (uso humano)"],
+    categoria: "Anestésico intravenoso",
+    indicaciones: ["Anestesia (inducción)"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "IV", frecuencia: "dosis única, hasta efecto", notas: "La fuente remite a la posología del artículo correspondiente, sin una dosis fija por kg publicada aquí. Presentación de uso humano (Etomidato-Lipuro, Hypnomidate, viales IV de 20 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "IV", frecuencia: "dosis única, hasta efecto", notas: "La fuente remite a la posología del artículo correspondiente, sin una dosis fija por kg publicada aquí. Presentación de uso humano (Etomidato-Lipuro, Hypnomidate, viales IV de 20 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "mepivacaina",
+    principioActivo: "Mepivacaína",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Anestésico local",
+    indicaciones: ["Analgesia epidural"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Epidural", frecuencia: "según protocolo", notas: "La fuente remite a la posología del artículo correspondiente, sin una dosis fija por kg publicada aquí. Presentación veterinaria para otras especies (Intra-epicaine, Mepidor) y de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Epidural", frecuencia: "según protocolo", notas: "La fuente remite a la posología del artículo correspondiente, sin una dosis fija por kg publicada aquí. Presentación veterinaria para otras especies (Intra-epicaine, Mepidor) y de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "bromuro-potasico",
+    principioActivo: "Bromuro potásico",
+    nombresComerciales: ["Libromide (veterinario)", "Vetbromide (veterinario)"],
+    categoria: "Antiepiléptico",
+    indicaciones: ["Epilepsia"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "VO", frecuencia: "según protocolo", notas: "La fuente remite a la posología del artículo correspondiente, sin una dosis fija por kg publicada aquí. No administrar con insuficiencia renal. Presentación veterinaria (Libromide, Vetbromide, comprimidos 325-600 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "alprazolam",
+    principioActivo: "Alprazolam",
+    nombresComerciales: ["Trankimazin (uso humano)"],
+    categoria: "Benzodiazepina (ansiolítico)",
+    indicaciones: ["Crisis de pánico o de angustia"],
+    especies: {
+      perro: { dosisMin: 0.02, dosisMax: 0.1, unidad: "mg/kg", via: "VO", frecuencia: "dosis única (o cada 6-12 h al inicio de ansiedad por separación)", notas: "No administrar con encefalopatía hepática ni en hembras al inicio de la gestación. Presentación de uso humano (Trankimazin, solución oral 0,75 mg/mL, comprimidos 0,25-2 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "dosis única o cada 8-24 h", notas: "Dosis fija por animal, no por kg: 0,125-0,250 mg/gato. No administrar con encefalopatía hepática ni en hembras al inicio de la gestación. Presentación de uso humano (Trankimazin, solución oral 0,75 mg/mL, comprimidos 0,25-2 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "clonazepam",
+    principioActivo: "Clonazepam",
+    nombresComerciales: ["Rivotril (uso humano)"],
+    categoria: "Benzodiazepina (ansiolítico)",
+    indicaciones: ["Crisis de pánico o de angustia"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "dosis única (comenzar con dosis baja) o cada 8-12 h", notas: "No administrar con encefalopatía hepática ni en hembras al inicio de la gestación. Presentación de uso humano (Rivotril, solución oral 2,5 mg/mL, comprimidos 0,5-2 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.05, dosisMax: 0.25, unidad: "mg/kg", via: "VO", frecuencia: "dosis única o cada 8-24 h", notas: "No administrar con encefalopatía hepática ni en hembras al inicio de la gestación. Presentación de uso humano (Rivotril, solución oral 2,5 mg/mL, comprimidos 0,5-2 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "clorazepato",
+    principioActivo: "Clorazepato",
+    nombresComerciales: ["Tranxilium (uso humano)"],
+    categoria: "Benzodiazepina (ansiolítico)",
+    indicaciones: ["Crisis de pánico o de angustia"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "dosis única en crisis grave; a largo plazo, cada 8-12 h", notas: "No administrar con encefalopatía hepática ni en hembras al inicio de la gestación. Presentación de uso humano (Tranxilium, cápsulas 5-15 mg, comprimidos 50 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.5, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "dosis única en crisis grave; a largo plazo, cada 12-24 h", notas: "No administrar con encefalopatía hepática ni en hembras al inicio de la gestación. Presentación de uso humano (Tranxilium, cápsulas 5-15 mg, comprimidos 50 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "lorazepam",
+    principioActivo: "Lorazepam",
+    nombresComerciales: ["Placinoral (uso humano)"],
+    categoria: "Benzodiazepina (ansiolítico)",
+    indicaciones: ["Crisis de pánico o de angustia"],
+    especies: {
+      perro: { dosisMin: 0.02, dosisMax: 0.1, unidad: "mg/kg", via: "VO", frecuencia: "dosis única o cada 8-24 h (al inicio de ansiedad por separación)", notas: "No administrar con encefalopatía hepática ni en hembras al inicio de la gestación. Presentación de uso humano (Placinoral, comprimidos 0,5-5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.02, dosisMax: 0.1, unidad: "mg/kg", via: "VO", frecuencia: "dosis única o cada 12-24 h, comenzando con la dosis menor", notas: "No administrar con encefalopatía hepática ni en hembras al inicio de la gestación. Presentación de uso humano (Placinoral, comprimidos 0,5-5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "clonidina",
+    principioActivo: "Clonidina",
+    nombresComerciales: ["Catapresan (uso humano)"],
+    categoria: "Agonista alfa2-adrenérgico",
+    indicaciones: ["Prevención de fobia o ansiedad"],
+    especies: {
+      perro: { dosisMin: 0.01, dosisMax: 0.05, unidad: "mg/kg", via: "VO", frecuencia: "90-120 minutos antes del evento", dosisMaxima: 0.9, notas: "Máximo 0,9 mg totales. No administrar a perros diabéticos. Presentación de uso humano (Catapresan, comprimidos de 0,15 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "amitriptilina",
+    principioActivo: "Amitriptilina",
+    nombresComerciales: ["Tryptizol (uso humano)"],
+    categoria: "Antidepresivo tricíclico",
+    indicaciones: ["Dolor neuropático", "Trastornos del comportamiento (agresividad, ansiedad)"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "No administrar con retención de orina, arritmias cardiacas graves, epilepsia o glaucoma. Presentación de uso humano (Tryptizol, comprimidos 10-75 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.5, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "Síndrome urológico felino (estrés): 5,0-12,5 mg/gato c12-24h (dosis fija). No administrar con retención de orina, arritmias cardiacas graves, epilepsia o glaucoma. Presentación de uso humano (Tryptizol, comprimidos 10-75 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "imipramina",
+    principioActivo: "Imipramina",
+    nombresComerciales: ["Tofranil (uso humano)"],
+    categoria: "Antidepresivo tricíclico",
+    indicaciones: ["Narcolepsia", "Incontinencia urinaria"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 1.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h, comenzando con dosis baja", notas: "Incontinencia urinaria: 5-15 mg/perro c12h (dosis fija). No administrar con retención de orina, arritmias cardiacas graves, epilepsia o glaucoma. Presentación de uso humano (Tofranil, comprimidos 10-50 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.5, dosisMax: 1.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h, comenzando con dosis baja", notas: "Incontinencia urinaria: 2,5-5,0 mg/gato c12h (dosis fija). No administrar con retención de orina, arritmias cardiacas graves, epilepsia o glaucoma. Presentación de uso humano (Tofranil, comprimidos 10-50 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "paroxetina",
+    principioActivo: "Paroxetina",
+    nombresComerciales: ["Daparox (uso humano)"],
+    categoria: "Antidepresivo (ISRS)",
+    indicaciones: ["Trastornos del comportamiento (agresividad, ansiedad, eliminación inadecuada felina)"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Presentación de uso humano (Daparox, solución oral 33 mg/mL, comprimidos 10-40 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Presentación de uso humano (Daparox, solución oral 33 mg/mL, comprimidos 10-40 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "sertralina",
+    principioActivo: "Sertralina",
+    nombresComerciales: ["Besitran (uso humano)"],
+    categoria: "Antidepresivo (ISRS)",
+    indicaciones: ["Trastornos del comportamiento (agresividad, ansiedad, eliminación inadecuada felina)"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Presentación de uso humano (Besitran, solución oral 20 mg/mL, comprimidos 50-200 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Presentación de uso humano (Besitran, solución oral 20 mg/mL, comprimidos 50-200 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "selegilina",
+    principioActivo: "Selegilina",
+    nombresComerciales: ["Plurimen (uso humano)"],
+    categoria: "Inhibidor de la MAO-B",
+    indicaciones: ["Disfunción cognitiva"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h por la mañana, comenzando con la dosis menor", notas: "No administrar a pacientes diabéticos, con pancreatitis, cardiopatía o nefropatía, ni en gestantes o lactantes. Presentación de uso humano (Plurimen, comprimidos de 5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "nicergolina",
+    principioActivo: "Nicergolina",
+    nombresComerciales: ["Varson (uso humano)"],
+    categoria: "Vasodilatador cerebral",
+    indicaciones: ["Disfunción cognitiva"],
+    especies: {
+      perro: { dosisMin: 0.25, dosisMax: 0.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h por la mañana", notas: "Presentación de uso humano (Varson, cápsulas de 5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.25, dosisMax: 0.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h por la mañana", notas: "Presentación de uso humano (Varson, cápsulas de 5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "neostigmina",
+    principioActivo: "Neostigmina",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Anticolinesterásico (parasimpaticomimético)",
+    indicaciones: ["Miastenia grave", "Reversión de bloqueantes neuromusculares no benzodiazepínicos"],
+    especies: {
+      perro: { dosisMin: 0.04, dosisMax: 0.04, unidad: "mg/kg", via: "SC/IM", frecuencia: "cada 6 h", notas: "Reversión de bloqueantes neuromusculares: 0,1 mg/kg IV. Presentación de uso humano (viales SC/IM/IV de 0,5 y 2,5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.04, dosisMax: 0.04, unidad: "mg/kg", via: "SC/IM", frecuencia: "cada 6 h", notas: "Reversión de bloqueantes neuromusculares: 0,1 mg/kg IV. Presentación de uso humano (viales SC/IM/IV de 0,5 y 2,5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "piridostigmina",
+    principioActivo: "Piridostigmina",
+    nombresComerciales: ["Mestinon (uso humano)"],
+    categoria: "Anticolinesterásico (parasimpaticomimético)",
+    indicaciones: ["Miastenia grave"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h, comenzando con la dosis inferior", notas: "Presentación de uso humano (Mestinon, comprimidos de 60 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.5, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h, comenzando con la dosis inferior", notas: "Presentación de uso humano (Mestinon, comprimidos de 60 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "amantadina",
+    principioActivo: "Amantadina",
+    nombresComerciales: ["Amantadine Level (uso humano)"],
+    categoria: "Antagonista NMDA (analgésico coadyuvante)",
+    indicaciones: ["Dolor crónico"],
+    especies: {
+      perro: { dosisMin: 3, dosisMax: 5, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "Presentación de uso humano (Amantadine Level, cápsulas de 100 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 3, dosisMax: 5, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "Presentación de uso humano (Amantadine Level, cápsulas de 100 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "cannabidiol",
+    principioActivo: "Cannabidiol",
+    nombresComerciales: ["Cibapet (paraveterinario)", "Cibdol (parafarmacia)"],
+    categoria: "Analgésico coadyuvante (cannabinoide)",
+    indicaciones: ["Dolor asociado a enfermedad articular degenerativa"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Presentación paraveterinaria (Cibapet) y de parafarmacia (Cibdol). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Presentación paraveterinaria (Cibapet) y de parafarmacia (Cibdol). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "metilfenidato",
+    principioActivo: "Metilfenidato",
+    nombresComerciales: ["Rubifen (uso humano)"],
+    categoria: "Estimulante del sistema nervioso central",
+    indicaciones: ["Narcolepsia"],
+    especies: {
+      perro: { dosisMin: 0.25, dosisMax: 0.25, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "Presentación de uso humano (Rubifen, comprimidos de 5-20 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "trazodona",
+    principioActivo: "Trazodona",
+    nombresComerciales: ["Deprax (uso humano)"],
+    categoria: "Antidepresivo (ansiolítico/sedante)",
+    indicaciones: ["Trastornos del comportamiento (ansiedad, fobias)", "Ansiedad por transporte/visita veterinaria"],
+    especies: {
+      perro: { dosisMin: 3, dosisMax: 7.5, unidad: "mg/kg", via: "VO", frecuencia: "1-4 horas antes del evento", notas: "Presentación de uso humano (Deprax, comprimidos de 100 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "60-90 minutos antes de la visita", notas: "Dosis fija por animal, no por kg: 50 mg/gato. Presentación de uso humano (Deprax, comprimidos de 100 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
   {
     id: "atropina",
     principioActivo: "Atropina",
@@ -2578,7 +2800,7 @@ const DRUGS = [
     categoria: "Anticonvulsivante",
     indicaciones: ["Epilepsia idiopática", "Convulsiones", "Fobia a ruidos"],
     especies: {
-      perro: { dosisMin: 10, dosisMax: 30, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Epilepsia idiopática: iniciar a 10 mg/kg/12h, si no controla tras ≥1 semana subir en incrementos del 50-100% hasta máximo 30 mg/kg/12h. No funciona en clusters ni estatus epiléptico; puede pararse de golpe. Fobia a ruidos: dosis fija de 30 mg/kg/12h, iniciando 2 días antes del evento. No usar en reproductores machos ni en gestación/lactancia. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 61700/5063 — equivalente al registro CIMAVET EU/2/12/147 (Pexion, Boehringer)." }
+      perro: { dosisMin: 10, dosisMax: 30, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Epilepsia idiopática: iniciar a 10 mg/kg/12h, si no controla tras ≥1 semana subir en incrementos del 50-100% hasta máximo 30 mg/kg/12h. No funciona en clusters ni estatus epiléptico; puede pararse de golpe. Fobia a ruidos: dosis fija de 30 mg/kg/12h, iniciando 2 días antes del evento. No usar en reproductores machos ni en gestación/lactancia. Fuente: Summary of Product Characteristics, VMD (Reino Unido), VM 61700/5063 — equivalente al registro CIMAVET EU/2/12/147 (Pexion, Boehringer). Guía terapéutica de ConsultaVet (Rejas López y cols., 8ª ed.): fobia al ruido, empezar 48 h antes del evento (no 2 días como aquí — ambas fuentes citadas por si difieren en la práctica)." }
     }
   },
   {
