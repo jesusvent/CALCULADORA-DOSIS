@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T00:46:35";
-const VERSION_BD = 8;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T00:53:29";
+const VERSION_BD = 9;
 
 const DRUGS = [
   {
@@ -1386,16 +1386,6 @@ const DRUGS = [
     }
   },
   {
-    id: "lotrifen",
-    principioActivo: "Lotrifen",
-    nombresComerciales: ["Privaprol"],
-    categoria: "Abortivo (reproducción)",
-    indicaciones: ["Interrupción de gestación (abortivo)"],
-    especies: {
-      perro: { dosisMin: 2.5, dosisMax: 2.5, unidad: "mg/kg", via: "IM profunda", frecuencia: "dosis única, entre el día 9º y 13º tras el acoplamiento", notas: "No administrar pasados 15 días del acoplamiento, ni en perras con hepatopatía, nefropatía o enfermedad gastrointestinal grave. Presentación veterinaria (Privaprol, viales IM de 50 y 100 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
-    }
-  },
-  {
     id: "melatonina",
     principioActivo: "Melatonina",
     nombresComerciales: ["Circadin (uso humano)", "Aquilea Melatonina (parafarmacia)"],
@@ -1675,6 +1665,121 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 1, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "" },
       gato:  { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", dosisMaxima: 18.75, notas: "Habitualmente pautado como dosis fija de 18,75 mg/gato/día independientemente del peso; el rango mg/kg es orientativo." }
+    }
+  },
+  // ---- Fármacos de "Descripción de especialidades: Sangre y terapia antineoplásica" (Guía
+  // terapéutica del animal de compañía, ConsultaVet, 8ª ed., Rejas López y cols.) — se omiten
+  // los citostáticos cuya fuente remite a "ver posología en el artículo correspondiente" sin dar
+  // una dosis concreta (ciclofosfamida, citarabina, dacarbazina, doxorubicina, melfalán,
+  // metotrexato, mitoxantrona; y la parte de linfoma de vincristina/clorambucilo), por requerir
+  // protocolos de quimioterapia completos, no una dosis suelta. ----
+  {
+    id: "darbepoetina-alfa",
+    principioActivo: "Darbepoetina alfa",
+    nombresComerciales: ["Aranesp (uso humano)"],
+    categoria: "Antianémico (estimulante de la eritropoyesis)",
+    indicaciones: ["Anemia no regenerativa"],
+    especies: {
+      perro: { dosisMin: 0.45, dosisMax: 0.45, unidad: "mcg/kg", via: "SC", frecuencia: "una vez por semana (dosis inicial)", notas: "Ajustar según respuesta (hematocrito). Presentación de uso humano (Aranesp, viales SC de 10-500 mcg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 1, dosisMax: 1, unidad: "mcg/kg", via: "SC", frecuencia: "una vez por semana (dosis inicial)", notas: "Ajustar según respuesta (hematocrito). Presentación de uso humano (Aranesp, viales SC de 10-500 mcg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "dalteparina",
+    principioActivo: "Dalteparina",
+    nombresComerciales: ["Fragmin (uso humano)"],
+    categoria: "Anticoagulante (heparina de bajo peso molecular)",
+    indicaciones: ["Trombosis"],
+    especies: {
+      perro: { dosisMin: 150, dosisMax: 175, unidad: "UI/kg", via: "SC", frecuencia: "cada 8 h", notas: "Presentación de uso humano (Fragmin, viales SC de 2.500-18.000 UI). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 75, dosisMax: 75, unidad: "UI/kg", via: "SC", frecuencia: "cada 6 h", notas: "Presentación de uso humano (Fragmin, viales SC de 2.500-18.000 UI). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "enoxaparina",
+    principioActivo: "Enoxaparina",
+    nombresComerciales: ["Clexane (uso humano)"],
+    categoria: "Anticoagulante (heparina de bajo peso molecular)",
+    indicaciones: ["Trombosis"],
+    especies: {
+      perro: { dosisMin: 0.8, dosisMax: 1, unidad: "mg/kg", via: "SC", frecuencia: "cada 6-8 h", notas: "Presentación de uso humano (Clexane, viales SC de 20-150 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.75, dosisMax: 1, unidad: "mg/kg", via: "SC", frecuencia: "cada 6-12 h", notas: "Presentación de uso humano (Clexane, viales SC de 20-150 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "heparina-sodica",
+    principioActivo: "Heparina sódica",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Anticoagulante",
+    indicaciones: ["Trombosis"],
+    especies: {
+      perro: { dosisMin: 200, dosisMax: 250, unidad: "UI/kg", via: "IV, seguido de SC cada 6-8 h", frecuencia: "dosis inicial IV, mantenimiento SC c6-8h a la misma dosis", notas: "No administrar con trombocitopenia o sangrado no controlable. Presentación de uso humano (viales IV de 1.000-5.000 UI/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 250, dosisMax: 275, unidad: "UI/kg", via: "IV, seguido de SC cada 6-8 h", frecuencia: "dosis inicial IV; mantenimiento SC c6-8h con 150-250 UI/kg", notas: "No administrar con trombocitopenia o sangrado no controlable. Presentación de uso humano (viales IV de 1.000-5.000 UI/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "rivaroxaban",
+    principioActivo: "Rivaroxabán",
+    nombresComerciales: ["Xarelto (uso humano)"],
+    categoria: "Anticoagulante (inhibidor directo del factor Xa)",
+    indicaciones: ["Trombosis"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "No administrar con sangrado no controlable o lesión renal aguda. Presentación de uso humano (Xarelto, comprimidos de 2,5-20 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "No administrar con sangrado no controlable o lesión renal aguda. Presentación de uso humano (Xarelto, comprimidos de 2,5-20 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "clorambucilo",
+    principioActivo: "Clorambucilo",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Citostático (agente alquilante)",
+    indicaciones: ["Dermatitis inmunomediada", "Glomerulonefritis inmunomediada o autoinmune"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 0.2, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h (dermatitis); en glomerulonefritis, 0,2 mg/kg c24-48h", notas: "Fármaco citotóxico: manipular con guantes. No administrar con mielosupresión. Presentación de uso humano (comprimidos de 2 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.1, dosisMax: 0.2, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h (dermatitis); en glomerulonefritis, 0,2 mg/kg c24-48h", notas: "Fármaco citotóxico: manipular con guantes. No administrar con mielosupresión. Presentación de uso humano (comprimidos de 2 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "azatioprina",
+    principioActivo: "Azatioprina",
+    nombresComerciales: ["Immufalk (uso humano)", "Imurel (uso humano)"],
+    categoria: "Inmunosupresor",
+    indicaciones: ["Dermatitis, trombocitopenia, enteritis crónica, hepatitis crónica, artritis y glomerulonefritis inmunomediadas o autoinmunes"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h (dosis inicial)", notas: "NO USAR EN GATOS (alta toxicidad hematológica). No administrar con mielosupresión. Presentación de uso humano (Immufalk, Imurel, comprimidos de 50-100 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "leflunomida",
+    principioActivo: "Leflunomida",
+    nombresComerciales: ["Arava (uso humano)"],
+    categoria: "Inmunosupresor",
+    indicaciones: ["Trombocitopenia inmunomediada primaria"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "No administrar con mielosupresión, infecciones ni en hembras gestantes. Presentación de uso humano (Arava, comprimidos de 10 y 20 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "No administrar con mielosupresión, infecciones ni en hembras gestantes. Presentación de uso humano (Arava, comprimidos de 10 y 20 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "micofenolato-mofetilo",
+    principioActivo: "Micofenolato mofetilo",
+    nombresComerciales: ["Cellcept (uso humano)"],
+    categoria: "Inmunosupresor",
+    indicaciones: ["Glomerulonefritis o artritis inmunomediadas o autoinmunes", "Trombocitopenia inmunomediada primaria", "Lupus eritematoso sistémico"],
+    especies: {
+      perro: { dosisMin: 8, dosisMax: 12, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "En glomerulonefritis/artritis inmunomediadas: 10 mg/kg VO c12h. No administrar con mielosupresión o infecciones. Presentación de uso humano (Cellcept, solución 200 mg/mL, comprimidos 250-500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 8, dosisMax: 12, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "No administrar con mielosupresión o infecciones. Presentación de uso humano (Cellcept, solución 200 mg/mL, comprimidos 250-500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "manitol",
+    principioActivo: "Manitol",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Diurético osmótico",
+    indicaciones: ["Lesión renal aguda", "Edema cerebral", "Glaucoma agudo"],
+    especies: {
+      perro: { dosisMin: 250, dosisMax: 1000, unidad: "mg/kg", via: "IV lento", frecuencia: "según indicación (ver notas)", notas: "Lesión renal aguda: 0,25-1,00 g/kg IV lento. Edema cerebral: 0,5-1,0 g/kg IV lento inicialmente. Glaucoma agudo: 1,0-1,5 g/kg IV lento. No administrar con deshidratación, hemorragias, insuficiencia cardiaca congestiva grave, edema pulmonar o insuficiencia renal anúrica. Presentación de uso humano (viales IV de manitol al 10 y 20%). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 250, dosisMax: 1000, unidad: "mg/kg", via: "IV lento", frecuencia: "según indicación (ver notas)", notas: "Lesión renal aguda: 0,25-1,00 g/kg IV lento. Edema cerebral: 0,5-1,0 g/kg IV lento inicialmente. Glaucoma agudo: 1,0-1,5 g/kg IV lento. No administrar con deshidratación, hemorragias, insuficiencia cardiaca congestiva grave, edema pulmonar o insuficiencia renal anúrica. Presentación de uso humano (viales IV de manitol al 10 y 20%). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
@@ -2178,7 +2283,7 @@ const DRUGS = [
     categoria: "Antigestágeno",
     indicaciones: ["Interrupción de la gestación (perras)"],
     especies: {
-      perro: { dosisMin: 2.5, dosisMax: 2.5, unidad: "mg/kg", via: "IM profunda", frecuencia: "dosis única, entre el día de la cópula y el día 15 de gestación", notas: "Solo en perras (no usar en machos ni en otras especies). No usar pasados 15 días de gestación, ni en enfermedad hepática/renal/gastrointestinal o mal estado general. Administrar exclusivamente IM profunda en el muslo — por vía SC o en espacios aponeuróticos puede perder eficacia. No repetir la administración. Fuente: ficha técnica CIMAVET (Privaprol, nº registro 3470 ESP)." }
+      perro: { dosisMin: 2.5, dosisMax: 2.5, unidad: "mg/kg", via: "IM profunda", frecuencia: "dosis única, entre el día de la cópula y el día 15 de gestación", notas: "Solo en perras (no usar en machos ni en otras especies). No usar pasados 15 días de gestación, ni en enfermedad hepática/renal/gastrointestinal o mal estado general. Administrar exclusivamente IM profunda en el muslo — por vía SC o en espacios aponeuróticos puede perder eficacia. No repetir la administración. Fuente: ficha técnica CIMAVET (Privaprol, nº registro 3470 ESP). La guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.) cita el mismo uso entre el día 9º y 13º tras el acoplamiento." }
     }
   },
   {
@@ -2197,10 +2302,10 @@ const DRUGS = [
     principioActivo: "Interferón omega felino recombinante",
     nombresComerciales: ["Virbagen Omega"],
     categoria: "Inmunomodulador (antiviral)",
-    indicaciones: ["Parvovirosis", "Leucemia felina (FeLV)", "Inmunodeficiencia felina (FIV)"],
+    indicaciones: ["Parvovirosis", "Leucemia felina (FeLV)", "Inmunodeficiencia felina (FIV)", "Gingivoestomatitis crónica felina", "Calicivirosis aguda felina"],
     especies: {
       perro: { dosisMin: 2.5, dosisMax: 2.5, unidad: "MU/kg", via: "IV", frecuencia: "una vez al día durante 3 días consecutivos", notas: "Reduce la mortalidad y los signos clínicos de la parvovirosis (forma entérica) en perros desde 1 mes de edad. Reconstituir solo con el disolvente específico. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/01/030 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." },
-      gato:  { dosisMin: 1, dosisMax: 1, unidad: "MU/kg", via: "SC", frecuencia: "una vez al día durante 5 días consecutivos, repetido en 3 ciclos (día 0, día 14 y día 60)", notas: "Indicado en infecciones por FeLV y/o FIV (asintomáticas o con signos clínicos leves no relacionados con neoplasia o insuficiencia renal/orgánica grave). Reconstituir solo con el disolvente específico. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/01/030 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE)." }
+      gato:  { dosisMin: 1, dosisMax: 1, unidad: "MU/kg", via: "SC", frecuencia: "una vez al día durante 5 días consecutivos, repetido en 3 ciclos (día 0, día 14 y día 60)", notas: "Indicado en infecciones por FeLV y/o FIV (asintomáticas o con signos clínicos leves no relacionados con neoplasia o insuficiencia renal/orgánica grave). Reconstituir solo con el disolvente específico. Fuente: Summary of Product Characteristics, VMD (Reino Unido) — equivalente al registro CIMAVET EU/2/01/030 (CIMAVET bloqueado por CAPTCHA al ser autorización centralizada UE). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.): en gingivoestomatitis crónica, 100.000 U/gato en mucosa oral cada 24 h (dosis fija, no por kg); en calicivirosis aguda, 2,5 MU/kg SC/IV cada 48 h, 3 dosis." }
     }
   },
   {
