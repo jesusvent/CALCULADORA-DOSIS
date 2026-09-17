@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:22:47";
-const VERSION_BD = 18;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:24:28";
+const VERSION_BD = 19;
 
 const DRUGS = [
   {
@@ -2495,6 +2495,31 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 0.5, dosisMax: 2.5, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto", notas: "Usar la calculadora de CRI para preparar la infusión. Presentación de uso humano (viales IV de 50 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
       gato: { dosisMin: 0.5, dosisMax: 2.5, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto", notas: "Usar la calculadora de CRI para preparar la infusión. Presentación de uso humano (viales IV de 50 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  // ---- Últimos dos fármacos que faltaban de "Uso de fármacos en cardiología" (Guía terapéutica
+  // del animal de compañía, ConsultaVet, 8ª ed., Rejas López y cols.); el resto del capítulo
+  // (diuréticos, IECA, vasodilatadores, inótropos, antiarrítmicos, prevención/tratamiento de la
+  // dirofilariosis) ya estaba cubierto por fichas previas. ----
+  {
+    id: "amrinona",
+    principioActivo: "Amrinona",
+    nombresComerciales: ["Amrinone (especialidad extranjera)"],
+    categoria: "Inhibidor de la fosfodiesterasa III (inótropo positivo)",
+    indicaciones: ["Fallo cardiaco agudo refractario"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "IV", frecuencia: "bolo inicial", notas: "Mantenimiento en infusión continua (CRI): 10-100 microgramos/kg/min — usar la pestaña CRI para calcular el ritmo de la bomba. Uso poco frecuente en veterinaria por su elevado precio. Especialidad farmacéutica extranjera (vial de 5 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "IV", frecuencia: "bolo inicial", notas: "Mantenimiento en infusión continua (CRI): 10-100 microgramos/kg/min — usar la pestaña CRI para calcular el ritmo de la bomba. Uso poco frecuente en veterinaria por su elevado precio. Especialidad farmacéutica extranjera (vial de 5 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "propantelina",
+    principioActivo: "Propantelina",
+    nombresComerciales: ["Pro-Banthine (especialidad extranjera)"],
+    categoria: "Anticolinérgico",
+    indicaciones: ["Síndrome del seno enfermo / parada sinusal con respuesta positiva al test de atropina"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Alternativa a la atropina en el manejo crónico de bradiarritmias de origen vagal, cuando el test de respuesta a la atropina es positivo. Especialidad farmacéutica extranjera (Pro-Banthine, grageas de 15 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
