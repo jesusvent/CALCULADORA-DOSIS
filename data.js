@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T00:02:45";
-const VERSION_BD = 5;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-17T10:57:25";
+const VERSION_BD = 4;
 
 const DRUGS = [
   {
@@ -1046,133 +1046,9 @@ const DRUGS = [
     principioActivo: "Terbutalina",
     nombresComerciales: ["Terbasmin (uso humano)"],
     categoria: "Broncodilatador (agonista beta-2)",
-    indicaciones: ["Enfermedad respiratoria", "Síndrome del seno enfermo", "Bloqueo atrioventricular de tercer grado"],
+    indicaciones: ["Enfermedad respiratoria"],
     especies: {
-      perro: { dosisMin: 0.1, dosisMax: 0.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", dosisMaxima: 10, notas: "Fuente: vademecum cardio (documento interno de la clínica). Dosis citada como 2,5-10 mg/perro (frecuencia no especificada en la fuente; confirmar antes de pautar); el rango mg/kg mostrado es una aproximación, limitada a los 10 mg citados como máximo. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.): afecciones bronquiales, dosis fija por tamaño VO c12h — 0,625-1,25 mg/pequeños, 1,25-2,5 mg/medianos, 2,5-5 mg/grandes; síndrome del seno enfermo, 0,2 mg/kg VO c8-12h." },
-      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "cada 12 h", notas: "Dosis fija por animal, no por kg: 0,625-1,25 mg/gato VO cada 12 h (afecciones bronquiales); en bloqueo atrioventricular de tercer grado, 0,625 mg/gato VO cada 12 h. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
-    }
-  },
-  // ---- Prueba: fármacos de "Descripción de especialidades: Aparato respiratorio" (Guía
-  // terapéutica del animal de compañía, ConsultaVet, 8ª ed., Rejas López y cols.) — todos de
-  // uso off-label (presentaciones de uso humano o veterinarias para otras especies, salvo que
-  // se indique lo contrario). Todas las notas citan expresamente la fuente. ----
-  {
-    id: "budesonida",
-    principioActivo: "Budesónida",
-    nombresComerciales: ["Inhalador EFG (uso humano)"],
-    categoria: "Antiasmático (corticoide inhalado)",
-    indicaciones: ["Asma felina"],
-    especies: {
-      gato: { dosisMin: null, dosisMax: null, unidad: "mcg", via: "Inhalada", frecuencia: "cada 12 h", notas: "Dosis fija, no por kg: según la intensidad del cuadro, 2 inhalaciones de 125-250 mcg cada 12 h inicialmente. No administrar con perforación intestinal o hepatopatía grave. Presentación de uso humano (inhalador EFG en envase a presión de 50, 100 y 200 mcg/pulsación). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
-    }
-  },
-  {
-    id: "clenbuterol",
-    principioActivo: "Clenbuterol",
-    nombresComerciales: ["Dilaterol (veterinario, otras especies)", "Spasmobronchal (veterinario, otras especies)"],
-    categoria: "Broncodilatador (agonista beta-2)",
-    indicaciones: ["Afecciones bronquiales"],
-    especies: {
-      perro: { dosisMin: 0.8, dosisMax: 0.8, unidad: "mcg/kg", via: "IM/SC/VO", frecuencia: "cada 12 h", notas: "Presentaciones veterinarias existentes (Dilaterol, Spasmobronchal) autorizadas para otras especies animales, no para perro/gato — uso off-label. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
-      gato: { dosisMin: 1, dosisMax: 1, unidad: "mcg/kg", via: "IM/SC/VO", frecuencia: "cada 24 h", notas: "Presentaciones veterinarias existentes (Dilaterol, Spasmobronchal) autorizadas para otras especies animales, no para perro/gato — uso off-label. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
-    }
-  },
-  {
-    id: "fluticasona",
-    principioActivo: "Fluticasona",
-    nombresComerciales: ["Trialona EFG (uso humano)"],
-    categoria: "Antiasmático (corticoide inhalado)",
-    indicaciones: ["Asma felina", "Colapso traqueal canino", "Enfermedad respiratoria inflamatoria crónica"],
-    especies: {
-      perro: { dosisMin: null, dosisMax: null, unidad: "mcg", via: "Inhalada", frecuencia: "según indicación", notas: "Dosis fija, no por kg. Colapso traqueal: 100 mcg cada 6-12 h inicialmente. Enfermedad respiratoria inflamatoria crónica (bronquitis crónica/eosinofílica): 100 mcg si <12 kg o 250 mcg si >12 kg cada 12 h inicialmente, 7-10 respiraciones con dispositivo tipo AeroDawg. Presentación de uso humano (Trialona EFG, inhaladores de 50, 125 y 250 mcg/pulsación). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
-      gato: { dosisMin: null, dosisMax: null, unidad: "mcg", via: "Inhalada", frecuencia: "cada 12 h", notas: "Dosis fija, no por kg: asma felina, según la intensidad del cuadro, 2 inhalaciones de 250 mcg cada 12 h inicialmente. Presentación de uso humano (Trialona EFG, inhaladores de 50, 125 y 250 mcg/pulsación). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
-    }
-  },
-  {
-    id: "salbutamol",
-    principioActivo: "Salbutamol",
-    nombresComerciales: ["Ventolin (uso humano)"],
-    categoria: "Broncodilatador (agonista beta-2)",
-    indicaciones: ["Afecciones bronquiales", "Asma felina"],
-    especies: {
-      perro: { dosisMin: 0.02, dosisMax: 0.02, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Si no mejora, aumentar hasta 0,05 mg/kg cada 8-12 h, salvo que aparezcan temblores o inquietud. Presentación de uso humano (Ventolin solución oral 0,4 mg/mL; inhalador 100 mcg/pulsación). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
-      gato: { dosisMin: 0.1, dosisMax: 0.3, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Asma felina (vía inhalada, dosis fija no por kg): 100 mcg cada 12 h; en crisis, 100 mcg cada 30 minutos (máximo 8 inhalaciones). Presentación de uso humano (Ventolin solución oral 0,4 mg/mL; inhalador 100 mcg/pulsación). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
-    }
-  },
-  {
-    id: "teofilina",
-    principioActivo: "Teofilina",
-    nombresComerciales: ["Elixifilin (uso humano)", "Theo-dur (uso humano)", "Eufilina Venosa (uso humano)"],
-    categoria: "Broncodilatador (metilxantina)",
-    indicaciones: ["Afecciones bronquiales", "Síndrome del seno enfermo", "Insuficiencia cardiaca aguda", "Bloqueo atrioventricular de tercer grado"],
-    especies: {
-      perro: { dosisMin: 5, dosisMax: 7, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "De acción sostenida (retard): 10 mg/kg VO cada 12 h. Insuficiencia cardiaca aguda: 5-7 mg/kg IV lento o VO cada 8 h (retard: 10 mg/kg VO c12h). Presentación de uso humano (Elixifilin solución 5,4 mg/mL; Theo-dur comprimidos retard 100/200/300 mg; Eufilina Venosa viales IV 200 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
-      gato: { dosisMin: 5, dosisMax: 7, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "De acción sostenida (retard): 15 mg/kg VO cada 24 h, por la noche. Insuficiencia cardiaca aguda: 4 mg/kg VO c12h (retard: 25 mg/kg VO c24h). Bloqueo AV de tercer grado: retard 25 mg/kg VO c24h. Presentación de uso humano (Elixifilin solución 5,4 mg/mL; Theo-dur comprimidos retard 100/200/300 mg; Eufilina Venosa viales IV 200 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
-    }
-  },
-  {
-    id: "dextrometorfano",
-    principioActivo: "Dextrometorfano",
-    nombresComerciales: ["Cinfatos (uso humano)", "Propalcof (uso humano)", "Intertos (uso humano)"],
-    categoria: "Antitusivo",
-    indicaciones: ["Tos"],
-    especies: {
-      perro: { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 6-8 h", notas: "Presentación de uso humano (Cinfatos/Propalcof solución 1-15 mg/mL; Intertos comprimidos 15 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
-      gato: { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 6-8 h", notas: "Presentación de uso humano (Cinfatos/Propalcof solución 1-15 mg/mL; Intertos comprimidos 15 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
-    }
-  },
-  {
-    id: "acetilcisteina-mucolitico",
-    principioActivo: "Acetilcisteína (mucolítico)",
-    nombresComerciales: ["Fluimucil (uso humano)"],
-    categoria: "Mucolítico",
-    indicaciones: ["Afecciones bronquiales (secreciones espesas)"],
-    especies: {
-      perro: { dosisMin: 30, dosisMax: 60, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", dosisMaxima: 600, notas: "Sin superar los 600 mg/dosis. Presentación de uso humano (Fluimucil solución oral 20 y 40 mg/mL; EFG polvos/granulados 100, 200 y 600 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
-      gato: { dosisMin: 30, dosisMax: 60, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", dosisMaxima: 600, notas: "Sin superar los 600 mg/dosis. Presentación de uso humano (Fluimucil solución oral 20 y 40 mg/mL; EFG polvos/granulados 100, 200 y 600 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
-    }
-  },
-  {
-    id: "bromhexina",
-    principioActivo: "Bromhexina",
-    nombresComerciales: ["Bisolvon Mucolitico (uso humano)", "Dophexine (veterinario, otras especies)", "Quentan (veterinario, otras especies)"],
-    categoria: "Mucolítico",
-    indicaciones: ["Afecciones bronquiales"],
-    especies: {
-      perro: { dosisMin: 2, dosisMax: 2.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "No administrar con edema pulmonar. Presentaciones veterinarias existentes (Dophexine, Quentan) autorizadas para otras especies animales, no para perro/gato. Presentación de uso humano: Bisolvon Mucolítico solución oral 1,6 mg/mL. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
-      gato: { dosisMin: 1, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "No administrar con edema pulmonar. Presentaciones veterinarias existentes (Dophexine, Quentan) autorizadas para otras especies animales, no para perro/gato. Presentación de uso humano: Bisolvon Mucolítico solución oral 1,6 mg/mL. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
-    }
-  },
-  {
-    id: "fenilefrina-nasal",
-    principioActivo: "Fenilefrina (nasal)",
-    nombresComerciales: ["Disneumon (uso humano)"],
-    categoria: "Descongestionante nasal",
-    indicaciones: ["Rinitis"],
-    especies: {
-      perro: { dosisMin: null, dosisMax: null, unidad: "gotas", via: "Intranasal", frecuencia: "cada 8 h", notas: "Dosis fija, no por kg: 1-2 gotas vía intranasal cada 8 h. Presentación de uso humano (Disneumon pernasal, gotas nasales). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
-      gato: { dosisMin: null, dosisMax: null, unidad: "gotas", via: "Intranasal", frecuencia: "cada 8 h", notas: "Dosis fija, no por kg: 1-2 gotas vía intranasal cada 8 h. Presentación de uso humano (Disneumon pernasal, gotas nasales). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
-    }
-  },
-  {
-    id: "ciproheptadina",
-    principioActivo: "Ciproheptadina",
-    nombresComerciales: ["Periactin (uso humano)"],
-    categoria: "Antihistamínico (antagonista H1)",
-    indicaciones: ["Asma felina"],
-    especies: {
-      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "cada 12 h", notas: "Dosis fija por animal, no por kg: 2-4 mg/gato VO cada 12 h. Presentación de uso humano (Periactin, comprimidos de 4 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
-    }
-  },
-  {
-    id: "hidroxizina",
-    principioActivo: "Hidroxizina",
-    nombresComerciales: ["Atarax (uso humano)"],
-    categoria: "Antihistamínico (antagonista H1)",
-    indicaciones: ["Urticaria"],
-    especies: {
-      perro: { dosisMin: 2, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Presentación de uso humano (Atarax solución oral 2 mg/mL; comprimidos 25 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
-      gato: { dosisMin: 2, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Presentación de uso humano (Atarax solución oral 2 mg/mL; comprimidos 25 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+      perro: { dosisMin: 0.1, dosisMax: 0.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", dosisMaxima: 10, notas: "Fuente: vademecum cardio (documento interno de la clínica). Dosis citada como 2,5-10 mg/perro (frecuencia no especificada en la fuente; confirmar antes de pautar); el rango mg/kg mostrado es una aproximación, limitada a los 10 mg citados como máximo." }
     }
   },
   {
@@ -2461,10 +2337,10 @@ const DRUGS = [
     principioActivo: "Difenhidramina",
     nombresComerciales: ["Benadryl (uso humano)"],
     categoria: "Antihistamínico (H1)",
-    indicaciones: ["Alergia", "Reacción alérgica", "Prurito", "Estomatitis por procesionaria"],
+    indicaciones: ["Alergia", "Reacción alérgica", "Prurito"],
     especies: {
-      perro: { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO/IM", frecuencia: "cada 8-12 h", notas: "Puede causar sedación. En estomatitis por procesionaria: 1-2 mg/kg SC/IM/IV cada 12 h, 1-3 días (no administrar con retención urinaria, glaucoma o hipotiroidismo). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
-      gato:  { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO/IM", frecuencia: "cada 8-12 h", notas: "Puede causar sedación. En estomatitis por procesionaria: 1-2 mg/kg SC/IM/IV cada 12 h, 1-3 días (no administrar con retención urinaria, glaucoma o hipotiroidismo). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+      perro: { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO/IM", frecuencia: "cada 8-12 h", notas: "Puede causar sedación." },
+      gato:  { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO/IM", frecuencia: "cada 8-12 h", notas: "Puede causar sedación." }
     }
   },
   {
