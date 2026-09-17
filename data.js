@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:24:28";
-const VERSION_BD = 19;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:27:03";
+const VERSION_BD = 20;
 
 const DRUGS = [
   {
@@ -738,6 +738,53 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 0.005, dosisMax: 0.005, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto, inicialmente", notas: "Equivale a 5 ng/kg/min. Presentación de uso humano (Glucagen Hypokit, viales SC/IM/IV de 1 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
       gato: { dosisMin: 0.005, dosisMax: 0.005, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto, inicialmente", notas: "Equivale a 5 ng/kg/min. Presentación de uso humano (Glucagen Hypokit, viales SC/IM/IV de 1 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  // ---- Resto de fármacos de "Uso de fármacos en endocrinología" (Guía terapéutica del animal de
+  // compañía, ConsultaVet, 8ª ed., Rejas López y cols.) que faltaban: capítulo mayormente cubierto
+  // por fichas previas (levotiroxina, metimazol, desmopresina, hidroclorotiazida, trilostano,
+  // fludrocortisona, desoxicorticosterona, prazosina, atenolol, amlodipino, propranolol,
+  // insulinas, glipizida, velagliflozina, glucagón, calcitonina, bisfosfonatos, gluconato cálcico,
+  // calcitriol, alfacalcidol, octreotida). Se omiten carbimazol (la fuente indica que no se recomienda su uso
+  // por no estar disponible en España) y acarbosa (la fuente no da una dosis concreta). ----
+  {
+    id: "pasireotida",
+    principioActivo: "Pasireotida",
+    nombresComerciales: ["Signifor (uso humano)"],
+    categoria: "Análogo de la somatostatina",
+    indicaciones: ["Hipersomatotropismo felino / acromegalia, con diabetes mellitus asociada"],
+    especies: {
+      gato: { dosisMin: 0.03, dosisMax: 0.03, unidad: "mg/kg", via: "SC", frecuencia: "dos veces al día", notas: "Reduce los niveles séricos de IGF-1 en gatos con hipersomatotropismo y diabetes mellitus. También existe una presentación de acción prolongada (pasireotida pamoato, Signifor LAR, no comercializada en España) a dosis de 8 mg/gato SC mensual. Puede provocar leves trastornos gastrointestinales y retraso en el crecimiento del pelo. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "fenoxibenzamina",
+    principioActivo: "Fenoxibenzamina",
+    nombresComerciales: ["Dibenzyline (especialidad extranjera)"],
+    categoria: "Bloqueante alfa-adrenérgico no selectivo",
+    indicaciones: ["Feocromocitoma (bloqueo alfa-adrenérgico previo a la adrenalectomía)"],
+    especies: {
+      perro: { dosisMin: 0.25, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "dos veces al día", notas: "Iniciar con la dosis mínima e incrementar gradualmente según necesidad. Reducir la dosis si aparecen signos de hipotensión (letargo, debilidad, síncope) u otros efectos adversos (taquicardia, vómitos). No reduce la síntesis de catecolaminas, solo bloquea la respuesta alfa-adrenérgica a las mismas. Especialidad farmacéutica extranjera (Dibenzyline, cápsulas de 10 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "labetalol",
+    principioActivo: "Labetalol",
+    nombresComerciales: ["Trandate (uso humano)"],
+    categoria: "Bloqueante alfa y beta adrenérgico",
+    indicaciones: ["Hipertensión aguda durante la adrenalectomía en feocromocitoma"],
+    especies: {
+      perro: { dosisMin: 0.2, dosisMax: 1.1, unidad: "mg/kg", via: "IV (infusión continua)", frecuencia: "según necesidad para el control de la presión arterial", notas: "Experiencia clínica limitada, con un número reducido de animales tratados. Presentación de uso humano (Trandate, vial IV de 100 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "diazoxido",
+    principioActivo: "Diazóxido",
+    nombresComerciales: ["Proglycem (especialidad extranjera)"],
+    categoria: "Inhibidor de la secreción de insulina",
+    indicaciones: ["Hiperinsulinismo / insulinoma (hipoglucemia crónica refractaria a dieta, ejercicio y glucocorticoides)"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 60, unidad: "mg/kg", via: "VO", frecuencia: "5 mg/kg dos veces al día inicialmente, incrementando si es necesario hasta un máximo de 60 mg/kg/día", notas: "Inhibe la secreción de insulina y estimula la gluconeogénesis y la glucogenolisis hepáticas. Escasos datos disponibles sobre sus efectos adversos en la especie canina. Especialidad farmacéutica extranjera (Proglycem, cápsulas de 25 y 100 mg, solución oral de 50 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
