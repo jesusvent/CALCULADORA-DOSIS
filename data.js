@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:17:54";
-const VERSION_BD = 16;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:21:06";
+const VERSION_BD = 17;
 
 const DRUGS = [
   {
@@ -2005,6 +2005,100 @@ const DRUGS = [
     indicaciones: ["Urolitos de estruvita"],
     especies: {
       perro: { dosisMin: 12.5, dosisMax: 12.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "No administrar con insuficiencia renal (creatinina >2,5 mg/dL). Presentación de uso humano (Uronefrex, cápsulas de 125-250 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  // ---- Resto de fármacos de "Uso de fármacos en enfermedades urogenitales" (Guía terapéutica
+  // del animal de compañía, ConsultaVet, 8ª ed., Rejas López y cols.) que faltaban: este capítulo
+  // ya estaba mayormente cubierto por fichas previas (dinoprost, aglepristona, cabergolina,
+  // finasterida, osaterona, testosterona, oxibutinina, imipramina, estriol, fenilpropanolamina,
+  // efedrina, cloprostenol, potasio-citrato, calcio-carbonato-chitosan, lantano-carbonato,
+  // sevelámero, colchicina, dl-metionina, hidroclorotiazida, piridoxina, telmisartán, amlodipino,
+  // atenolol, hidralazina, calcitriol, amitriptilina, prazosina). Se omiten HCG y buserelina por
+  // dosificarse por animal sin relación con el peso. ----
+  {
+    id: "alopurinol",
+    principioActivo: "Alopurinol",
+    nombresComerciales: ["Zyloric (uso humano)"],
+    categoria: "Inhibidor de la xantina oxidasa (antiurolitiásico)",
+    indicaciones: ["Urolitos de urato (disolución y prevención)"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 15, unidad: "mg/kg", via: "VO", frecuencia: "15 mg/kg cada 12 h para disolución; 5-7 mg/kg cada 12-24 h para prevenir recidivas", notas: "Descartar previamente una anomalía vascular hepática (shunt portosistémico), en cuyo caso el alopurinol no será eficaz. Combinar con dieta y alcalinización de la orina. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "fluconazol",
+    principioActivo: "Fluconazol",
+    nombresComerciales: ["Diflucan (uso humano)"],
+    categoria: "Antifúngico (triazol)",
+    indicaciones: ["Cistitis fúngica (Candida albicans)"],
+    especies: {
+      perro: { dosisMin: 1.25, dosisMax: 2.5, unidad: "mg/kg", via: "VO/IV", frecuencia: "cada 12 h", notas: "El ketoconazol y el itraconazol no se recomiendan por excretarse poco fármaco activo en la orina. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "cada 12 h", notas: "Dosis fija por animal, no por kg: 50 mg/gato cada 12 h. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "flucitosina",
+    principioActivo: "Flucitosina",
+    nombresComerciales: ["Ancotil (especialidad extranjera)"],
+    categoria: "Antifúngico",
+    indicaciones: ["Cistitis fúngica (Candida albicans)"],
+    especies: {
+      perro: { dosisMin: 25, dosisMax: 50, unidad: "mg/kg", via: "VO", frecuencia: "cada 6 h", notas: "Especialidad farmacéutica extranjera (Ancotil, comprimidos de 500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "cada 6 h", notas: "Dosis fija por animal, no por kg: 100 mg/gato cada 6 h. Especialidad farmacéutica extranjera (Ancotil, comprimidos de 500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "acido-ascorbico-urinario",
+    principioActivo: "Ácido ascórbico (vitamina C)",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Acidificante urinario",
+    indicaciones: ["Acidificación de la orina para maximizar la eficacia de antibióticos betalactámicos"],
+    especies: {
+      perro: { dosisMin: 30, dosisMax: 30, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 30, dosisMax: 30, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "cloruro-amonico",
+    principioActivo: "Cloruro amónico",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Acidificante urinario",
+    indicaciones: ["Acidificación de la orina para maximizar la eficacia de antibióticos betalactámicos"],
+    especies: {
+      perro: { dosisMin: 100, dosisMax: 100, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 100, dosisMax: 100, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "lincomicina",
+    principioActivo: "Lincomicina",
+    nombresComerciales: ["Lincocin (uso humano)"],
+    categoria: "Antibiótico (lincosamida)",
+    indicaciones: ["Mastitis (leche de pH ácido)"],
+    especies: {
+      perro: { dosisMin: 15, dosisMax: 15, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Duración mínima del tratamiento de mastitis: 3 semanas. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 15, dosisMax: 15, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Duración mínima del tratamiento de mastitis: 3 semanas. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "eritromicina",
+    principioActivo: "Eritromicina",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Antibiótico (macrólido)",
+    indicaciones: ["Mastitis (leche de pH ácido)", "Prostatitis por grampositivos"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 10, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "En mastitis, duración mínima 3 semanas. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 10, dosisMax: 10, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "En mastitis, duración mínima 3 semanas. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "tiopronina",
+    principioActivo: "Tiopronina (N-2-mercaptopropionilglicina)",
+    nombresComerciales: ["Thiola (especialidad extranjera)"],
+    categoria: "Quelante de cistina (antiurolitiásico)",
+    indicaciones: ["Urolitos de cistina (disolución y prevención)"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 20, unidad: "mg/kg", via: "VO", frecuencia: "15-20 mg/kg cada 12 h para disolución; 5-15 mg/kg cada 12 h para prevención", notas: "Combinar con dieta húmeda específica para disolución de cistina. Especialidad farmacéutica extranjera (Thiola, comprimidos de 100 y 250 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
