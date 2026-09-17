@@ -2346,7 +2346,8 @@ comercialSelect.addEventListener("change", () => {
 // cuando de verdad no hay una "m" delante (ej. "NOLOTIL 0,4 g/ml", metamizol de uso humano) — así
 // no hay ambigüedad entre "50 mg/ml" y "2 g/ml" aunque ambos acaben en "g".
 const PATRON_CONCENTRACION_LIQUIDA = /(\d+(?:[.,]\d+)?)\s*(mg|mcg|[uµ]g|microgramos?|UI|g)\s*\/\s*ml/i;
-const PATRON_MG_COMPRIMIDO = /(\d+(?:[.,]\d+)?)\s*mg\b/i;
+// "g" también el último aquí por el mismo motivo (ej. "NOLOTIL 2 g COMPRIMIDOS", si existiera).
+const PATRON_MG_COMPRIMIDO = /(\d+(?:[.,]\d+)?)\s*(mg|g)\b/i;
 
 // A partir del match de PATRON_CONCENTRACION_LIQUIDA, devuelve { valor, unidad } ya
 // normalizado a mg/ml o UI/ml (convirtiendo gramos ×1000 y microgramos/mcg/µg ÷1000).
@@ -2357,6 +2358,13 @@ function normalizarConcentracionLiquida(match) {
   if (unidadRaw === "mg") return { valor: valorBruto, unidad: "mg/ml" };
   if (unidadRaw === "g") return { valor: valorBruto * 1000, unidad: "mg/ml" };
   return { valor: valorBruto / 1000, unidad: "mg/ml" }; // mcg, µg, ug, microgramo(s)
+}
+
+// A partir del match de PATRON_MG_COMPRIMIDO, devuelve el valor ya normalizado a mg
+// (convirtiendo gramos ×1000, ej. "2 g" -> 2000 mg por comprimido).
+function normalizarValorSolido(match) {
+  const valorBruto = parseFloat(match[1].replace(",", "."));
+  return match[2].toLowerCase() === "g" ? valorBruto * 1000 : valorBruto;
 }
 
 // CIMAVET (veterinario) devuelve la forma farmacéutica en "formasFarmaceuticas" (array);
@@ -2374,7 +2382,7 @@ function extraerPresentacionMed(med) {
   if (esFormaSolida(med)) {
     const m = PATRON_MG_COMPRIMIDO.exec(nombre);
     if (!m) return null;
-    return { tipo: "solido", valor: parseFloat(m[1].replace(",", ".")), unidad: "mg/comprimido" };
+    return { tipo: "solido", valor: normalizarValorSolido(m), unidad: "mg/comprimido" };
   }
   const m = PATRON_CONCENTRACION_LIQUIDA.exec(nombre);
   if (!m) return null;
@@ -2407,7 +2415,7 @@ function extraerPresentacionDeComposicion(composicion) {
   if (mLiquido) return { tipo: "liquido", ...normalizarConcentracionLiquida(mLiquido) };
   if (/comprimid|c[aá]psula|tableta/i.test(composicion)) {
     const mSolido = PATRON_MG_COMPRIMIDO.exec(composicion);
-    if (mSolido) return { tipo: "solido", valor: parseFloat(mSolido[1].replace(",", ".")), unidad: "mg/comprimido" };
+    if (mSolido) return { tipo: "solido", valor: normalizarValorSolido(mSolido), unidad: "mg/comprimido" };
   }
   return null;
 }
