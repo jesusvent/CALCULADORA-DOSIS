@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T00:58:08";
-const VERSION_BD = 10;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:00:22";
+const VERSION_BD = 11;
 
 const DRUGS = [
   {
@@ -1897,6 +1897,161 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 0.003, dosisMax: 0.005, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Margen terapéutico muy estrecho: monitorizar niveles séricos y función renal periódicamente." },
       gato:  { dosisMin: 0.002, dosisMax: 0.004, unidad: "mg/kg", via: "VO", frecuencia: "cada 48 h", notas: "Los gatos son muy sensibles a la toxicidad digitálica: monitorizar niveles séricos estrechamente. Alternativa citada en vademecum cardio (fuente interna de la clínica): dosis FIJA de 0,03 mg/gato cada 12-48 h, independientemente del peso — convención habitual en cardiología felina para evitar sobredosificación." }
+    }
+  },
+  // ---- Fármacos de "Descripción de especialidades: Aparato cardiovascular" (Guía terapéutica
+  // del animal de compañía, ConsultaVet, 8ª ed., Rejas López y cols.) — la mayoría de los
+  // demás fármacos de este capítulo ya estaban en la base de datos (Furosemida, Torasemida,
+  // Amiodarona, Diltiazem, Esmolol, Hidralazina, Hidroclorotiazida, Imidapril, Mexiletina,
+  // Procainamida, Propranolol, Ramipril, Sildenafilo, Sotalol, Amlodipino, Telmisartán,
+  // Atropina, Atenolol, Lidocaína, Pimobendán, Benazepril, Enalapril, Espironolactona), no se
+  // han tocado. ----
+  {
+    id: "adrenalina",
+    principioActivo: "Adrenalina",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Estimulante cardiaco (agonista adrenérgico)",
+    indicaciones: ["Anafilaxia", "Broncoconstricción"],
+    especies: {
+      perro: { dosisMin: 0.02, dosisMax: 0.02, unidad: "mg/kg", via: "SC/IM/IV", frecuencia: "según necesidad", notas: "Anafilaxia: 0,1 mL al 1/1.000 por cada 10 kg IM. Hipotensión anestésica: 0,1-1,0 mcg/kg al minuto IV. Presentación de uso humano (viales/jeringas precargadas de 1 mg/mL y 0,1 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.02, dosisMax: 0.02, unidad: "mg/kg", via: "SC/IM/IV", frecuencia: "según necesidad", notas: "Anafilaxia: 0,1 mL al 1/1.000 por cada 10 kg IM. Hipotensión anestésica: 0,1-1,0 mcg/kg al minuto IV. Presentación de uso humano (viales/jeringas precargadas de 1 mg/mL y 0,1 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "dobutamina",
+    principioActivo: "Dobutamina",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Estimulante cardiaco (agonista beta-1)",
+    indicaciones: ["Insuficiencia miocárdica grave y choque cardiógeno", "Hipotensión anestésica"],
+    especies: {
+      perro: { dosisMin: 2.5, dosisMax: 3, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto, incrementando 25% cada 10-20 min hasta efecto deseado", notas: "Hipotensión anestésica: 5-20 mcg/kg/min. Usar la calculadora de CRI para preparar la infusión. Presentación de uso humano (viales IV de 250 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.5, dosisMax: 3, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto", notas: "Hipotensión anestésica: 5-20 mcg/kg/min. Usar la calculadora de CRI para preparar la infusión. Presentación de uso humano (viales IV de 250 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "dopamina",
+    principioActivo: "Dopamina",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Estimulante cardiaco (agonista dopaminérgico/adrenérgico)",
+    indicaciones: ["Insuficiencia miocárdica grave y choque", "Hipotensión anestésica"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 1, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto, incrementando 25-30% cada 30 min hasta efecto deseado", notas: "En choque no cardiógeno la dosis inicial puede ser mayor (2,5 mcg/kg/min). Hipotensión anestésica: 5-20 mcg/kg/min. Usar la calculadora de CRI. Presentación de uso humano (viales IV de 200 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 1, dosisMax: 1, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto, incrementando 25-30% cada 30 min hasta efecto deseado", notas: "En choque no cardiógeno la dosis inicial puede ser mayor (2,5 mcg/kg/min). Hipotensión anestésica: 5-20 mcg/kg/min. Usar la calculadora de CRI. Presentación de uso humano (viales IV de 200 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "fenilefrina-iv",
+    principioActivo: "Fenilefrina (IV)",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Vasopresor (agonista alfa-1)",
+    indicaciones: ["Hipotensión anestésica"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 5, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto", notas: "Usar la calculadora de CRI para preparar la infusión. Presentación de uso humano (viales/jeringas precargadas SC/IM/IV). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 1, dosisMax: 5, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto", notas: "Usar la calculadora de CRI para preparar la infusión. Presentación de uso humano (viales/jeringas precargadas SC/IM/IV). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "noradrenalina",
+    principioActivo: "Noradrenalina",
+    nombresComerciales: ["Norages (uso humano)"],
+    categoria: "Vasopresor (agonista alfa/beta-adrenérgico)",
+    indicaciones: ["Choque no cardiógeno", "Hipotensión anestésica"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 2, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto; comenzar en el extremo inferior y ajustar cada 5-15 min según presión arterial", notas: "Hipotensión anestésica: 0,2-2,0 mcg/kg/min. Usar la calculadora de CRI. Presentación de uso humano (Norages, viales IV de 4-50 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.1, dosisMax: 2, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto; comenzar en el extremo inferior y ajustar cada 5-15 min según presión arterial", notas: "Hipotensión anestésica: 0,2-2,0 mcg/kg/min. Usar la calculadora de CRI. Presentación de uso humano (Norages, viales IV de 4-50 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "milrinona",
+    principioActivo: "Milrinona",
+    nombresComerciales: ["Corotrope (uso humano)"],
+    categoria: "Inotrópico (inhibidor de la fosfodiesterasa III)",
+    indicaciones: ["Insuficiencia cardiaca"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mcg/kg", via: "IV", frecuencia: "según respuesta", notas: "La fuente remite a la posología del artículo correspondiente, sin una dosis fija por kg publicada aquí. Presentación de uso humano (Corotrope, viales IV de 10 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mcg/kg", via: "IV", frecuencia: "según respuesta", notas: "La fuente remite a la posología del artículo correspondiente, sin una dosis fija por kg publicada aquí. Presentación de uso humano (Corotrope, viales IV de 10 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "flecainida",
+    principioActivo: "Flecainida",
+    nombresComerciales: ["Apocard (uso humano)"],
+    categoria: "Antiarrítmico (clase Ic)",
+    indicaciones: ["Fibrilación atrial"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 5, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", notas: "Presentación de uso humano (Apocard, comprimidos de 100 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "propafenona",
+    principioActivo: "Propafenona",
+    nombresComerciales: ["Rytmonorm (uso humano)"],
+    categoria: "Antiarrítmico (clase Ic)",
+    indicaciones: ["Fibrilación atrial"],
+    especies: {
+      perro: { dosisMin: 3, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Presentación de uso humano (Rytmonorm, comprimidos de 150 y 300 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "carvedilol",
+    principioActivo: "Carvedilol",
+    nombresComerciales: ["Coropres (uso humano)"],
+    categoria: "Antagonista beta-adrenérgico",
+    indicaciones: ["Insuficiencia cardiaca", "Fibrilación atrial"],
+    especies: {
+      perro: { dosisMin: 1.5, dosisMax: 3, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "No administrar con insuficiencia cardiaca congestiva descompensada. Presentación de uso humano (Coropres, comprimidos de 6,25 y 25 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "nitroprusiato-sodico",
+    principioActivo: "Nitroprusiato sódico",
+    nombresComerciales: ["Nitroprussiat Fides (uso humano)"],
+    categoria: "Vasodilatador",
+    indicaciones: ["Edema pulmonar agudo"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 2.5, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto", notas: "Usar la calculadora de CRI para preparar la infusión. Presentación de uso humano (viales IV de 50 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.5, dosisMax: 2.5, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto", notas: "Usar la calculadora de CRI para preparar la infusión. Presentación de uso humano (viales IV de 50 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "pentoxifilina",
+    principioActivo: "Pentoxifilina",
+    nombresComerciales: ["Hemovas (uso humano)"],
+    categoria: "Vasodilatador (mejora reológica)",
+    indicaciones: ["Hipertensión pulmonar"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 15, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Presentación de uso humano (Hemovas, comprimidos de 400 y 600 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "prazosina",
+    principioActivo: "Prazosina",
+    nombresComerciales: ["Minipres (uso humano)"],
+    categoria: "Vasodilatador (antagonista alfa-1)",
+    indicaciones: ["Insuficiencia cardiaca", "Hipertensión sistémica", "Feocromocitoma", "Síndrome urológico felino"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", dosisMaxima: 2, notas: "Dosis fija por tramo de peso: 0,5-1 mg/perro <15 kg, 1-2 mg/perro >15 kg, cada 8 h — el rango mg/kg mostrado es orientativo. Presentación de uso humano (Minipres, comprimidos de 1-5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "cada 8-12 h", notas: "Síndrome urológico felino, dosis fija por animal, no por kg: 0,25-0,50 mg/gato cada 8-12 h. Presentación de uso humano (Minipres, comprimidos de 1-5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "tadalafilo",
+    principioActivo: "Tadalafilo",
+    nombresComerciales: ["Acore (uso humano)"],
+    categoria: "Vasodilatador (inhibidor de la fosfodiesterasa 5)",
+    indicaciones: ["Hipertensión pulmonar"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, comenzando con la dosis inferior", notas: "Presentación de uso humano (Acore, comprimidos de 5, 10 y 20 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "verapamilo",
+    principioActivo: "Verapamilo",
+    nombresComerciales: ["Manidon (uso humano)"],
+    categoria: "Antiarrítmico (bloqueante de los canales de calcio)",
+    indicaciones: ["Taquicardia supraventricular independiente del nódulo atrioventricular"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 10, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", notas: "También descrito 0,05-0,15 mg/kg IV lento inicialmente. No administrar con bloqueo cardiaco de 2º o 3er grado, hipotensión, síndrome del seno enfermo o alteración grave del ventrículo izquierdo. Presentación de uso humano (Manidon, comprimidos de 80 mg y retard). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
