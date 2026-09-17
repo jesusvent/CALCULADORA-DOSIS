@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:28:47";
-const VERSION_BD = 21;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:30:53";
+const VERSION_BD = 22;
 
 const DRUGS = [
   {
@@ -1832,6 +1832,98 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: null, dosisMax: null, unidad: "gotas", via: "Intranasal", frecuencia: "cada 8 h", notas: "Dosis fija, no por kg: 1-2 gotas vía intranasal cada 8 h. Presentación de uso humano (Disneumon pernasal, gotas nasales). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
       gato: { dosisMin: null, dosisMax: null, unidad: "gotas", via: "Intranasal", frecuencia: "cada 8 h", notas: "Dosis fija, no por kg: 1-2 gotas vía intranasal cada 8 h. Presentación de uso humano (Disneumon pernasal, gotas nasales). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  // ---- Resto de fármacos de "Uso de fármacos en neumología" (Guía terapéutica del animal de
+  // compañía, ConsultaVet, 8ª ed., Rejas López y cols.) que faltaban: capítulo enorme, mayormente
+  // cubierto por fichas previas (broncodilatadores beta-adrenérgicos, teofilina, atropina,
+  // glucocorticoides sistémicos e inhalados, antibioterapia respiratoria completa, codeína,
+  // dextrometorfano, butorfanol, bromhexina, maropitant, ketoconazol/itraconazol/fluconazol/
+  // terbinafina, interferón omega, ciproheptadina, ciclosporina, masitinib, colchicina,
+  // sildenafilo, pimobendán, fenbendazol/milbemicina/praziquantel/moxidectina). Se omiten
+  // levalbuterol (la fuente no da una dosis concreta), enilconazol (autorización actualmente
+  // suspendida) y clotrimazol (infusión local en tubos de sinusotomía, no es una dosis por kg). ----
+  {
+    id: "aminofilina",
+    principioActivo: "Aminofilina",
+    nombresComerciales: ["Aminophylline Hydrate (especialidad extranjera)"],
+    categoria: "Broncodilatador (metilxantina)",
+    indicaciones: ["Broncoconstricción refractaria al tratamiento beta-agonista"],
+    especies: {
+      perro: { dosisMin: 3, dosisMax: 11, unidad: "mg/kg", via: "IV/IM lento", frecuencia: "cada 6-8 h", notas: "Contiene un 80% de teofilina activa. Los perros pueden requerir el extremo más alto del rango. Se indica exclusivamente en pacientes que no responden al tratamiento beta-agonista; puede causar arritmias, hipotensión, náuseas, temblores y empeorar la dificultad respiratoria. Especialidad farmacéutica extranjera (Aminophylline Hydrate, 25 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 3, dosisMax: 11, unidad: "mg/kg", via: "IV/IM lento", frecuencia: "cada 12 h", notas: "Contiene un 80% de teofilina activa. En gatos se indica en el extremo inferior del rango, por su metabolismo más lento. Se indica exclusivamente en pacientes que no responden al tratamiento beta-agonista; puede causar arritmias, hipotensión, náuseas, temblores y empeorar la dificultad respiratoria. Especialidad farmacéutica extranjera (Aminophylline Hydrate, 25 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "n-acetilcisteina",
+    principioActivo: "N-acetilcisteína",
+    nombresComerciales: ["Fluimucil (uso humano)"],
+    categoria: "Mucolítico",
+    indicaciones: ["Bronconeumonía / secreciones respiratorias espesas"],
+    especies: {
+      perro: { dosisMin: 30, dosisMax: 60, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", dosisMaxima: 600, notas: "Dosis empírica, ya que no hay estudios que establezcan una dosis concreta en perros y gatos; extrapolada de la especie humana. Dosis máxima 600 mg/animal. Actúa rompiendo los enlaces de azufre de las secreciones mucosas. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 30, dosisMax: 60, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", dosisMaxima: 600, notas: "Dosis empírica, ya que no hay estudios que establezcan una dosis concreta en perros y gatos; extrapolada de la especie humana. Dosis máxima 600 mg/animal. Actúa rompiendo los enlaces de azufre de las secreciones mucosas. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "clorfenamina",
+    principioActivo: "Clorfenamina",
+    nombresComerciales: ["Polaramine (uso humano)"],
+    categoria: "Antihistamínico (antagonista H1)",
+    indicaciones: ["Rinitis (descongestionante)"],
+    especies: {
+      perro: { dosisMin: 0.22, dosisMax: 0.22, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "No se ha probado su eficacia, se usa a corto plazo y en pulsos. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "cada 24 h", notas: "Dosis fija por animal, no por kg: 2-4 mg/gato al día. No se ha probado su eficacia, se usa a corto plazo y en pulsos. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "anfotericina-b",
+    principioActivo: "Anfotericina B",
+    nombresComerciales: ["Fungizona (uso humano)"],
+    categoria: "Antifúngico",
+    indicaciones: ["Criptococosis felina (alternativa si no se toleran los antifúngicos orales)"],
+    especies: {
+      gato: { dosisMin: 0.5, dosisMax: 0.8, unidad: "mg/kg", via: "SC", frecuencia: "dos o tres veces por semana, hasta una dosis acumulativa de 20 mg/kg", notas: "Diluir en 400 mL de NaCl al 0,45% junto con glucosa al 2,5% para reducir su potencial nefrotóxico. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "voriconazol",
+    principioActivo: "Voriconazol",
+    nombresComerciales: ["Vfend (uso humano)"],
+    categoria: "Antifúngico (triazol)",
+    indicaciones: ["Aspergilosis (con afectación del sistema nervioso central o resistente a otros antifúngicos)"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 12, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Usar con cautela: se han descrito efectos neurológicos adversos (ceguera y paraparesia). Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "posaconazol",
+    principioActivo: "Posaconazol",
+    nombresComerciales: ["Noxafil (uso humano)"],
+    categoria: "Antifúngico (triazol)",
+    indicaciones: ["Aspergilosis (en combinación con itraconazol)"],
+    especies: {
+      perro: { dosisMin: 2.5, dosisMax: 4.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Se emplea en combinación con itraconazol. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "l-lisina",
+    principioActivo: "L-lisina",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Aminoácido (antiviral)",
+    indicaciones: ["Herpesvirus felino (recurrente o refractario)"],
+    especies: {
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "dos veces al día", notas: "Dosis fija por animal, no por kg: 250-500 mg/gato. Estudios recientes y amplios no han sido capaces de confirmar claramente su eficacia. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "famciclovir",
+    principioActivo: "Famciclovir",
+    nombresComerciales: ["Famvir (uso humano)"],
+    categoria: "Antiviral",
+    indicaciones: ["Herpesvirus felino"],
+    especies: {
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "una o dos veces al día", notas: "Dosis fija por animal, no por kg: 62,5-125 mg/gato. Puede reducir la duración de los signos clínicos, aunque en la mayor parte de los casos la mejoría ya suele ser de por sí rápida. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
