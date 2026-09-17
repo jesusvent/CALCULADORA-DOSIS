@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T00:53:29";
-const VERSION_BD = 9;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T00:58:08";
+const VERSION_BD = 10;
 
 const DRUGS = [
   {
@@ -535,8 +535,251 @@ const DRUGS = [
     categoria: "Corticoide",
     indicaciones: ["Inflamación", "Enfermedad inmunomediada", "Alergia"],
     especies: {
-      perro: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h (antiinflamatoria); hasta 2-4 mg/kg/día inmunosupresora", notas: "Reducir dosis de forma gradual en tratamientos largos." },
-      gato:  { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h; hasta 4 mg/kg/día inmunosupresora", notas: "Reducir dosis de forma gradual en tratamientos largos." }
+      perro: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h (antiinflamatoria); hasta 2-4 mg/kg/día inmunosupresora", notas: "Reducir dosis de forma gradual en tratamientos largos. Según guía terapéutica de ConsultaVet (Rejas López y cols., 8ª ed.), dosis por proceso: dermatitis autoinmunes/enteritis crónica inmunomediada 1-1,5 mg/kg c12h; neuromiopatías/artritis inmunomediadas 1-2 mg/kg c12h; anemia/trombocitopenia inmunomediadas 2 mg/kg c24h inicial (<25 kg; 40-60 mg/m² si >25 kg); hipoadrenocorticismo crónico 0,2 mg/kg c24h. No usar en diabéticos, hiperadrenocorticismo, enfermedad renal, glaucoma o úlcera GI/corneal, ni en gestantes." },
+      gato:  { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h; hasta 4 mg/kg/día inmunosupresora", notas: "Reducir dosis de forma gradual en tratamientos largos. Preferir prednisolona a prednisona en gatos: algunos no metabolizan bien la prednisona a su forma activa. Según guía terapéutica de ConsultaVet (Rejas López y cols., 8ª ed.), dosis por proceso: dermatitis autoinmunes (pénfigo foliáceo) 1,5-3 mg/kg c24h inicial; gingivoestomatitis/enteritis crónica inmunomediada 2 mg/kg c24h; colangitis linfocitaria 1-2 mg/kg c12h; anemia/trombocitopenia inmunomediadas 2-4 mg/kg c24h. No usar en diabéticos, hiperadrenocorticismo, enfermedad renal, glaucoma o úlcera GI/corneal, ni en gestantes." }
+    }
+  },
+  {
+    id: "prednisona",
+    principioActivo: "Prednisona",
+    nombresComerciales: ["Dacortin (uso humano)"],
+    categoria: "Corticoide",
+    indicaciones: ["Dermatitis alérgicas", "Inflamación", "Enfermedad inmunomediada"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h inicialmente (algunos autores reparten en dos tomas)", notas: "Dosis mayores (1-2 mg/kg) para procesos inmunomediados — ver Prednisolona para el desglose por proceso, es clínicamente equivalente. No usar en diabéticos, hiperadrenocorticismo, enfermedad renal, glaucoma o úlcera GI/corneal, ni en gestantes. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h inicialmente (algunos autores reparten en dos tomas)", notas: "⚠ En gatos se prefiere PREDNISOLONA: algunos no metabolizan bien la prednisona a su forma activa (ver ficha de Prednisolona). No usar en diabéticos, hiperadrenocorticismo, enfermedad renal, glaucoma o úlcera GI/corneal, ni en gestantes. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "hidrocortisona-sistemica",
+    principioActivo: "Hidrocortisona (sistémica)",
+    nombresComerciales: ["Actocortina (uso humano)"],
+    categoria: "Corticoide (acción rápida)",
+    indicaciones: ["Hipoadrenocorticismo agudo (crisis addisoniana)"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 5, unidad: "mg/kg", via: "IV lento", frecuencia: "cada 8 h (o 0,3-0,625 mg/kg a la hora IV en infusión)", notas: "No administrar en gestantes; no recomendado en diabéticos ni con enfermedad renal. Presentación de uso humano (Actocortina, viales IM/IV de 100 y 500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 2, dosisMax: 5, unidad: "mg/kg", via: "IV lento", frecuencia: "cada 8 h (o 0,3-0,625 mg/kg a la hora IV en infusión)", notas: "No administrar en gestantes; no recomendado en diabéticos ni con enfermedad renal. Presentación de uso humano (Actocortina, viales IM/IV de 100 y 500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "desmopresina",
+    principioActivo: "Desmopresina",
+    nombresComerciales: ["Minurin (uso humano)", "Wetirin (uso humano)"],
+    categoria: "Análogo de vasopresina",
+    indicaciones: ["Diabetes insípida central"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "gotas/comprimido", via: "Conjuntival o VO", frecuencia: "cada 8-24 h (conjuntival) o cada 12 h (VO, dosis inicial)", notas: "Dosis fija por tramo de peso, no por kg: vía conjuntival 1-4 gotas/animal según tamaño; VO 0,05 mg si <5 kg, 0,1 mg si 5-20 kg, 0,2 mg si >20 kg, cada 12 h inicialmente. Presentación de uso humano (Minurin pulverizador nasal 0,1 mg/mL; Wetirin comprimidos 0,1-0,2 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "gotas/comprimido", via: "Conjuntival o VO", frecuencia: "cada 12 h", notas: "Dosis fija por animal, no por kg: 1 gota vía conjuntival, o 0,025-0,050 mg VO, cada 12 h inicialmente. Presentación de uso humano (Minurin pulverizador nasal 0,1 mg/mL; Wetirin comprimidos 0,1-0,2 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "testosterona",
+    principioActivo: "Testosterona",
+    nombresComerciales: ["Testex (uso humano)"],
+    categoria: "Andrógeno",
+    indicaciones: ["Incontinencia urinaria (machos)"],
+    especies: {
+      perro: { dosisMin: 2.2, dosisMax: 2.2, unidad: "mg/kg", via: "IM", frecuencia: "cada 4-8 semanas", notas: "Solo en machos. No administrar con hipertrofia de próstata, adenoma perianal o insuficiencia cardiaca/renal/hepática. Presentación de uso humano (Testex, viales IM de 25 mg; las de liberación prolongada de 100-250 mg no son apropiadas a esta dosis). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "finasterida",
+    principioActivo: "Finasterida",
+    nombresComerciales: ["Propecia (uso humano)", "Proscar (uso humano)"],
+    categoria: "Inhibidor de la 5-alfa reductasa",
+    indicaciones: ["Hiperplasia prostática"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, durante 1-4 meses", notas: "Presentación de uso humano (Propecia, Proscar, comprimidos de 1 y 5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "medroxiprogesterona-inyectable",
+    principioActivo: "Medroxiprogesterona (inyectable)",
+    nombresComerciales: ["Cenavul (veterinario)", "Depo-progevera (uso humano)"],
+    categoria: "Progestágeno",
+    indicaciones: ["Hiposomatotropismo"],
+    especies: {
+      perro: { dosisMin: 2.5, dosisMax: 5, unidad: "mg/kg", via: "SC", frecuencia: "cada 3 semanas, 6 dosis inicialmente", notas: "No administrar con diabetes mellitus, neoplasias mamarias o piómetra, en gestantes, con alteraciones uterinas, ni durante proestro/estro/metaestro o antes/durante el primer celo. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "somatotropina",
+    principioActivo: "Somatotropina",
+    nombresComerciales: ["Genotonorm Miniquick (uso humano)"],
+    categoria: "Hormona del crecimiento",
+    indicaciones: ["Hiposomatotropismo (perro)"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 0.3, unidad: "UI/kg", via: "SC", frecuencia: "tres veces por semana", notas: "Presentación de uso humano (Genotonorm Miniquick, viales SC de 0,2-2,0 mg; 1 mg equivale a 3 UI). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "somatotropina-recombinante-felina",
+    principioActivo: "Somatotropina recombinante",
+    nombresComerciales: ["Omnitrope (uso humano)"],
+    categoria: "Hormona del crecimiento",
+    indicaciones: ["Hiposomatotropismo (gato)"],
+    especies: {
+      gato: { dosisMin: 1.6, dosisMax: 1.6, unidad: "mg/kg", via: "SC", frecuencia: "dos veces por semana", notas: "Presentación de uso humano (Omnitrope, viales SC de 3,3-10 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "octreotida",
+    principioActivo: "Octreotida",
+    nombresComerciales: ["Sandostatin (uso humano)"],
+    categoria: "Análogo de somatostatina",
+    indicaciones: ["Hipersomatotropismo (gato)", "Hipoglucemia crónica por hiperinsulinismo (perro)"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 50, unidad: "mcg/kg", via: "SC", frecuencia: "cada 8-12 h", notas: "Presentación de uso humano (Sandostatin, viales SC de 50-1.000 mcg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 20, dosisMax: 50, unidad: "mcg", via: "SC", frecuencia: "cada 12 h", notas: "Dosis fija por animal (20-50 mcg/gato), no por kg. Presentación de uso humano (Sandostatin, viales SC de 50-1.000 mcg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "gonadotrofina-corionica-humana",
+    principioActivo: "Gonadotrofina coriónica humana",
+    nombresComerciales: ["Veterin Corion (veterinario)", "Gonasi Kit (uso humano)"],
+    categoria: "Gonadotrofina",
+    indicaciones: ["Quistes ováricos"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "UI", via: "IM", frecuencia: "dosis única", notas: "Dosis fija por animal (450-3.000 UI/perra), no por kg. Presentación veterinaria (Veterin Corion, viales IM de 3.000 UI) y de uso humano (Gonasi Kit, viales SC/IM de 5.000 UI). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "cloprostenol",
+    principioActivo: "Cloprostenol",
+    nombresComerciales: ["Cyclix (veterinario, otras especies)", "Estrumate (veterinario, otras especies)"],
+    categoria: "Prostaglandina (análogo de PGF2α)",
+    indicaciones: ["Piómetra"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 0.25, unidad: "mg/kg", via: "SC", frecuencia: "cada 12 h (dosis crecientes en perras pequeñas — ver notas)", notas: "En perras pequeñas usar dosis crecientes: día 1, 0,1 mg/kg BID; días 2-5, 0,15 mg/kg BID; días 5-8, 0,25 mg/kg BID. Premedicar siempre con atropina. Presentaciones veterinarias para otras especies (Cyclix, Estrumate). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "dinoprost",
+    principioActivo: "Dinoprost",
+    nombresComerciales: ["Dinolytic (veterinario, otras especies)"],
+    categoria: "Prostaglandina (PGF2α)",
+    indicaciones: ["Complejo hiperplasia endometrial quística-piómetra", "Metritis"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 0.25, unidad: "mg/kg", via: "SC", frecuencia: "cada 12-24 h, 3-8 días", notas: "Alternativa en hiperplasia endometrial quística-piómetra: 0,025-0,050 mg/kg SC 6-8 veces al día durante 2-3 días. No administrar en piómetras cerradas. Presentación veterinaria para otras especies (Dinolytic). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.1, dosisMax: 0.1, unidad: "mg/kg", via: "SC", frecuencia: "cada 24 h", notas: "No administrar en piómetras cerradas. Presentación veterinaria para otras especies (Dinolytic). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "desoxicorticosterona",
+    principioActivo: "Desoxicorticosterona",
+    nombresComerciales: ["Zycortal"],
+    categoria: "Mineralocorticoide",
+    indicaciones: ["Hipoadrenocorticismo crónico"],
+    especies: {
+      perro: { dosisMin: 2.2, dosisMax: 2.2, unidad: "mg/kg", via: "SC", frecuencia: "cada 25 días inicialmente", notas: "No ha quedado demostrada su seguridad durante la gestación y lactancia. Presentación veterinaria (Zycortal, viales SC de 25 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 2.2, dosisMax: 2.2, unidad: "mg/kg", via: "SC", frecuencia: "cada 25 días inicialmente", notas: "No ha quedado demostrada su seguridad durante la gestación y lactancia. Presentación veterinaria (Zycortal, viales SC de 25 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "fludrocortisona-sistemica",
+    principioActivo: "Fludrocortisona (sistémica)",
+    nombresComerciales: ["Astonin (uso humano)"],
+    categoria: "Mineralocorticoide",
+    indicaciones: ["Hipoadrenocorticismo crónico"],
+    especies: {
+      perro: { dosisMin: 0.01, dosisMax: 0.02, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Ajustar según ionograma. Presentación de uso humano (Astonin, comprimidos de 0,1 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.01, dosisMax: 0.02, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Ajustar según ionograma. Presentación de uso humano (Astonin, comprimidos de 0,1 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "insulina-protamina-zinc",
+    principioActivo: "Insulina protamina zinc",
+    nombresComerciales: ["Prozinc (uso humano)"],
+    categoria: "Antidiabético (insulina de acción intermedia-larga)",
+    indicaciones: ["Diabetes mellitus"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 1, unidad: "UI/kg", via: "SC", frecuencia: "una o dos veces al día", notas: "Presentación de uso humano (Prozinc, viales SC de 40 UI/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.2, dosisMax: 0.4, unidad: "UI/kg", via: "SC", frecuencia: "cada 12 h inicialmente", notas: "Alternativa: 1-2 UI/gato SC c12h (dosis fija). Presentación de uso humano (Prozinc, viales SC de 40 UI/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "insulina-veterinaria-intermedia",
+    principioActivo: "Insulina veterinaria (acción intermedia)",
+    nombresComerciales: ["Caninsulin"],
+    categoria: "Antidiabético (insulina)",
+    indicaciones: ["Diabetes mellitus"],
+    especies: {
+      perro: { dosisMin: 0.25, dosisMax: 0.5, unidad: "UI/kg", via: "SC", frecuencia: "cada 12 h, comenzando con la dosis inferior", notas: "Presentación veterinaria (Caninsulin, viales SC de 40 UI/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.25, dosisMax: 0.5, unidad: "UI/kg", via: "SC", frecuencia: "cada 12 h", dosisMaxima: 3, notas: "Máximo 2-3 UI/gato por inyección. Presentación veterinaria (Caninsulin, viales SC de 40 UI/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "insulina-regular",
+    principioActivo: "Insulina regular",
+    nombresComerciales: ["Actrapid (uso humano)", "Humulina Regular (uso humano)"],
+    categoria: "Antidiabético (insulina de acción rápida)",
+    indicaciones: ["Hipercaliemia moderada-intensa sin acidosis metabólica"],
+    especies: {
+      perro: { dosisMin: 0.25, dosisMax: 0.5, unidad: "UI/kg", via: "IV", frecuencia: "dosis única, seguida de 1-2 g de glucosa por unidad de insulina IV", notas: "Cetoacidosis diabética: consultar protocolo específico, no es una dosis única simple. Presentación de uso humano (Actrapid, Humulina Regular, viales IV de 100 UI/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.25, dosisMax: 0.5, unidad: "UI/kg", via: "IV", frecuencia: "dosis única, seguida de 1-2 g de glucosa por unidad de insulina IV", notas: "Cetoacidosis diabética: consultar protocolo específico, no es una dosis única simple. Presentación de uso humano (Actrapid, Humulina Regular, viales IV de 100 UI/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "glipizida",
+    principioActivo: "Glipizida",
+    nombresComerciales: ["Minodiab (uso humano)"],
+    categoria: "Antidiabético oral (sulfonilurea)",
+    indicaciones: ["Diabetes mellitus (gato)"],
+    especies: {
+      gato: { dosisMin: 2.5, dosisMax: 2.5, unidad: "mg", via: "VO", frecuencia: "cada 12 h inicialmente", notas: "Dosis fija por animal, no por kg. No administrar con cetoacidosis. Presentación de uso humano (Minodiab, comprimidos de 5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "glucagon",
+    principioActivo: "Glucagón",
+    nombresComerciales: ["Glucagen Hypokit (uso humano)"],
+    categoria: "Hormona hiperglucemiante",
+    indicaciones: ["Hipoglucemia aguda por hiperinsulinismo"],
+    especies: {
+      perro: { dosisMin: 0.005, dosisMax: 0.005, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto, inicialmente", notas: "Equivale a 5 ng/kg/min. Presentación de uso humano (Glucagen Hypokit, viales SC/IM/IV de 1 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.005, dosisMax: 0.005, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto, inicialmente", notas: "Equivale a 5 ng/kg/min. Presentación de uso humano (Glucagen Hypokit, viales SC/IM/IV de 1 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "acido-alendronico",
+    principioActivo: "Alendrónico ácido",
+    nombresComerciales: ["Fosamax (uso humano)"],
+    categoria: "Bisfosfonato",
+    indicaciones: ["Hiperparatiroidismo primario"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 2-3 días", notas: "Presentación de uso humano (Fosamax, comprimidos de 70 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "acido-pamidronico",
+    principioActivo: "Pamidrónico ácido",
+    nombresComerciales: ["Pamidronato Hospira (uso humano)"],
+    categoria: "Bisfosfonato",
+    indicaciones: ["Hiperparatiroidismo primario", "Dolor en neoplasia ósea"],
+    especies: {
+      perro: { dosisMin: 1.3, dosisMax: 2, unidad: "mg/kg", via: "IV", frecuencia: "dosis inicial; en dolor por neoplasia ósea, 1-2 mg/kg IV lento en 2 h, cada 3-4 semanas", notas: "Presentación de uso humano (Pamidronato Hospira, viales IV de 15-90 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 1.5, dosisMax: 2, unidad: "mg/kg", via: "IV", frecuencia: "dosis inicial", notas: "Presentación de uso humano (Pamidronato Hospira, viales IV de 15-90 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "acido-zoledronico",
+    principioActivo: "Zoledrónico ácido",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Bisfosfonato",
+    indicaciones: ["Dolor en neoplasia ósea"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 0.2, unidad: "mg/kg", via: "IV lento (15 min)", frecuencia: "cada 3-4 semanas", dosisMaxima: 4, notas: "Máximo 4 mg totales, diluido en 50-100 mL de NaCl al 0,9%. Presentación de uso humano (viales IV de 4 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.1, dosisMax: 0.2, unidad: "mg/kg", via: "IV lento (15 min)", frecuencia: "cada 3-4 semanas", dosisMaxima: 4, notas: "Máximo 4 mg totales, diluido en 50-100 mL de NaCl al 0,9%. Presentación de uso humano (viales IV de 4 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "calcitonina",
+    principioActivo: "Calcitonina",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Hormona (regulación del calcio)",
+    indicaciones: ["Hiperparatiroidismo primario"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "UI", via: "SC/IM", frecuencia: "según respuesta", notas: "La fuente remite a la posología del artículo correspondiente, sin una dosis fija por kg. Presentación de uso humano (viales SC/IM de 100 UI). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
