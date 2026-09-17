@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:00:22";
-const VERSION_BD = 11;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:01:56";
+const VERSION_BD = 12;
 
 const DRUGS = [
   {
@@ -3163,6 +3163,55 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 0.2, dosisMax: 0.6, unidad: "mg/kg", via: "VO/SC", frecuencia: "cada 24 h (protocolos prolongados en demodicosis)", notas: "⚠ CONTRAINDICADO o usar con máxima precaución en razas sensibles a mutación MDR1 (Collie, Pastor Australiano, Pastor de Shetland y cruces): riesgo de neurotoxicidad grave. La dosis para prevención de dirofilariosis es muy inferior (~0,006 mg/kg) y no corresponde a este rango." },
       gato:  { dosisMin: 0.2, dosisMax: 0.3, unidad: "mg/kg", via: "SC", frecuencia: "cada 24 h (protocolos prolongados en demodicosis/notoedres)", notas: "Usar con precaución; iniciar con dosis bajas y vigilar signos neurológicos." }
+    }
+  },
+  // ---- Fármacos de "Descripción de especialidades: Antiparasitarios" (Guía terapéutica del
+  // animal de compañía, ConsultaVet, 8ª ed., Rejas López y cols.) — la inmensa mayoría de este
+  // capítulo (isoxazolinas, avermectinas tópicas, combinados desparasitantes) ya está cubierta
+  // en la base de datos con los mismos principios activos (Fipronil, Fluralaner, Lotilaner,
+  // Sarolaner, Afoxolaner, Nitenpiram, Moxidectina, Mebendazol, Ivermectina, Selamectina), o son
+  // dosis fijas por tramo de peso/producto ("ver tabla") sin una cifra mg/kg extraíble de esta
+  // fuente. Solo estos 4 principios activos eran nuevos con dosis numérica utilizable. ----
+  {
+    id: "flubendazol",
+    principioActivo: "Flubendazol",
+    nombresComerciales: ["Alphafluben"],
+    categoria: "Antiparasitario interno (bencimidazol)",
+    indicaciones: ["Desparasitación interna"],
+    especies: {
+      perro: { dosisMin: 22, dosisMax: 22, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, 2-3 días", notas: "Presentación veterinaria (Alphafluben, gel oral de 44 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 22, dosisMax: 22, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, 2-3 días", notas: "Presentación veterinaria (Alphafluben, gel oral de 44 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "toltrazurilo",
+    principioActivo: "Toltrazurilo",
+    nombresComerciales: ["Baycox (veterinario, otras especies)"],
+    categoria: "Antiparasitario (coccidiostático)",
+    indicaciones: ["Coccidiosis"],
+    especies: {
+      perro: { dosisMin: 20, dosisMax: 20, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, 3 días", notas: "Presentación veterinaria para otras especies (Baycox, solución oral 25 y 50 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 20, dosisMax: 20, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, 3 días", notas: "Presentación veterinaria para otras especies (Baycox, solución oral 25 y 50 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "levamisol",
+    principioActivo: "Levamisol",
+    nombresComerciales: ["Vermivet (veterinario, otras especies)"],
+    categoria: "Inmunomodulador/antiparasitario",
+    indicaciones: ["Lupus eritematoso sistémico"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 5, unidad: "mg/kg", via: "VO", frecuencia: "cada 48 h", dosisMaxima: 150, notas: "Combinado con prednisona. Máximo 150 mg totales. Presentaciones veterinarias para otras especies (Levasil, Panvermin Oral, Tabernil Levamisol, Vermivet). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "doramectina",
+    principioActivo: "Doramectina",
+    nombresComerciales: ["Dectomax (veterinario, otras especies)"],
+    categoria: "Antiparasitario (lactona macrocíclica)",
+    indicaciones: ["Sarna demodécica generalizada (perro adulto)"],
+    especies: {
+      perro: { dosisMin: 0.6, dosisMax: 0.6, unidad: "mg/kg", via: "SC", frecuencia: "cada 7 días, hasta dos raspados negativos con un mes de intervalo", notas: "⚠ No administrar a perros de raza Collie, Shetland o Bobtail, o sus cruces, sin valorar mutación del gen MDR1, ni a pacientes con dirofilariosis. Presentación veterinaria para otras especies (Dectomax, viales SC/IM de 10 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
