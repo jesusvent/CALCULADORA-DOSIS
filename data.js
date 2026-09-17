@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T00:45:15";
-const VERSION_BD = 7;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T00:46:35";
+const VERSION_BD = 8;
 
 const DRUGS = [
   {
@@ -2865,6 +2865,30 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 0.4, dosisMax: 0.6, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h durante un máximo de 14 días, después cada 24 h de mantenimiento", notas: "Solo en perros a partir de 12 meses de edad. Fuente: FDA Freedom of Information Summary, NADA 141-345 (Zoetis)." }
       // No autorizado en gatos: se omite por seguridad.
+    }
+  },
+  // ---- Fármacos sistémicos (retinoides orales) de "Descripción de especialidades:
+  // Dermatológicos" (Guía terapéutica del animal de compañía, ConsultaVet, 8ª ed., Rejas López y
+  // cols.) — el resto del capítulo es tópico (champús, cremas, aerosoles por %) y no encaja con
+  // el cálculo por peso de esta app. ----
+  {
+    id: "acitretina",
+    principioActivo: "Acitretina",
+    nombresComerciales: ["Neotigason (uso humano)"],
+    categoria: "Retinoide sistémico",
+    indicaciones: ["Seborrea idiopática", "Ictiosis"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "una o dos veces al día (dosis inicial)", notas: "No administrar a animales usados como reproductores. Presentación de uso humano (Neotigason, cápsulas de 10 y 25 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "isotretinoina",
+    principioActivo: "Isotretinoína",
+    nombresComerciales: ["Dercutane (uso humano)", "Isoacne (uso humano)"],
+    categoria: "Retinoide sistémico",
+    indicaciones: ["Síndrome de comedones del Schnauzer", "Ictiosis"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "una o dos veces al día (dosis inicial)", notas: "No administrar a animales usados como reproductores. Presentación de uso humano (Dercutane, Isoacne, cápsulas de 5-40 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
 
