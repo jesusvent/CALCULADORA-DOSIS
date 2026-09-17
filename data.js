@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:21:06";
-const VERSION_BD = 17;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:22:47";
+const VERSION_BD = 18;
 
 const DRUGS = [
   {
@@ -4008,6 +4008,68 @@ const DRUGS = [
     indicaciones: ["Síndrome de comedones del Schnauzer", "Ictiosis"],
     especies: {
       perro: { dosisMin: 1, dosisMax: 2, unidad: "mg/kg", via: "VO", frecuencia: "una o dos veces al día (dosis inicial)", notas: "No administrar a animales usados como reproductores. Presentación de uso humano (Dercutane, Isoacne, cápsulas de 5-40 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  // ---- Resto de fármacos de "Uso de fármacos en dermatología" (Guía terapéutica del animal de
+  // compañía, ConsultaVet, 8ª ed., Rejas López y cols.) que faltaban: capítulo mayormente cubierto
+  // por fichas previas (oclacitinib, lokivetmab, ciclosporina, azatioprina, clorambucilo,
+  // doxiciclina, amoxicilina-clavulánico, cefalexina, cefadroxilo, clindamicina, sulfadiazina-
+  // trimetoprim, cefovecina, enrofloxacino, marbofloxacino, pradofloxacino, azitromicina,
+  // itraconazol, ketoconazol, terbinafina, fluconazol, nitenpiram, antimoniato de meglumina,
+  // miltefosina, alopurinol, domperidona, melatonina, trilostano, difenhidramina, hidroxizina,
+  // masitinib, toceranib, tigilanol tiglato, acitretina, isotretinoína). Nuevos: triamcinolona
+  // acetónido, cloranfenicol, minociclina, palmitoiletanolamida y vitamina A. ----
+  {
+    id: "triamcinolona-acetonido-depot",
+    principioActivo: "Triamcinolona acetónido",
+    nombresComerciales: ["Trigon Depot (uso humano)"],
+    categoria: "Glucocorticoide de liberación prolongada",
+    indicaciones: ["Prurito alérgico felino (tratamiento a largo plazo, opción cuando la vía oral no es viable)"],
+    especies: {
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "SC/IM", frecuencia: "no repetir antes de 3-4 meses", notas: "Dosis fija por animal, no por kg: 5 mg/gato SC/IM. La falta de estudios prospectivos que evalúen dosis, frecuencia y efectos secundarios de los glucocorticoides de liberación prolongada aconseja una evaluación cuidadosa de riesgo/beneficio antes de su uso. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "cloranfenicol",
+    principioActivo: "Cloranfenicol",
+    nombresComerciales: ["EFG (fórmula magistral)"],
+    categoria: "Antibiótico",
+    indicaciones: ["Piodermas profundas o superficiales resistentes (según cultivo y antibiograma)"],
+    especies: {
+      perro: { dosisMin: 40, dosisMax: 50, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Disponible en farmacias como fórmula magistral. Reservar para infecciones resistentes según antibiograma. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 40, dosisMax: 50, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Disponible en farmacias como fórmula magistral. Reservar para infecciones resistentes según antibiograma. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "minociclina",
+    principioActivo: "Minociclina",
+    nombresComerciales: ["Minocin (uso humano)"],
+    categoria: "Antibiótico (tetraciclina)",
+    indicaciones: ["Piodermas profundas o superficiales resistentes (según cultivo y antibiograma)"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 10, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Reservar para infecciones resistentes según antibiograma. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 5, dosisMax: 10, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Reservar para infecciones resistentes según antibiograma. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "palmitoiletanolamida",
+    principioActivo: "Palmitoiletanolamida",
+    nombresComerciales: ["Redonyl (nutracéutico)"],
+    categoria: "Nutracéutico (antipruriginoso)",
+    indicaciones: ["Prurito de intensidad leve o moderada (como complemento o ahorrador de dosis de antipruriginosos sistémicos)"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 10, unidad: "mg/kg", via: "VO", frecuencia: "al día", notas: "Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 15, dosisMax: 15, unidad: "mg/kg", via: "VO", frecuencia: "al día", notas: "Uso ensayado, con menor evidencia que en el perro. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "vitamina-a-dermatologica",
+    principioActivo: "Vitamina A",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Vitamina (retinoide natural)",
+    indicaciones: ["Seborrea primaria idiopática", "Adenitis sebácea"],
+    especies: {
+      perro: { dosisMin: 1000, dosisMax: 1000, unidad: "UI/kg", via: "VO", frecuencia: "al día, repartida en dos tomas", notas: "No administrar conjuntamente con retinoides sintéticos (acitretina, isotretinoína). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
 
