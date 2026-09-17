@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T00:40:41";
-const VERSION_BD = 5;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T00:43:16";
+const VERSION_BD = 6;
 
 const DRUGS = [
   {
@@ -1193,8 +1193,8 @@ const DRUGS = [
     categoria: "Antagonista alfa-2 (reversor)",
     indicaciones: ["Reversión de sedación con dexmedetomidina/medetomidina"],
     especies: {
-      perro: { dosisMin: 0.1, dosisMax: 0.2, unidad: "mg/kg", via: "IM", frecuencia: "dosis única, al finalizar el procedimiento o si es necesario revertir la sedación", notas: "No administrar IV. Alternativa habitual: mismo volumen de Antisedan que el de alfa-2 agonista administrado, ya que Antisedan es más concentrado (5 mg/ml) que Dexdomitor/Domitor." },
-      gato:  { dosisMin: 0.1, dosisMax: 0.2, unidad: "mg/kg", via: "IM", frecuencia: "dosis única, al finalizar el procedimiento o si es necesario revertir la sedación", notas: "No administrar IV. Alternativa habitual: mismo volumen de Antisedan que el de alfa-2 agonista administrado, ya que Antisedan es más concentrado (5 mg/ml) que Dexdomitor/Domitor." }
+      perro: { dosisMin: 0.1, dosisMax: 0.2, unidad: "mg/kg", via: "IM", frecuencia: "dosis única, al finalizar el procedimiento o si es necesario revertir la sedación", notas: "No administrar IV. Alternativa habitual: mismo volumen de Antisedan que el de alfa-2 agonista administrado, ya que Antisedan es más concentrado (5 mg/ml) que Dexdomitor/Domitor. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.), dosis específica según el agonista a revertir: 0,2 mg/kg IM para xilacina; 0,05-0,40 mg/kg IM para medetomidina (o 5 veces la dosis en mcg administrada); para dexmedetomidina, 10 veces la dosis en mcg administrada. Para antagonizar amitraz: 0,05-0,20 mg/kg IM (ambas especies). No administrar con insuficiencia renal, hepática o cardiaca, ni en gestantes." },
+      gato:  { dosisMin: 0.1, dosisMax: 0.2, unidad: "mg/kg", via: "IM", frecuencia: "dosis única, al finalizar el procedimiento o si es necesario revertir la sedación", notas: "No administrar IV. Alternativa habitual: mismo volumen de Antisedan que el de alfa-2 agonista administrado, ya que Antisedan es más concentrado (5 mg/ml) que Dexdomitor/Domitor. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.), dosis específica según el agonista a revertir: 0,2 mg/kg IM para xilacina; 0,1-0,4 mg/kg IM para medetomidina (o 2,5 veces la dosis en mcg administrada); para dexmedetomidina, 5 veces la dosis en mcg administrada. Para antagonizar amitraz: 0,05-0,20 mg/kg IM (ambas especies). No administrar con insuficiencia renal, hepática o cardiaca, ni en gestantes." }
     }
   },
   {
@@ -1217,6 +1217,156 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 0.01, dosisMax: 0.02, unidad: "mg/kg", via: "IV", frecuencia: "dosis única, repetible si reaparece la sedación", notas: "Vida media corta: puede necesitar repetirse antes que la benzodiazepina revertida." },
       gato:  { dosisMin: 0.01, dosisMax: 0.02, unidad: "mg/kg", via: "IV", frecuencia: "dosis única, repetible si reaparece la sedación", notas: "Vida media corta: puede necesitar repetirse antes que la benzodiazepina revertida." }
+    }
+  },
+  // ---- Fármacos de "Descripción de especialidades: Otros fármacos" (Guía terapéutica del
+  // animal de compañía, ConsultaVet, 8ª ed., Rejas López y cols.). ----
+  {
+    id: "edrofonio",
+    principioActivo: "Edrofonio",
+    nombresComerciales: ["Anticude (uso humano)"],
+    categoria: "Antagonista de bloqueantes neuromusculares",
+    indicaciones: ["Reversión de relajantes musculares no benzodiazepínicos (bloqueantes neuromusculares)"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "IV", frecuencia: "dosis única", notas: "No administrar con peritonitis u obstrucciones mecánicas del tracto gastrointestinal o urinario. Presentación de uso humano (Anticude, viales IV de 25 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "IV", frecuencia: "dosis única", notas: "No administrar con peritonitis u obstrucciones mecánicas del tracto gastrointestinal o urinario. Presentación de uso humano (Anticude, viales IV de 25 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "oxibutinina",
+    principioActivo: "Oxibutinina",
+    nombresComerciales: ["Ditropan (uso humano)"],
+    categoria: "Antiespasmódico urinario",
+    indicaciones: ["Incontinencia urinaria"],
+    especies: {
+      perro: { dosisMin: 0.2, dosisMax: 0.3, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", notas: "Presentación de uso humano (Ditropan, comprimidos de 5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "cada 8-12 h", notas: "Dosis fija por animal, no por kg: 0,5 mg/gato VO cada 8-12 h. Presentación de uso humano (Ditropan, comprimidos de 5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "sodio-bicarbonato-urinario",
+    principioActivo: "Sodio bicarbonato",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Alcalinizante urinario",
+    indicaciones: ["Acidosis metabólica en glomerulonefritis / alcalinización del pH urinario", "Urolitos de urato"],
+    especies: {
+      perro: { dosisMin: 8, dosisMax: 12, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", notas: "En urolitos de urato: dosis fija por animal, no por kg — 0,65-5,90 g/animal VO al día. Presentación de uso humano (polvo oral 1.000 mg, comprimidos 500 mg) y de parafarmacia (polvo oral 200 g). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 8, dosisMax: 12, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", notas: "En urolitos de urato: dosis fija por animal, no por kg — 0,65-5,90 g/animal VO al día. Presentación de uso humano (polvo oral 1.000 mg, comprimidos 500 mg) y de parafarmacia (polvo oral 200 g). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "potasio-citrato",
+    principioActivo: "Potasio citrato",
+    nombresComerciales: ["Acalka (uso humano)"],
+    categoria: "Alcalinizante urinario",
+    indicaciones: ["Acidosis metabólica en glomerulonefritis / alcalinización del pH urinario", "Urolitos de oxalato cálcico o de urato"],
+    especies: {
+      perro: { dosisMin: 75, dosisMax: 75, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "Dosis para urolitos de oxalato cálcico o de urato. Para acidosis metabólica/alcalinización del pH urinario la fuente cita 0,3-0,5 mmol/kg VO c12h (unidad no convertible a mg/kg de forma directa, confirmar equivalencia antes de usar). No administrar con enfermedad cardiaca. Presentación de uso humano (Acalka, comprimidos de 1,08 g). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 75, dosisMax: 75, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "Dosis para urolitos de oxalato cálcico o de urato. Para acidosis metabólica/alcalinización del pH urinario la fuente cita 0,3-0,5 mmol/kg VO c12h (unidad no convertible a mg/kg de forma directa, confirmar equivalencia antes de usar). No administrar con enfermedad cardiaca. Presentación de uso humano (Acalka, comprimidos de 1,08 g). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "calcio-carbonato-chitosan",
+    principioActivo: "Calcio carbonato - Chitosán",
+    nombresComerciales: ["Ipakitine (paraveterinario)"],
+    categoria: "Quelante del fósforo",
+    indicaciones: ["Hiperfosfatemia"],
+    especies: {
+      perro: { dosisMin: 90, dosisMax: 150, unidad: "mg/kg", via: "VO", frecuencia: "una vez al día", notas: "Dosis de calcio carbonato. Presentación paraveterinaria (Ipakitine) y de uso humano (Caosina polvo oral 2.500 mg; Mastical/Natecal comprimidos masticables 1.250-1.500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 90, dosisMax: 150, unidad: "mg/kg", via: "VO", frecuencia: "una vez al día", notas: "Dosis de calcio carbonato. Presentación paraveterinaria (Ipakitine) y de uso humano (Caosina polvo oral 2.500 mg; Mastical/Natecal comprimidos masticables 1.250-1.500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "lantano-carbonato",
+    principioActivo: "Lantano carbonato",
+    nombresComerciales: ["Fosrenol (uso humano)"],
+    categoria: "Quelante del fósforo",
+    indicaciones: ["Hiperfosfatemia"],
+    especies: {
+      perro: { dosisMin: 12.5, dosisMax: 25, unidad: "mg/kg", via: "VO", frecuencia: "una vez al día, con la comida", notas: "Presentación de uso humano (Fosrenol, polvos y comprimidos de 500-1.000 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 12.5, dosisMax: 25, unidad: "mg/kg", via: "VO", frecuencia: "una vez al día, con la comida", notas: "Presentación de uso humano (Fosrenol, polvos y comprimidos de 500-1.000 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "sevelamero",
+    principioActivo: "Sevelámero",
+    nombresComerciales: ["Renvela (uso humano)"],
+    categoria: "Quelante del fósforo",
+    indicaciones: ["Hiperfosfatemia"],
+    especies: {
+      perro: { dosisMin: 30, dosisMax: 50, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Presentación de uso humano (Renvela, polvos orales 800-2.400 mg; comprimidos 800 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "acetohidroxamico-acido",
+    principioActivo: "Acetohidroxámico ácido",
+    nombresComerciales: ["Uronefrex (uso humano)"],
+    categoria: "Otros (urolitiasis)",
+    indicaciones: ["Urolitos de estruvita"],
+    especies: {
+      perro: { dosisMin: 12.5, dosisMax: 12.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "No administrar con insuficiencia renal (creatinina >2,5 mg/dL). Presentación de uso humano (Uronefrex, cápsulas de 125-250 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "colchicina",
+    principioActivo: "Colchicina",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Otros (amiloidosis)",
+    indicaciones: ["Amiloidosis"],
+    especies: {
+      perro: { dosisMin: 0.01, dosisMax: 0.03, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Presentación de uso humano (comprimidos de 0,5 y 1 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.01, dosisMax: 0.03, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Presentación de uso humano (comprimidos de 0,5 y 1 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "lotrifen",
+    principioActivo: "Lotrifen",
+    nombresComerciales: ["Privaprol"],
+    categoria: "Abortivo (reproducción)",
+    indicaciones: ["Interrupción de gestación (abortivo)"],
+    especies: {
+      perro: { dosisMin: 2.5, dosisMax: 2.5, unidad: "mg/kg", via: "IM profunda", frecuencia: "dosis única, entre el día 9º y 13º tras el acoplamiento", notas: "No administrar pasados 15 días del acoplamiento, ni en perras con hepatopatía, nefropatía o enfermedad gastrointestinal grave. Presentación veterinaria (Privaprol, viales IM de 50 y 100 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "melatonina",
+    principioActivo: "Melatonina",
+    nombresComerciales: ["Circadin (uso humano)", "Aquilea Melatonina (parafarmacia)"],
+    categoria: "Otros (dermatológico)",
+    indicaciones: ["Distrofias foliculares", "Alopecia cíclica de los flancos", "Alopecia X"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "cada 12 h", notas: "Dosis fija por tamaño, no por kg: 3 mg/perro pequeño, 6-12 mg/perro mediano a grande, VO cada 12 h. No administrar a diabéticos. Presentación de uso humano (Circadin, Melatonite, Slenyto, comprimidos 1-5 mg) y de parafarmacia (gotas, aerosol, comprimidos). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "dl-metionina",
+    principioActivo: "DL Metionina",
+    nombresComerciales: ["Uropet (parafarmacia)"],
+    categoria: "Otros (urolitiasis, acidificante urinario)",
+    indicaciones: ["Urolitos de estruvita"],
+    especies: {
+      perro: { dosisMin: 100, dosisMax: 100, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Presentación de parafarmacia (Uropet, polvo oral 80 mg/g). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 100, dosisMax: 100, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Presentación de parafarmacia (Uropet, polvo oral 80 mg/g). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "penicilamina",
+    principioActivo: "Penicilamina",
+    nombresComerciales: ["Cupripen (uso humano)"],
+    categoria: "Quelante (cobre)",
+    indicaciones: ["Hepatopatía asociada al cobre"],
+    especies: {
+      perro: { dosisMin: 15, dosisMax: 15, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Presentación de uso humano (Cupripen, comprimidos de 50 mg y cápsulas de 250 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "tigilanol-toglato",
+    principioActivo: "Tigilanol toglato",
+    nombresComerciales: ["Stelfonta"],
+    categoria: "Antineoplásico (inyección intratumoral)",
+    indicaciones: ["Mastocitoma subcutáneo irresecable y no metastásico (<8 cm³)"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "ml", via: "Intraneoplásica", frecuencia: "dosis única, repetible a las 4 semanas si es necesario", notas: "Cálculo específico, no un simple mg/kg: volumen a inyectar (mL) = volumen de la neoplasia (cm³) × 0,5, máximo 0,15 mL/kg y 4 mL/perro. No administrar a menores de 12 meses o menos de 3 kg, inmunodeprimidos o con cáncer progresivo. Requiere formación específica del fabricante antes de usar. Presentación veterinaria (Stelfonta, viales de 2 mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
