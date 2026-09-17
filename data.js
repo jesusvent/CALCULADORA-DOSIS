@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:27:03";
-const VERSION_BD = 20;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:28:47";
+const VERSION_BD = 21;
 
 const DRUGS = [
   {
@@ -1899,6 +1899,44 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 0.25, dosisMax: 1, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto (mcg/kg/min)", notas: "Infusión a ritmo constante (CRI): 0,25-1,00 mcg/kg al minuto, no una dosis única — usar la calculadora de CRI para preparar la mezcla. Presentación de uso humano (Ultiva, viales IV de 1, 2 y 5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
       gato: { dosisMin: 0.25, dosisMax: 1, unidad: "mcg/kg", via: "IV (infusión continua)", frecuencia: "por minuto (mcg/kg/min)", notas: "Infusión a ritmo constante (CRI): 0,25-1,00 mcg/kg al minuto, no una dosis única — usar la calculadora de CRI para preparar la mezcla. Presentación de uso humano (Ultiva, viales IV de 1, 2 y 5 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  // ---- Últimos fármacos que faltaban de "Uso de fármacos en neurología y enfermedades del
+  // aparato locomotor" (Guía terapéutica del animal de compañía, ConsultaVet, 8ª ed., Rejas López
+  // y cols.); el resto del capítulo (antiepilépticos, benzodiazepinas, antídotos habituales,
+  // opioides, AINE/coxibs, gabapentinoides, relajantes musculares, antidepresivos/ansiolíticos y
+  // fármacos de disfunción cognitiva) ya estaba cubierto por fichas previas. Se omite tapentadol
+  // por no tener la fuente una dosis establecida ("en fase de estudio en perros y gatos"). ----
+  {
+    id: "edetato-calcico-disodico",
+    principioActivo: "Edetato cálcico disódico",
+    nombresComerciales: ["Sodico Calcico Edetato (especialidad extranjera)"],
+    categoria: "Quelante de metales pesados (antídoto)",
+    indicaciones: ["Intoxicación por plomo"],
+    especies: {
+      perro: { dosisMin: 25, dosisMax: 25, unidad: "mg/kg", via: "SC", frecuencia: "cada 6 h, durante 2-5 días", dosisMaxima: 2000, notas: "Diluir en glucosa al 5%, a una concentración de 10 mg/mL. Dosis máxima 2.000 mg/animal al día. Especialidad farmacéutica extranjera (vial IM/IV de 500, 1.000 y 2.000 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 25, dosisMax: 25, unidad: "mg/kg", via: "SC", frecuencia: "cada 6 h, durante 2-5 días", dosisMaxima: 2000, notas: "Diluir en glucosa al 5%, a una concentración de 10 mg/mL. Dosis máxima 2.000 mg/animal al día. Especialidad farmacéutica extranjera (vial IM/IV de 500, 1.000 y 2.000 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "pralidoxima",
+    principioActivo: "Pralidoxima",
+    nombresComerciales: ["Contrathion (especialidad extranjera)"],
+    categoria: "Reactivador de la colinesterasa (antídoto)",
+    indicaciones: ["Intoxicación por organofosforados"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 20, unidad: "mg/kg", via: "SC/IV lento (1-2 h)", frecuencia: "cada 8-12 h, durante 1-2 días", notas: "Repetir la primera dosis a la hora si se necesita. Solo tratar en las primeras 24-48 horas tras la intoxicación; los signos muscarínicos se tratan con atropina. Especialidad farmacéutica extranjera (Contrathion, vial IV de 200 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 10, dosisMax: 20, unidad: "mg/kg", via: "SC/IV lento (1-2 h)", frecuencia: "cada 8-12 h, durante 1-2 días", notas: "Repetir la primera dosis a la hora si se necesita. Solo tratar en las primeras 24-48 horas tras la intoxicación; los signos muscarínicos se tratan con atropina. Especialidad farmacéutica extranjera (Contrathion, vial IV de 200 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "xilacina",
+    principioActivo: "Xilacina",
+    nombresComerciales: ["Rompun (veterinario)"],
+    categoria: "Agonista alfa2-adrenérgico (sedante)",
+    indicaciones: ["Sedación"],
+    especies: {
+      perro: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "IM", frecuencia: "efecto de 0,5 a 2 horas", notas: "Presentación veterinaria (Rompun). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
