@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:15:49";
-const VERSION_BD = 15;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:17:54";
+const VERSION_BD = 16;
 
 const DRUGS = [
   {
@@ -1424,6 +1424,38 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Epidural", frecuencia: "según protocolo", notas: "La fuente remite a la posología del artículo correspondiente, sin una dosis fija por kg publicada aquí. Presentación veterinaria para otras especies (Intra-epicaine, Mepidor) y de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
       gato: { dosisMin: null, dosisMax: null, unidad: "mg/kg", via: "Epidural", frecuencia: "según protocolo", notas: "La fuente remite a la posología del artículo correspondiente, sin una dosis fija por kg publicada aquí. Presentación veterinaria para otras especies (Intra-epicaine, Mepidor) y de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  // ---- Fármacos de "Uso de fármacos en anestesia en cirugía" (Guía terapéutica del animal de
+  // compañía, ConsultaVet, 8ª ed., Rejas López y cols.) — capítulo de protocolos por escenario
+  // clínico (neonatos, cardiópatas, insuficiencia ventilatoria/renal-hepática, cesárea,
+  // dilatación-torsión gástrica, broncoscopia, trauma, procedimientos cortos). Todos los demás
+  // fármacos citados (propofol, alfaxalona, etomidato, tiopental, ketamina, medetomidina,
+  // dexmedetomidina, diazepam, midazolam, acepromazina, buprenorfina, butorfanol, metadona,
+  // fentanilo, lidocaína, mepivacaína, bupivacaína, naloxona, flumazenilo, atipamezol,
+  // neostigmina, edrofonio, atropina, dobutamina, dopamina, adrenalina, noradrenalina,
+  // fenilefrina, esmolol, propranolol, diltiazem) ya existían; vasopresina/argipresina ya está
+  // cubierta en la pestaña CRI. Solo morfina y cisatracurio faltaban por completo. ----
+  {
+    id: "morfina",
+    principioActivo: "Morfina",
+    nombresComerciales: ["Cloruro mórfico (uso humano)"],
+    categoria: "Opioide (agonista puro)",
+    indicaciones: ["Analgesia perioperatoria", "Premedicación anestésica", "Sedación en pacientes traumatizados o críticos"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 0.5, unidad: "mg/kg", via: "IM/IV lento", frecuencia: "cada 4-6 h según necesidad", notas: "Premedicación/analgesia habitual: 0,1 mg/kg IM/IV; en dilatación-torsión gástrica se ha empleado hasta 0,5 mg/kg IV. Perfusión continua: dosis de carga de 0,5 mg/kg IV seguida de 0,24 mg/kg/hora (o como componente del 'triple gotero' junto con ketamina y lidocaína). Vía epidural: 0,1 mg/kg (0,1 mL/kg diluido para bloqueo abdominal, 0,25 mL/kg para torácico); inicio de acción 45-90 min, duración 12-24 h. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.1, dosisMax: 0.5, unidad: "mg/kg", via: "IM/IV lento", frecuencia: "cada 4-6 h según necesidad", notas: "Premedicación/analgesia habitual: 0,1 mg/kg IM/IV. Perfusión continua: dosis de carga de 0,5 mg/kg IV seguida de 0,24 mg/kg/hora (eliminar la lidocaína del 'triple gotero' en esta especie por su toxicidad). Vía epidural: 0,1 mg/kg (0,1 mL/kg diluido para bloqueo abdominal, 0,25 mL/kg para torácico); inicio de acción 45-90 min, duración 12-24 h. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "cisatracurio",
+    principioActivo: "Cisatracurio",
+    nombresComerciales: ["Nimbex (uso humano)"],
+    categoria: "Bloqueante neuromuscular no despolarizante",
+    indicaciones: ["Relajación muscular para ventilación mecánica durante la anestesia"],
+    especies: {
+      perro: { dosisMin: 0.05, dosisMax: 0.2, unidad: "mg/kg", via: "IV", frecuencia: "antes de instaurar la ventilación artificial", notas: "Bloqueante neuromuscular no despolarizante; debe monitorizarse la relajación (p. ej. estimulador de nervio periférico) y disponer de soporte ventilatorio hasta la recuperación de la función muscular. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.05, dosisMax: 0.2, unidad: "mg/kg", via: "IV", frecuencia: "antes de instaurar la ventilación artificial", notas: "Bloqueante neuromuscular no despolarizante; debe monitorizarse la relajación (p. ej. estimulador de nervio periférico) y disponer de soporte ventilatorio hasta la recuperación de la función muscular. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
