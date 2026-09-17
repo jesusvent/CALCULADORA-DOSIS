@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:08:05";
-const VERSION_BD = 14;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:15:49";
+const VERSION_BD = 15;
 
 const DRUGS = [
   {
@@ -2525,6 +2525,89 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 8, dosisMax: 12, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "En glomerulonefritis/artritis inmunomediadas: 10 mg/kg VO c12h. No administrar con mielosupresión o infecciones. Presentación de uso humano (Cellcept, solución 200 mg/mL, comprimidos 250-500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
       gato: { dosisMin: 8, dosisMax: 12, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "No administrar con mielosupresión o infecciones. Presentación de uso humano (Cellcept, solución 200 mg/mL, comprimidos 250-500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  // ---- Fármacos de "Uso de fármacos en hematología y oncología" (Guía terapéutica del animal
+  // de compañía, ConsultaVet, 8ª ed., Rejas López y cols.) — capítulo distinto del ya procesado
+  // "Descripción de especialidades: Sangre y terapia antineoplásica". Darbepoetina alfa,
+  // dalteparina, enoxaparina, heparina sódica, rivaroxabán, clopidogrel, clorambucilo,
+  // azatioprina, leflunomida, micofenolato mofetilo, ácido acetilsalicílico, fitomenadiona y el
+  // interferón omega felino recombinante (que ya cubre leucemia/inmunodeficiencia felina) ya
+  // existían y no se han modificado. Se omiten los protocolos de quimioterapia para linfoma
+  // (Winsconsin-Madison, COAP, CHOP, etc.), dosificados en mg/m² de superficie corporal, por no
+  // ser compatibles con el cálculo por kg de esta app y requerir un protocolo completo, no una
+  // dosis suelta. ----
+  {
+    id: "imidocarb-dipropionato",
+    principioActivo: "Dipropionato de imidocarb",
+    nombresComerciales: ["Imizol"],
+    categoria: "Antiprotozoario (antibabesial)",
+    indicaciones: ["Babesiosis canina (B. canis canis y B. canis vogeli)", "Hepatozoonosis", "Babesiosis felina por B. canis (combinado)"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 6.6, unidad: "mg/kg", via: "IM/SC", frecuencia: "dosis única, repetir a los 15 días (babesiosis); en hepatozoonosis, 5 mg/kg SC cada 7 días durante 4 semanas", notas: "Babesiosis por B. canis canis y B. canis vogeli: 6,6 mg/kg. Los efectos colaterales (tialismo, diarrea, depresión) pueden evitarse premedicando con atropina 0,02 mg/kg SC. No eficaz frente a B. gibsoni ni B. vulpes. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 3.5, dosisMax: 5, unidad: "mg/kg", via: "IM/SC", frecuencia: "dosis única, repetir a los 10 días", notas: "Indicado en gatos infectados por B. canis (diagnosticado en Europa); no es eficaz frente a B. felis. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "atovacuona",
+    principioActivo: "Atovacuona",
+    nombresComerciales: ["Wellvone (uso humano)"],
+    categoria: "Antiprotozoario",
+    indicaciones: ["Babesiosis canina (B. gibsoni y B. vulpes)", "Cytauxzoonosis felina (combinado)"],
+    especies: {
+      perro: { dosisMin: 13.3, dosisMax: 25, unidad: "mg/kg", via: "VO", frecuencia: "13,3 mg/kg cada 8 h con comida grasa + azitromicina 10 mg/kg VO c24h, 10 días; o 17-25 mg/kg + proguanil 7-10 mg/kg VO cada 24 h, 10 días", notas: "Debe administrarse con comida grasa para mejorar su absorción. Especialidad farmacéutica extranjera. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 15, dosisMax: 15, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h durante 15 días, combinado con azitromicina 10 mg/kg VO c24h durante 10 días", notas: "Tratamiento de la cytauxzoonosis felina. Debe administrarse con comida grasa. Especialidad farmacéutica extranjera. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "buparvacuona",
+    principioActivo: "Buparvacuona",
+    nombresComerciales: ["Butalex (especialidad extranjera)"],
+    categoria: "Antiprotozoario",
+    indicaciones: ["Babesiosis canina (B. gibsoni y B. vulpes)"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 5, unidad: "mg/kg", via: "IM", frecuencia: "repetir a las 48 horas, combinado con azitromicina 10 mg/kg VO cada 24 h durante 10 días", notas: "Especialidad farmacéutica disponible mediante solicitud de autorización de uso a la Agencia Española de Medicamentos y Productos Sanitarios (Butalex, vial IM de 50 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "primaquina-fosfato",
+    principioActivo: "Fosfato de primaquina",
+    nombresComerciales: ["Neo-Quipenyl (especialidad extranjera)"],
+    categoria: "Antiprotozoario",
+    indicaciones: ["Babesiosis felina"],
+    especies: {
+      gato: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO/IV/IM", frecuencia: "de 1 a 3 días", notas: "Indicado porque el imidocarb no es eficaz contra B. felis. Especialidad farmacéutica extranjera (comprimidos de 15 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "proguanil",
+    principioActivo: "Proguanil",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Antiprotozoario",
+    indicaciones: ["Babesiosis canina (B. gibsoni y B. vulpes, combinado con atovacuona)"],
+    especies: {
+      perro: { dosisMin: 7, dosisMax: 10, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h durante 10 días, combinado con atovacuona 17-25 mg/kg", notas: "Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "zidovudina",
+    principioActivo: "Zidovudina",
+    nombresComerciales: ["Retrovir (uso humano)"],
+    categoria: "Antiviral (antirretroviral)",
+    indicaciones: ["Inmunodeficiencia felina (FIV)"],
+    especies: {
+      gato: { dosisMin: 5, dosisMax: 10, unidad: "mg/kg", via: "VO o SC", frecuencia: "cada 12 h durante 49 días", notas: "Tratamiento experimental; puede ocasionar aplasia medular como efecto adverso grave. Puede administrarse conjuntamente con interferón alfa. Mejora la supervivencia a corto-medio plazo, pero no parece ser eficaz frente a la leucemia felina vírica. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "dextrano-ferrico",
+    principioActivo: "Dextrano férrico",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Antianémico (suplemento de hierro)",
+    indicaciones: ["Anemia ferropénica (malabsorción o intolerancia al hierro oral)"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 10, unidad: "mg/kg", via: "IM profundo", frecuencia: "cada 3 semanas", notas: "Indicado en pacientes con malabsorción o intolerancia al hierro oral. Puede ocasionar dolor en el punto de inyección. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 10, dosisMax: 10, unidad: "mg/kg", via: "IM profundo", frecuencia: "cada 3 semanas", notas: "Indicado en pacientes con malabsorción o intolerancia al hierro oral. Puede ocasionar dolor en el punto de inyección. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
