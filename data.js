@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:01:56";
-const VERSION_BD = 12;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:04:39";
+const VERSION_BD = 13;
 
 const DRUGS = [
   {
@@ -990,6 +990,142 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 12-24 h", notas: "Administrar antes de la comida." },
       gato:  { dosisMin: 0.5, dosisMax: 1, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Administrar antes de la comida." }
+    }
+  },
+  // ---- Fármacos de "Descripción de especialidades: Aparato digestivo y metabolismo" (Guía
+  // terapéutica del animal de compañía, ConsultaVet, 8ª ed., Rejas López y cols.) — se omiten
+  // los suplementos/nutracéuticos sin principio activo regulado y dosis mg/kg propia (ácidos
+  // grasos, L-teanina, glutamina, palmitoiletanolamida, probióticos/prebióticos genéricos), y los
+  // ya existentes (Domperidona, Apomorfina, Omeprazol, Maropitant, Ondansetrón, Metoclopramida).
+  {
+    id: "esomeprazol",
+    principioActivo: "Esomeprazol",
+    nombresComerciales: ["Nexium (uso humano)"],
+    categoria: "Antiulceroso (IBP)",
+    indicaciones: ["Úlcera gastroduodenal", "Esofagitis por reflujo", "Pancreatitis"],
+    especies: {
+      perro: { dosisMin: 1, dosisMax: 1, unidad: "mg/kg", via: "VO/IV", frecuencia: "cada 12 h, VO media hora antes de comer", notas: "Presentación de uso humano (Nexium, granulado oral 10 mg, comprimidos/cápsulas 20-40 mg, viales IV 40 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 1, dosisMax: 1, unidad: "mg/kg", via: "VO/IV", frecuencia: "cada 12 h, VO media hora antes de comer", notas: "Presentación de uso humano (Nexium, granulado oral 10 mg, comprimidos/cápsulas 20-40 mg, viales IV 40 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "loperamida",
+    principioActivo: "Loperamida",
+    nombresComerciales: ["Salvacolina (uso humano)"],
+    categoria: "Antidiarreico (inhibidor de la motilidad intestinal)",
+    indicaciones: ["Colitis no bacteriana ni tóxica"],
+    especies: {
+      perro: { dosisMin: 0.1, dosisMax: 0.2, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", notas: "No administrar con riesgo de obstrucción intestinal ni presencia de sangre en heces. Presentación de uso humano (Salvacolina, solución oral 0,2 mg/mL, comprimidos 2 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.05, dosisMax: 0.05, unidad: "mg/kg", via: "VO", frecuencia: "cada 8-12 h", notas: "No administrar con riesgo de obstrucción intestinal ni presencia de sangre en heces. Presentación de uso humano (Salvacolina, solución oral 0,2 mg/mL, comprimidos 2 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "carbon-adsorbente",
+    principioActivo: "Carbón adsorbente",
+    nombresComerciales: ["Carboliq (uso humano)"],
+    categoria: "Adsorbente intestinal",
+    indicaciones: ["Lavado gástrico (intoxicaciones)"],
+    especies: {
+      perro: { dosisMin: 1000, dosisMax: 3000, unidad: "mg/kg", via: "VO", frecuencia: "dosis única, diluido al 10-20% en agua", notas: "Equivale a 1-3 g/kg. Presentación de uso humano (Carboliq, solución oral 0,125-0,200 g/mL) y paraveterinaria (Carbodote). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 1000, dosisMax: 3000, unidad: "mg/kg", via: "VO", frecuencia: "dosis única, diluido al 10-20% en agua", notas: "Equivale a 1-3 g/kg. Presentación de uso humano (Carboliq, solución oral 0,125-0,200 g/mL) y paraveterinaria (Carbodote). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "colestiramina",
+    principioActivo: "Colestiramina",
+    nombresComerciales: ["Efensol (uso humano)", "Resincolestiramina (uso humano)"],
+    categoria: "Secuestrador de ácidos biliares",
+    indicaciones: ["Intoxicación por toxinas lipofílicas"],
+    especies: {
+      perro: { dosisMin: 300, dosisMax: 300, unidad: "mg/kg", via: "VO", frecuencia: "mezclado con comida húmeda", notas: "Equivale a 0,3 g/kg. Presentación de uso humano (Efensol, Resincolestiramina, polvo oral de 3-4 g). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 300, dosisMax: 300, unidad: "mg/kg", via: "VO", frecuencia: "mezclado con comida húmeda", notas: "Equivale a 0,3 g/kg. Presentación de uso humano (Efensol, Resincolestiramina, polvo oral de 3-4 g). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "acido-ursodesoxicolico",
+    principioActivo: "Ácido ursodesoxicólico",
+    nombresComerciales: ["Ursobilane (uso humano)", "Adisocol (uso humano)"],
+    categoria: "Hepatoprotector (colerético)",
+    indicaciones: ["Hepatitis crónica", "Colangitis"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 15, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Aumenta el flujo biliar. Ya usado como componente en varios protocolos hepáticos de esta app; esta es su ficha propia. Presentación de uso humano (Adisocol, Ursobilane, cápsulas/comprimidos 150-500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 10, dosisMax: 15, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Aumenta el flujo biliar. Ya usado como componente en varios protocolos hepáticos de esta app; esta es su ficha propia. Presentación de uso humano (Adisocol, Ursobilane, cápsulas/comprimidos 150-500 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "hidroxicobalamina",
+    principioActivo: "Hidroxicobalamina",
+    nombresComerciales: ["Hidroxicobalamina EFG (uso humano)"],
+    categoria: "Vitamina (B12)",
+    indicaciones: ["Enteritis crónica", "Lipidosis hepática felina"],
+    especies: {
+      gato: { dosisMin: null, dosisMax: null, unidad: "mcg", via: "IM", frecuencia: "cada 2 semanas, 4 dosis, seguido de dosis mensuales", notas: "Dosis fija por animal, no por kg: 300 mcg/gato. Presentación de uso humano (viales IM de 1.000 mcg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "piridoxina",
+    principioActivo: "Piridoxina",
+    nombresComerciales: ["Vitamin B6 EFG (parafarmacia)"],
+    categoria: "Vitamina (B6)",
+    indicaciones: ["Urolitos de oxalato cálcico"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Presentación de parafarmacia (cápsulas 25-100 mg, comprimidos 50 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "Presentación de parafarmacia (cápsulas 25-100 mg, comprimidos 50 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "alfacalcidol",
+    principioActivo: "Alfacalcidol",
+    nombresComerciales: ["Etalpha (uso humano)"],
+    categoria: "Vitamina D (análogo activo)",
+    indicaciones: ["Hipocalcemia crónica"],
+    especies: {
+      perro: { dosisMin: 0.01, dosisMax: 0.03, unidad: "mcg/kg", via: "VO", frecuencia: "cada 24 h (dosis inicial)", notas: "Presentación de uso humano (Etalpha, solución oral 2 mcg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.01, dosisMax: 0.03, unidad: "mcg/kg", via: "VO", frecuencia: "cada 24 h (dosis inicial)", notas: "Presentación de uso humano (Etalpha, solución oral 2 mcg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "calcitriol",
+    principioActivo: "Calcitriol",
+    nombresComerciales: ["Rocaltrol (uso humano)"],
+    categoria: "Vitamina D (análogo activo)",
+    indicaciones: ["Hipocalcemia crónica", "Hiperparatiroidismo secundario renal"],
+    especies: {
+      perro: { dosisMin: 0.002, dosisMax: 0.03, unidad: "mcg/kg", via: "VO", frecuencia: "cada 24 h (dosis inicial; ver notas)", notas: "Hipocalcemia crónica: 0,02-0,03 mcg/kg. Hiperparatiroidismo secundario renal: dosis mucho menor, 0,002-0,003 mcg/kg. Presentación de uso humano (Rocaltrol, cápsulas 0,25-0,50 mcg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 0.002, dosisMax: 0.03, unidad: "mcg/kg", via: "VO", frecuencia: "cada 24 h (dosis inicial; ver notas)", notas: "Hipocalcemia crónica: 0,02-0,03 mcg/kg. Hiperparatiroidismo secundario renal: dosis mucho menor, 0,002-0,003 mcg/kg. Presentación de uso humano (Rocaltrol, cápsulas 0,25-0,50 mcg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "carnitina",
+    principioActivo: "Carnitina",
+    nombresComerciales: ["Carnicor (uso humano)"],
+    categoria: "Suplemento (aminoácido, apoyo cardiaco)",
+    indicaciones: ["Cardiomiopatía dilatada (perro)", "Lipidosis hepática (gato)"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "g", via: "VO", frecuencia: "cada 8-12 h", notas: "Dosis fija por animal, no por kg: 1-2 g/perro. Presentación de uso humano (Carnicor, soluciones orales 100 y 300 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "una vez al día", notas: "Dosis fija por animal, no por kg: 250-500 mg/gato. Presentación de uso humano (Carnicor, soluciones orales 100 y 300 mg/mL). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "taurina",
+    principioActivo: "Taurina",
+    nombresComerciales: ["Taurine Haya (parafarmacia)"],
+    categoria: "Suplemento (aminoácido, apoyo cardiaco/retiniano)",
+    indicaciones: ["Carencia de taurina (gato)", "Cardiomiopatía dilatada (perro)"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "cada 12 h", notas: "Dosis fija por animal, no por kg: 500-1.000 mg/perro. Presentación de parafarmacia (cápsulas 500-1.000 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "cada 12 h", notas: "Dosis fija por animal, no por kg: 250-500 mg/gato. Presentación de parafarmacia (cápsulas 500-1.000 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "budesonida-enterica",
+    principioActivo: "Budesónida (entérica)",
+    nombresComerciales: ["Entocord (uso humano)", "Intestifalk (uso humano)"],
+    categoria: "Antiinflamatorio intestinal (corticoide de acción tópica)",
+    indicaciones: ["Enteritis crónica inmunomediada"],
+    especies: {
+      perro: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "cada 24 h", notas: "Dosis fija por animal, no por kg: 1-5 mg/perro. Menor efecto sistémico que otros corticoides por su metabolismo hepático de primer paso. Presentación de uso humano (Entocord, Intestifalk, cápsulas 3 mg, granulado 9 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: null, dosisMax: null, unidad: "mg", via: "VO", frecuencia: "cada 24 h", notas: "Dosis fija por animal, no por kg: 0,5-1,0 mg/gato. Menor efecto sistémico que otros corticoides por su metabolismo hepático de primer paso. Presentación de uso humano (Entocord, Intestifalk, cápsulas 3 mg, granulado 9 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
