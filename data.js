@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:30:53";
-const VERSION_BD = 22;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:34:10";
+const VERSION_BD = 23;
 
 const DRUGS = [
   {
@@ -315,6 +315,155 @@ const DRUGS = [
     especies: {
       perro: { dosisMin: 5, dosisMax: 5, unidad: "mg/kg", via: "IM/IV lenta", frecuencia: "cada 12 h, durante 3-4 días", notas: "Vigilar función renal (nefrotoxicidad). Fuente: ficha técnica CIMAVET (Gentavall 40 mg/ml, nº registro 307 ESP)." },
       gato:  { dosisMin: 5, dosisMax: 5, unidad: "mg/kg", via: "IM/IV lenta", frecuencia: "cada 12 h, durante 3-4 días", notas: "Vigilar función renal (nefrotoxicidad). Fuente: ficha técnica CIMAVET (Gentavall 40 mg/ml, nº registro 307 ESP)." }
+    }
+  },
+  // ---- Fármacos de "Descripción de especialidades: Antiinfecciosos sistémicos" (Guía terapéutica
+  // del animal de compañía, ConsultaVet, 8ª ed., Rejas López y cols.) que faltaban por completo:
+  // sorprendentemente, ni la amikacina ni las fluoroquinolonas enrofloxacino/marbofloxacino/
+  // pradofloxacino (pese a citarse decenas de veces como combinación en protocolos ya existentes)
+  // tenían ficha propia en la base de datos. El resto de antiinfecciosos de este capítulo
+  // (penicilinas, cefalosporinas, carbapenémicos, doxiciclina/minociclina/tetraciclina,
+  // azitromicina/eritromicina, clindamicina/lincomicina, trimetoprim-sulfa, metronidazol,
+  // antifúngicos azólicos, terbinafina, famciclovir, zidovudina) ya existían. Ronidazol y
+  // tilosina ya existían dentro de protocolos concretos (tricomoniasis/enteritis), no se duplican
+  // aquí. ----
+  {
+    id: "amikacina",
+    principioActivo: "Amikacina",
+    nombresComerciales: ["Amikin (uso humano)"],
+    categoria: "Antibiótico (aminoglucósido)",
+    indicaciones: ["Infecciones respiratorias graves", "Choque séptico", "Infecciones por organismos multirresistentes"],
+    especies: {
+      perro: { dosisMin: 15, dosisMax: 30, unidad: "mg/kg", via: "IV/IM/SC", frecuencia: "cada 24 h", notas: "En choque, 15 mg/kg IV cada 24 h; en infecciones respiratorias graves, 15 mg/kg cada 24 h. No administrar a pacientes con insuficiencia renal ni deshidratados. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 10, dosisMax: 15, unidad: "mg/kg", via: "IV/IM/SC", frecuencia: "cada 24 h", notas: "En choque, 15 mg/kg IV cada 24 h; en infecciones respiratorias graves, 10 mg/kg cada 24 h. No administrar a pacientes con insuficiencia renal ni deshidratados. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "enrofloxacino",
+    principioActivo: "Enrofloxacino",
+    nombresComerciales: ["Baytril (veterinario)", "Enrocil (veterinario)", "Enrotab (veterinario)"],
+    categoria: "Antibiótico (fluoroquinolona)",
+    indicaciones: ["Piodermas", "Infecciones del tracto urinario", "Infecciones respiratorias", "Otitis", "Prostatitis / orquitis-epididimitis", "Piómetra"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 20, unidad: "mg/kg", via: "VO/SC/IM/IV", frecuencia: "cada 24 h", notas: "5 mg/kg en piodermas/ITU/otitis habituales (hasta 20 mg/kg en piodermas intensas o frente a Pseudomonas aeruginosa); 5-20 mg/kg en infecciones respiratorias. No administrar a animales en crecimiento (menores de 18 meses en razas gigantes), a pacientes con epilepsia o trastorno del crecimiento cartilaginoso, ni a hembras gestantes o lactantes. Presentación veterinaria (Baytril y otras). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 5, dosisMax: 5, unidad: "mg/kg", via: "VO/SC/IM/IV", frecuencia: "cada 24 h", notas: "Una dosis superior a 5 mg/kg cada 24 h conlleva riesgo de daño retiniano en gatos. No administrar a animales en crecimiento (menores de 8 meses), con epilepsia, ni a hembras gestantes o lactantes. Presentación veterinaria (Baytril y otras). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "marbofloxacino",
+    principioActivo: "Marbofloxacino",
+    nombresComerciales: ["Marbocyl (veterinario)", "Marbovet (veterinario)", "Efex (veterinario)"],
+    categoria: "Antibiótico (fluoroquinolona)",
+    indicaciones: ["Piodermas", "Infecciones del tracto urinario", "Infecciones respiratorias", "Otitis", "Orquitis-epididimitis"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 5.5, unidad: "mg/kg", via: "VO/SC", frecuencia: "cada 24 h", notas: "2 mg/kg en ITU/orquitis-epididimitis; 2,75-5,5 mg/kg en piodermas y otitis (dosis superior frente a Pseudomonas aeruginosa o piodermas intensas); 2,7-5,5 mg/kg en infecciones respiratorias. No administrar a animales en crecimiento (menores de 12 meses, o 18 meses en razas gigantes) ni con epilepsia; no ha quedado demostrada su seguridad durante la gestación y lactancia. Presentación veterinaria (Marbocyl y otras). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 2, dosisMax: 5.5, unidad: "mg/kg", via: "VO/SC", frecuencia: "cada 24 h", notas: "2 mg/kg en ITU; 2,75-5,5 mg/kg en piodermas y otitis (dosis superior frente a Pseudomonas aeruginosa); 2 mg/kg en hemoplasmosis. No administrar a animales en crecimiento (menores de 16 semanas) ni con epilepsia; no ha quedado demostrada su seguridad durante la gestación y lactancia. Presentación veterinaria (Marbocyl y otras). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "pradofloxacino",
+    principioActivo: "Pradofloxacino",
+    nombresComerciales: ["Veraflox (veterinario)"],
+    categoria: "Antibiótico (fluoroquinolona)",
+    indicaciones: ["Piodermas", "Infecciones respiratorias", "Hemoplasmosis"],
+    especies: {
+      perro: { dosisMin: 3, dosisMax: 5, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "3 mg/kg en piodermas (comprimidos) o 5 mg/kg (solución oral); 5 mg/kg en infecciones respiratorias (comprimidos). No administrar a perros en crecimiento (razas pequeñas/medianas/grandes menores de 12 meses, gigantes menores de 18 meses) ni a individuos epilépticos, hembras gestantes o lactantes. Presentación veterinaria (Veraflox). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 2, dosisMax: 7.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h", notas: "5 mg/kg (comprimidos) o 7,5 mg/kg (solución oral) en infecciones respiratorias; 2 mg/kg en hemoplasmosis. No administrar a gatos menores de 6 semanas, individuos epilépticos, hembras gestantes o lactantes. Presentación veterinaria (Veraflox). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "estreptomicina",
+    principioActivo: "Estreptomicina",
+    nombresComerciales: ["Sulfato de Estreptomicina Reig Jofré (uso humano)"],
+    categoria: "Antibiótico (aminoglucósido)",
+    indicaciones: ["Brucelosis (tras ciclo inicial de tetraciclina/doxiciclina + enrofloxacino)"],
+    especies: {
+      perro: { dosisMin: 5, dosisMax: 10, unidad: "mg/kg", via: "IM", frecuencia: "cada 12 h", notas: "Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "neomicina",
+    principioActivo: "Neomicina",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Antibiótico (aminoglucósido)",
+    indicaciones: ["Encefalopatía hepática (reducción de bacterias productoras de amoniaco en el colon)"],
+    especies: {
+      perro: { dosisMin: 20, dosisMax: 20, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Su escasa absorción oral favorece su acción local intestinal. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 20, dosisMax: 20, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h", notas: "Su escasa absorción oral favorece su acción local intestinal. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "paromomicina",
+    principioActivo: "Paromomicina",
+    nombresComerciales: ["Humatin (uso humano)"],
+    categoria: "Antibiótico (aminoglucósido)",
+    indicaciones: ["Criptosporidiosis"],
+    especies: {
+      perro: { dosisMin: 10, dosisMax: 10, unidad: "mg/kg", via: "VO", frecuencia: "cada 8 h, durante 5-10 días", notas: "Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "tobramicina",
+    principioActivo: "Tobramicina",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Antibiótico (aminoglucósido)",
+    indicaciones: ["Choque séptico"],
+    especies: {
+      perro: { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "IV", frecuencia: "cada 8 h", notas: "Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 2, dosisMax: 4, unidad: "mg/kg", via: "IV", frecuencia: "cada 8 h", notas: "Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "claritromicina",
+    principioActivo: "Claritromicina",
+    nombresComerciales: ["EFG (uso humano)"],
+    categoria: "Antibiótico (macrólido)",
+    indicaciones: ["Gastritis por Helicobacter (combinado con otros fármacos)"],
+    especies: {
+      perro: { dosisMin: 7.5, dosisMax: 7.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Combinar con otros fármacos según el protocolo de gastritis por Helicobacter. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 7.5, dosisMax: 7.5, unidad: "mg/kg", via: "VO", frecuencia: "cada 12 h", notas: "Combinar con otros fármacos según el protocolo de gastritis por Helicobacter. Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "sulfadimetoxina",
+    principioActivo: "Sulfadimetoxina",
+    nombresComerciales: ["Sulfadim (veterinario, otras especies)"],
+    categoria: "Antibiótico (sulfamida)",
+    indicaciones: ["Coccidiosis"],
+    especies: {
+      perro: { dosisMin: 50, dosisMax: 60, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, durante 5-20 días", notas: "Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 50, dosisMax: 60, unidad: "mg/kg", via: "VO", frecuencia: "cada 24 h, durante 5-20 días", notas: "Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "remdesivir",
+    principioActivo: "Remdesivir",
+    nombresComerciales: ["Veklury (uso humano)"],
+    categoria: "Antiviral",
+    indicaciones: ["Peritonitis infecciosa felina (PIF)"],
+    especies: {
+      gato: { dosisMin: 8, dosisMax: 15, unidad: "mg/kg", via: "SC", frecuencia: "cada 24 h", notas: "Presentación de uso humano (Veklury, vial IV de 100 mg). Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "antitoxina-tetanica",
+    principioActivo: "Antitoxina tetánica",
+    nombresComerciales: ["Gamma Anti-tétanos Grifols (uso humano)"],
+    categoria: "Inmunoglobulina (antitoxina)",
+    indicaciones: ["Tétanos"],
+    especies: {
+      perro: { dosisMin: 100, dosisMax: 300, unidad: "UI/kg", via: "IV lento", frecuencia: "dosis única", notas: "Se recomienda inyectar 20 minutos antes 0,1-0,2 mL SC para comprobar la ausencia de reacciones adversas. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." },
+      gato: { dosisMin: 100, dosisMax: 300, unidad: "UI/kg", via: "IV lento", frecuencia: "dosis única", notas: "Se recomienda inyectar 20 minutos antes 0,1-0,2 mL SC para comprobar la ausencia de reacciones adversas. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
+    }
+  },
+  {
+    id: "inmunoglobulina-humana",
+    principioActivo: "Inmunoglobulina humana",
+    nombresComerciales: ["Flebogamma DIF (uso humano)", "Hyqvia (uso humano)"],
+    categoria: "Inmunoglobulina",
+    indicaciones: ["Anemia y trombocitopenia inmunomediadas (casos graves y refractarios)"],
+    especies: {
+      perro: { dosisMin: 280, dosisMax: 700, unidad: "mg/kg", via: "IV", frecuencia: "dosis única", notas: "Presentación de uso humano. Según guía terapéutica de ConsultaVet (Rejas López y cols., Guía terapéutica del animal de compañía, 8ª ed.)." }
     }
   },
   {
