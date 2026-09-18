@@ -1988,7 +1988,7 @@ function filaCimavetHtml(med, textoBuscado) {
         ${prospecto ? `<a href="${prospecto.url}" target="_blank" rel="noopener">📄 Prospecto</a>` : ""}
         <a href="${urlPubMedTexto(textoBuscado || med.nombre, principios, paciente.especie)}" target="_blank" rel="noopener">🔎 Buscar en PubMed</a>
       </div>
-      ${cajaCalculoDosisHtml(med, principios, marcaCorta(med.nombre) || med.nombre)}
+      ${cajaCalculoDosisHtml(med, principios, med.nombre)}
     </div>`;
 }
 
@@ -2061,7 +2061,7 @@ function filaCimaHtml(med, textoBuscado) {
           data-nregistro="${escapeHtml(med.nregistro || "")}"
         >+ Añadir a Mi base de datos</button>
       </div>
-      ${cajaCalculoDosisHtml(med, principioActivoCapitalizado, marcaCorta(med.nombre) || med.nombre)}
+      ${cajaCalculoDosisHtml(med, principioActivoCapitalizado, med.nombre)}
     </div>`;
 }
 
