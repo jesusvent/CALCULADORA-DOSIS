@@ -208,7 +208,7 @@ function renderPatologias() {
   el.innerHTML = lista.map((p) => `
     <div class="tarjeta">
       <details ${q ? "open" : ""}>
-        <summary><strong>${escapeHtml(p.nombre)}</strong> <span class="ayuda">· ${escapeHtml(p.capitulo)} · ${p.especie === "ambas" ? "perro y gato" : escapeHtml(p.especie)}</span></summary>
+        <summary><strong>${escapeHtml(p.nombre)}</strong> <span class="badge-humano">Guía terapéutica ConsultaVet</span> <span class="ayuda">· ${escapeHtml(p.capitulo)} · ${p.especie === "ambas" ? "perro y gato" : escapeHtml(p.especie)}</span></summary>
         ${p.farmacos.map((f) => {
           const d = DRUGS.find((x) => x.id === f.id);
           if (!d) return "";
