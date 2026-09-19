@@ -202,7 +202,7 @@ const cimavetResultadoGeneralEl = document.getElementById("cimavet-resultado-gen
 // ============================================================
 function renderPatologias() {
   const q = normalizar(document.getElementById("patologia-busqueda").value.trim());
-  const lista = PATOLOGIAS.filter((p) => !q || normalizar(p.nombre + " " + p.capitulo).includes(q));
+  const lista = PATOLOGIAS.filter((p) => !q || normalizar(p.nombre + " " + p.capitulo + " " + p.farmacos.map((f) => f.nombre || f.id).join(" ")).includes(q));
   const el = document.getElementById("patologias-lista");
   if (!lista.length) { el.innerHTML = `<div class="tarjeta"><p class="placeholder">Ninguna patología coincide con la búsqueda.</p></div>`; return; }
   el.innerHTML = lista.map((p) => `
@@ -210,8 +210,8 @@ function renderPatologias() {
       <details ${q ? "open" : ""}>
         <summary><strong>${escapeHtml(p.nombre)}</strong> <span class="badge-humano">Guía terapéutica ConsultaVet</span> <span class="ayuda">· ${escapeHtml(p.capitulo)} · ${p.especie === "ambas" ? "perro y gato" : escapeHtml(p.especie)}</span></summary>
         ${p.farmacos.map((f) => {
-          const d = DRUGS.find((x) => x.id === f.id);
-          if (!d) return "";
+          const d = f.id ? DRUGS.find((x) => x.id === f.id) : null;
+          if (!d) return `<div class="cimavet-fila"><strong>${escapeHtml(f.nombre || f.id)}</strong><p class="notas">${escapeHtml(f.uso)}</p></div>`;
           return `<div class="cimavet-fila"><button type="button" class="boton-enlace boton-farmaco-patologia" data-id="${escapeHtml(f.id)}">${escapeHtml(d.principioActivo)}</button><p class="notas">${escapeHtml(f.uso)}</p></div>`;
         }).join("")}
         <p class="ayuda">Según guía terapéutica de ConsultaVet (Rejas López y cols., 8ª ed.).</p>

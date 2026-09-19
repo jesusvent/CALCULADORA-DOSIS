@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-19T12:23:48";
-const VERSION_BD = 24;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-19T18:20:31";
+const VERSION_BD = 25;
 
 const DRUGS = [
   {
@@ -7119,3 +7119,1017 @@ const PATOLOGIAS = [
     ]
   }
 ];
+
+// ---- Fluidoterapia, hematología y oncología, anestesia (Guía terapéutica ConsultaVet) ----
+PATOLOGIAS.push(
+  {
+    id: "choque-no-cardiogenico", nombre: "Choque no cardiógeno (medidas farmacológicas)", especie: "ambas", capitulo: "Fluidoterapia",
+    farmacos: [
+      { nombre: "Cristaloides isotónicos (Ringer lactato, Isofundin, Plasmalyte 148)", uso: "Bolo de 20-25 mL/kg en perros (10-15 mL/kg en gatos) en 10-15 min; repetir 1-2 bolos si no mejora. Después mantenimiento de choque: 10-12 mL/kg/h en perros y la mitad en gatos." },
+      { nombre: "Suero salino hipertónico (NaCl 7,5%)", uso: "3-5 mL/kg en 5-15 min (no superar 1 mL/kg/min); seguir con Ringer lactato + glucosa 5% a partes iguales." },
+      { nombre: "Coloides (gelatina, albúmina humana)", uso: "Gelatina: 5 mL/kg en 20 min en perros (2-4 mL/kg en gatos), sin superar 10-20 mL/kg/día. Albúmina humana solo si hipoalbuminemia <1,5 g/dL con riesgo vital; pretratar con difenhidramina 0,5-1 mg/kg SC/IM." },
+      { id: "noradrenalina", uso: "Si no mejora con fluidos: perfusión 0,1-2 mcg/kg/min diluida en glucosa 5% (preferible a la dopamina)." },
+      { id: "atropina", uso: "Bradiarritmias: 20 mcg/kg IV." },
+      { id: "metilprednisolona", uso: "Choque anafiláctico: succinato sódico 10-25 mg/kg IV lento (15-30 min)." },
+      { id: "dexametasona", uso: "Alternativa: fosfato sódico 1-2 mg/kg IV lento." },
+      { id: "ampicilina", uso: "Choque traumático/séptico: 20-40 mg/kg IV c6-8h." },
+      { id: "cefazolina", uso: "20 mg/kg IV c8h." },
+      { id: "gentamicina", uso: "8 mg/kg IV c24h." },
+      { id: "amikacina", uso: "15 mg/kg IV c24h." },
+      { id: "tobramicina", uso: "2-4 mg/kg IV c8h." },
+      { id: "metronidazol", uso: "Anaerobios: 8-15 mg/kg IV c8h." },
+      { id: "clindamicina", uso: "11 mg/kg IV lento c8h." },
+      { id: "enrofloxacino", uso: "5 mg/kg IV lento c24h (diluir 1:3 o 1:6 en NaCl 0,9%)." },
+      { nombre: "Bencilpenicilina", uso: "20.000-40.000 UI/kg IV c4-6h." },
+      { id: "adrenalina", uso: "Choque anafiláctico: 0,1 mL por cada 10 kg de adrenalina 1/1.000 IM (o endotraqueal); repetir a los 15-20 min. En crisis muy graves vía IV diluida a 1/10.000 (1 mL por cada 10 kg)." },
+      { nombre: "Glucosa hipertónica", uso: "Hipoglucemia en choque séptico: bolo lento IV de 0,5 g/kg seguido de glucosa al 2,5-5%." },
+      { nombre: "Hemoglobina bovina (OXMAX)", uso: "Choque hemorrágico en perros: 10 mL/kg IV a máx. 10 mL/kg/h junto a cristaloides (Ringer lactato 20 mL/kg/h)." }
+    ]
+  },
+  {
+    id: "hipopotasemia-hiperpotasemia", nombre: "Hipopotasemia e hiperpotasemia", especie: "ambas", capitulo: "Fluidoterapia",
+    farmacos: [
+      { nombre: "Cloruro potásico (KCl) — hipopotasemia", uso: "Leve (3,0-3,7 mmol/L): 1-3 mmol/kg/día, 20-30 mmol/L en la solución; moderada (2,5-3,0): 4-6 mmol/kg/día, 30-40 mmol/L; intensa (<2,5): 7-9 mmol/kg/día, 40-60 mmol/L. No superar 0,5 mmol/kg/h ni 3 mmol/kg/h IV." },
+      { nombre: "Magnesio (hipopotasemia refractaria)", uso: "0,37-0,50 mmol/kg/día 12-24 h; después 0,15-0,25 mmol/kg/día 3-5 días." },
+      { id: "gluconato-calcico", uso: "Hiperpotasemia >9,5 mmol/L: calcio 5-10 mg/kg (0,5-1,0 mL/kg de gluconato cálcico 10%) IV lento en 10-15 min." },
+      { nombre: "Bicarbonato sódico (NaHCO₃) IV", uso: "Hiperpotasemia 8,0-9,5 mmol/L con acidosis: 2-3 mmol/kg en 30 min." },
+      { id: "insulina-regular", uso: "Hiperpotasemia: 0,25-0,50 UI/kg IV perfundiendo 1-2 g de glucosa IV por UI de insulina." }
+    ]
+  },
+  {
+    id: "babesiosis-canina", nombre: "Babesiosis canina", especie: "perro", capitulo: "Hematología y oncología",
+    farmacos: [
+      { id: "imidocarb-dipropionato", uso: "B. canis canis y B. c. vogeli: 6,6 mg/kg IM/SC, repetir a los 15 días; premedicar con atropina 0,02 mg/kg SC para evitar efectos colaterales." },
+      { id: "atovacuona", uso: "B. gibsoni y B. vulpes: 13,3 mg/kg VO c8h con comida grasa + azitromicina 10 mg/kg VO c24h, 10 días." },
+      { id: "azitromicina", uso: "10 mg/kg VO c24h 10 días asociada a atovacuona." },
+      { id: "buparvacuona", uso: "Alternativa a atovacuona: 5 mg/kg IM, repetir a las 48 h (con azitromicina)." },
+      { id: "proguanil", uso: "Con atovacuona (17-25 mg/kg): 7-10 mg/kg VO c24h, 10 días." }
+    ]
+  },
+  {
+    id: "babesiosis-felina", nombre: "Babesiosis felina y cytauxzoonosis", especie: "gato", capitulo: "Hematología y oncología",
+    farmacos: [
+      { id: "primaquina-fosfato", uso: "0,5-1,0 mg/kg VO/IV/IM, 1-3 días (el imidocarb no es eficaz contra B. felis)." },
+      { id: "atovacuona", uso: "Cytauxzoonosis: 15 mg/kg VO c8h 15 días + azitromicina 10 mg/kg VO c24h 10 días." },
+      { id: "imidocarb-dipropionato", uso: "Infección por B. canis: 3,5-5,0 mg/kg IM/SC, repetir a los 10 días." }
+    ]
+  },
+  {
+    id: "ehrlichiosis-anaplasmosis-hematologia", nombre: "Ehrlichiosis, anaplasmosis y hepatozoonosis", especie: "perro", capitulo: "Hematología y oncología",
+    farmacos: [
+      { id: "doxiciclina", uso: "Ehrlichiosis/anaplasmosis: 5 mg/kg VO c12h, 28 días." },
+      { id: "imidocarb-dipropionato", uso: "Hepatozoonosis: 5 mg/kg SC cada 7 días durante 4 semanas." }
+    ]
+  },
+  {
+    id: "hemoplasmosis", nombre: "Hemoplasmosis (micoplasmas hemotrópicos)", especie: "ambas", capitulo: "Hematología y oncología",
+    farmacos: [
+      { id: "doxiciclina", uso: "Elección: 5 mg/kg VO c12h durante 4 semanas (seguida de un bolo de agua por riesgo de esofagitis)." },
+      { id: "enrofloxacino", uso: "Alternativa: 5 mg/kg/día VO." },
+      { id: "pradofloxacino", uso: "Alternativa: 5 mg/kg/día VO." },
+      { id: "marbofloxacino", uso: "Alternativa: 2 mg/kg/día VO durante un mes." }
+    ]
+  },
+  {
+    id: "felv-fiv", nombre: "Leucemia e inmunodeficiencia felinas (FeLV/FIV)", especie: "gato", capitulo: "Hematología y oncología",
+    farmacos: [
+      { id: "interferon-omega-felino", uso: "1 millón U/kg SC c24h 5 días consecutivos, en tres tandas (días 0, 14 y 60)." },
+      { id: "zidovudina", uso: "5-10 mg/kg VO/SC c12h durante 49 días (experimental; riesgo de aplasia medular)." },
+      { nombre: "Raltegravir", uso: "40 mg/kg/día VO reduce la carga viral en FeLV." }
+    ]
+  },
+  {
+    id: "anemia-trombocitopenia-inmunomediada", nombre: "Anemia hemolítica y trombocitopenia inmunomediadas", especie: "ambas", capitulo: "Hematología y oncología",
+    farmacos: [
+      { id: "prednisolona", uso: "Perros <25 kg: 2 mg/kg VO c24h (40-60 mg/m² si >25 kg); gatos 2-4 mg/kg/día. Reducir tras 2 semanas de recuento normal." },
+      { id: "dexametasona", uso: "Si no es posible la vía oral: 0,2-0,5 mg/kg IV en perros; 0,6-1,0 mg/kg en gatos." },
+      { nombre: "Vincristina", uso: "Trombocitopenia: 0,02 mg/kg o 0,7 mg/m² IV dosis única." },
+      { id: "azatioprina", uso: "2 mg/kg (50 mg/m²) VO c24h, luego c48h; no recomendada en gatos (0,3 mg/kg si se usa)." },
+      { id: "inmunoglobulina-humana", uso: "Casos graves refractarios en perros: 280-700 mg/kg IV." },
+      { id: "ciclosporina", uso: "5 mg/kg VO c12h, con o sin corticoides." },
+      { id: "leflunomida", uso: "2-4 mg/kg VO c24h." },
+      { id: "micofenolato-mofetilo", uso: "8-12 mg/kg VO c12h." },
+      { id: "clopidogrel", uso: "Antitrombótico en anemia hemolítica: 2-4 mg/kg VO c24h (carga 10 mg/kg en perros; 18,75 mg/gato)." }
+    ]
+  },
+  {
+    id: "lupus-eritematoso-sistemico", nombre: "Lupus eritematoso sistémico", especie: "ambas", capitulo: "Hematología y oncología",
+    farmacos: [
+      { id: "prednisolona", uso: "2 mg/kg VO al día (o metilprednisolona)." },
+      { id: "azatioprina", uso: "Perros: 2 mg/kg VO c24h en casos graves o refractarios." },
+      { id: "clorambucilo", uso: "Gatos: 15 mg/m² VO c24h 4 días, luego 2 mg/gato c2-3 días." },
+      { id: "ciclosporina", uso: "5 mg/kg VO c12-24h." },
+      { id: "levamisol", uso: "Perros: con prednisolona, 2-5 mg/kg VO c48h (máx. 150 mg)." }
+    ]
+  },
+  {
+    id: "anemia-ferropenica-no-regenerativa", nombre: "Anemia ferropénica y anemia no regenerativa", especie: "ambas", capitulo: "Hematología y oncología",
+    farmacos: [
+      { nombre: "Sulfato ferroso", uso: "Ferropénica: 100-300 mg/día VO en perros; 50-100 mg/día en gatos." },
+      { id: "dextrano-ferrico", uso: "Malabsorción/intolerancia oral: 10 mg/kg IM profundo cada 3 semanas." },
+      { id: "darbepoetina-alfa", uso: "No regenerativa: 1 mcg/kg SC semanal en gatos y 0,45 mcg/kg en perros; suplementar hierro (100-300 mg/día perros; 50-100 mg/día gatos)." }
+    ]
+  },
+  {
+    id: "trombosis", nombre: "Trombosis / tromboembolismo", especie: "ambas", capitulo: "Hematología y oncología",
+    farmacos: [
+      { id: "acido-acetilsalicilico", uso: "Perros: 0,5 mg/kg VO c24h." },
+      { id: "dalteparina", uso: "Perros 150-175 UI/kg c8h; gatos 75 UI/kg c6h SC." },
+      { id: "enoxaparina", uso: "Perros 0,8-1,0 mg/kg c6-8h; gatos 0,75-1,0 mg/kg c6-12h SC." },
+      { id: "rivaroxaban", uso: "Perros 1-2 mg/kg c24h VO; gatos 0,5-1,0 mg/kg/día." },
+      { id: "clopidogrel", uso: "2-4 mg/kg VO c24h (carga 10 mg/kg en perro); gatos 18,75 mg/gato c24h." },
+      { id: "heparina-sodica", uso: "Perros: 200-250 UI/kg IV y luego SC c6-8h; gatos 250-275 UI/kg inicial y 150-250 UI/kg SC c6-8h." },
+      { nombre: "Estreptocinasa (fibrinolítico)", uso: "90.000 UI IV en 20-30 min y 45.000 UI/h 3-8 h (perro medio); muy arriesgado." }
+    ]
+  },
+  {
+    id: "linfoma", nombre: "Linfoma (protocolos de quimioterapia)", especie: "ambas", capitulo: "Hematología y oncología",
+    farmacos: [
+      { id: "prednisolona", uso: "Base de los protocolos (prednisona/prednisolona 2 mg/kg VO c24h, reducción semanal)." },
+      { nombre: "Protocolos Winsconsin-Madison, COAP, CHOP", uso: "Dosificados en mg/m² (vincristina 0,5-0,7 mg/m² IV, ciclofosfamida 200-250 mg/m², doxorrubicina 25-30 mg/m², citarabina...). Consultar el protocolo completo en la guía (págs. 197-210) y la tabla de superficie corporal." },
+      { id: "clorambucilo", uso: "Linfoma intestinal felino de bajo grado: prednisolona 2 mg/kg c24h + clorambucilo 2 mg/gato c48h." }
+    ]
+  },
+  {
+    id: "intoxicacion-antivitamina-k", nombre: "Intoxicación por antagonistas de la vitamina K (raticidas)", especie: "ambas", capitulo: "Hematología y oncología",
+    farmacos: [
+      { id: "vitamina-k1", uso: "Fitomenadiona 1,5-4,0 mg/kg/día SC (dosis inicial hasta 4 mg/kg en varios sitios, luego 2,5-1,5 mg/kg) durante 1-6 semanas; nunca IV. Controlar tiempo de protrombina a 48-96 h de la última dosis." }
+    ]
+  },
+  {
+    id: "anestesia-neonatos", nombre: "Anestesia en neonatos (<12 semanas)", especie: "ambas", capitulo: "Anestesia en cirugía",
+    farmacos: [
+      { id: "diazepam", uso: "Premedicación: 0,1 mg/kg IV (o midazolam 0,1 mg/kg)." },
+      { id: "acepromazina", uso: "0,025 mg/kg IM + buprenorfina 0,01 mg/kg IM." },
+      { id: "butorfanol", uso: "0,2 mg/kg IM/IV." },
+      { id: "morfina", uso: "0,1 mg/kg IM/IV." },
+      { id: "propofol", uso: "Inducción 2-8 mg/kg IV; mantenimiento 0,2-0,4 mg/kg/min." }
+    ]
+  },
+  {
+    id: "anestesia-cardiopatas", nombre: "Anestesia en pacientes cardiópatas", especie: "ambas", capitulo: "Anestesia en cirugía",
+    farmacos: [
+      { id: "diazepam", uso: "Premedicación: 0,2-0,4 mg/kg IV; midazolam 0,1-0,3 mg/kg IM/IV." },
+      { id: "acepromazina", uso: "Dosis bajas 0,02-0,05 mg/kg IM (máx. 1,5 mg)." },
+      { id: "etomidato", uso: "Inducción: 0,75-3,00 mg/kg IV (emboladas de 0,75 mg/kg); mantenimiento 50-150 mcg/kg/min." },
+      { id: "alfaxalona", uso: "Inducción 0,5-5,0 mg/kg IV; mantenimiento 0,10-0,18 mg/kg/min." },
+      { id: "propofol", uso: "Inducción 1-5 mg/kg IV; mantenimiento 0,2-0,4 mg/kg/min." },
+      { id: "buprenorfina", uso: "0,01 mg/kg IM." }
+    ]
+  },
+  {
+    id: "anestesia-insuficiencia-ventilatoria", nombre: "Anestesia en insuficiencia ventilatoria", especie: "ambas", capitulo: "Anestesia en cirugía",
+    farmacos: [
+      { id: "diazepam", uso: "Premedicación 0,2 mg/kg IV (o midazolam) + buprenorfina 0,01 mg/kg IM." },
+      { id: "propofol", uso: "Inducción 2-8 mg/kg IV." },
+      { id: "alfaxalona", uso: "0,5-5,0 mg/kg IV." },
+      { id: "tiopental", uso: "3-10 mg/kg IV (previa lidocaína sin adrenalina 0,5-3,0 mg/kg IV para evitar taquiarritmias)." }
+    ]
+  },
+  {
+    id: "anestesia-cesarea", nombre: "Anestesia para cesárea", especie: "ambas", capitulo: "Anestesia en cirugía",
+    farmacos: [
+      { id: "propofol", uso: "Inducción 2-8 mg/kg IV; mantenimiento 0,2-0,4 mg/kg/min. Sin premedicación." },
+      { id: "morfina", uso: "Tras extraer los cachorros: 0,1 mg/kg IM/IV." },
+      { id: "metadona", uso: "Tras extraer los cachorros: 0,1-0,5 mg/kg IV." },
+      { id: "lidocaina", uso: "Epidural con lidocaína 2%, mepivacaína 2% o bupivacaína 0,5% como técnica única con sedación." }
+    ]
+  },
+  {
+    id: "anestesia-renal-hepatica", nombre: "Anestesia en insuficiencia renal-hepática", especie: "ambas", capitulo: "Anestesia en cirugía",
+    farmacos: [
+      { id: "diazepam", uso: "Premedicación 0,2 mg/kg IV (o midazolam) + buprenorfina 0,01 mg/kg IM." },
+      { id: "etomidato", uso: "Agente de elección: 0,75-3,00 mg/kg IV." },
+      { id: "fentanilo", uso: "Mantenimiento: 5-10 mcg/kg IV cada 20 min." }
+    ]
+  },
+  {
+    id: "anestesia-torsion-gastrica", nombre: "Anestesia en dilatación-torsión gástrica", especie: "perro", capitulo: "Anestesia en cirugía",
+    farmacos: [
+      { id: "morfina", uso: "Analgesia preanestésica 0,5 mg/kg." },
+      { id: "diazepam", uso: "Premedicación 0,2 mg/kg IV + morfina 0,1 mg/kg o metadona 0,1-0,5 mg/kg IV." },
+      { id: "etomidato", uso: "Inducción de elección: 0,75-3,00 mg/kg IV." },
+      { id: "propofol", uso: "2-8 mg/kg IV." }
+    ]
+  },
+  {
+    id: "anestesia-broncoscopia", nombre: "Anestesia en broncoscopia", especie: "ambas", capitulo: "Anestesia en cirugía",
+    farmacos: [
+      { id: "acepromazina", uso: "0,01-0,05 mg/kg IM o diazepam/midazolam 0,2 mg/kg IV o medetomidina 5-40 mcg/kg IM." },
+      { id: "propofol", uso: "Inducción 2-8 mg/kg IV; mantenimiento 0,2-0,4 mg/kg/min." }
+    ]
+  },
+  {
+    id: "anestesia-traumatizados", nombre: "Anestesia en pacientes traumatizados", especie: "ambas", capitulo: "Anestesia en cirugía",
+    farmacos: [
+      { id: "diazepam", uso: "Premedicación 0,2 mg/kg IV + morfina 0,1 mg/kg o metadona 0,1-0,5 mg/kg. Evitar acepromazina y alfa-2." },
+      { id: "propofol", uso: "2-8 mg/kg IV (no en hipovolémicos)." },
+      { id: "tiopental", uso: "3-10 mg/kg IV (reducir dosis)." },
+      { id: "etomidato", uso: "0,5-1,5 mg/kg IV (tras benzodiacepina)." },
+      { id: "alfaxalona", uso: "0,5-5,0 mg/kg IV." },
+      { id: "cisatracurio", uso: "Antes de la ventilación artificial: 0,05-0,20 mg/kg IV." }
+    ]
+  },
+  {
+    id: "anestesia-procedimientos-cortos", nombre: "Sedación y anestesia de procedimientos de corta duración", especie: "ambas", capitulo: "Anestesia en cirugía",
+    farmacos: [
+      { id: "medetomidina", uso: "10-50 mcg/kg IM (o dexmedetomidina 5-20 mcg/kg), sola o con butorfanol 0,2 mg/kg IM, morfina 0,1 mg/kg o buprenorfina 10-20 mcg/kg." },
+      { id: "ketamina", uso: "Con diazepam/midazolam 0,2-0,5 mg/kg IV + ketamina 5-10 mg/kg IV; o medetomidina 10-20 mcg/kg + ketamina 5 mg/kg IM." },
+      { id: "alfaxalona", uso: "1-3 mg/kg IM con dexmedetomidina/medetomidina 2,5-5,0 mcg/kg y butorfanol 0,1-0,3 mg/kg o metadona 0,2 mg/kg." }
+    ]
+  },
+  {
+    id: "analgesia-perfusion-continua", nombre: "Analgesia por perfusión continua intra y posoperatoria", especie: "ambas", capitulo: "Anestesia en cirugía",
+    farmacos: [
+      { id: "fentanilo", uso: "Carga 3 mcg/kg; perfusión 3,6 mcg/kg/h. En 'triple gotero': fentanilo 2,4 mcg/kg/h + ketamina 0,6 mg/kg/h + lidocaína 1,5 mg/kg/h (sin lidocaína en gatos)." },
+      { id: "morfina", uso: "Carga 0,5 mg/kg; perfusión 0,24 mg/kg/h." },
+      { id: "metadona", uso: "Carga 0,5 mg/kg; perfusión 0,24 mg/kg/h." },
+      { id: "dexmedetomidina", uso: "Carga 0,5-1,0 mcg/kg; perfusión 1 mcg/kg/h." },
+      { id: "medetomidina", uso: "Carga 1-2 mcg/kg; perfusión 2 mcg/kg/h." },
+      { id: "ketamina", uso: "Bolo IV 0,5 mg/kg, seguido de 10 mcg/kg/min intraoperatorio y 2 mcg/kg/min 24 h posoperatorio." }
+    ]
+  },
+  {
+    id: "complicaciones-anestesicas", nombre: "Complicaciones anestésicas (antagonistas, hipotensión, arritmias)", especie: "ambas", capitulo: "Anestesia en cirugía",
+    farmacos: [
+      { id: "naloxona", uso: "Opioides: 0,015-0,040 mg/kg SC/IM/IV." },
+      { id: "flumazenilo", uso: "Benzodiacepinas: 0,02-0,10 mg/kg IV." },
+      { id: "atipamezol", uso: "Alfa-2: 0,05-0,40 mg/kg IM." },
+      { id: "neostigmina", uso: "Bloqueo neuromuscular: 0,1 mg/kg IV." },
+      { id: "edrofonio", uso: "0,5-1,0 mg/kg IV." },
+      { id: "dobutamina", uso: "Hipotensión (primera elección): 5-20 mcg/kg/min IV." },
+      { id: "dopamina", uso: "5-20 mcg/kg/min IV." },
+      { id: "adrenalina", uso: "0,1-1,0 mcg/kg/min IV." },
+      { id: "noradrenalina", uso: "0,2-2,0 mcg/kg/min IV." },
+      { id: "fenilefrina-iv", uso: "1-5 mcg/kg/min IV." },
+      { nombre: "Vasopresina", uso: "0,5 UI/kg IV." },
+      { id: "atropina", uso: "Bradicardia: 0,02-0,04 mg/kg IV." },
+      { id: "esmolol", uso: "TSV: perfusión 50-200 mcg/kg/min o 50-100 mcg/kg IV lento." },
+      { id: "propranolol", uso: "0,04-0,06 mg/kg IV." },
+      { id: "diltiazem", uso: "10-15 mcg/kg/min." },
+      { id: "lidocaina", uso: "Complejos ventriculares prematuros: 1,0-2,0 mg/kg IV (perros); 0,5 mg/kg (gatos)." }
+    ]
+  }
+);
+
+// ---- Enfermedades urogenitales y dermatología (Guía terapéutica ConsultaVet) ----
+PATOLOGIAS.push(
+  {
+    id: "quistes-ovaricos", nombre: "Quistes ováricos (perra)", especie: "perro", capitulo: "Enfermedades urogenitales",
+    farmacos: [
+      { id: "gonadotrofina-corionica-humana", uso: "450-3.000 UI/animal IM (dosis fija). Alternativa: buserelina 0,8-6 mcg/animal SC, 2-6 veces cada 12 h o 3 veces cada 8 h." }
+    ]
+  },
+  {
+    id: "hiperplasia-endometrial-piometra", nombre: "Hiperplasia endometrial quística y piómetra (tratamiento médico)", especie: "ambas", capitulo: "Enfermedades urogenitales",
+    farmacos: [
+      { id: "dinoprost", uso: "No en piómetra cerrada. Perra: 0,10-0,25 mg/kg SC c12-24h 3-8 días, o 0,025-0,050 mg/kg SC 6-8 veces al día 2-3 días. Gata: 0,1 mg/kg SC c24h." },
+      { id: "aglepristona", uso: "Perra: 10 mg/kg SC días 2, 7 y 14 + amoxicilina-clavulánico 12-22 mg/kg VO c8-12h (o enrofloxacino 5 mg/kg c24h). Si fracasa: 2 dosis más separadas 7 días + cloprostenol 1 mcg/kg 2 dosis separadas 4 días." },
+      { id: "cloprostenol", uso: "1 mcg/kg SC, 2 dosis separadas 4 días (asociado a aglepristona)." }
+    ]
+  },
+  {
+    id: "mastitis-metritis", nombre: "Mastitis y metritis", especie: "ambas", capitulo: "Enfermedades urogenitales",
+    farmacos: [
+      { id: "trimetoprim-sulfametoxazol", uso: "Mastitis con leche ácida (<7,3): 15-30 mg/kg VO c12h (mín. 3 semanas)." },
+      { id: "lincomicina", uso: "Leche ácida: 15 mg/kg VO c8h." },
+      { id: "eritromicina", uso: "Leche ácida: 10 mg/kg VO c8h." },
+      { id: "ampicilina", uso: "Leche alcalina (>7,4): 22 mg/kg VO c8h. Metritis: 22 mg/kg VO c8h (mín. 14 días)." },
+      { id: "cefalexina", uso: "Leche alcalina: 30 mg/kg VO c12h." },
+      { id: "dinoprost", uso: "Metritis en perras: 0,10-0,25 mg/kg SC c12-24h 3-8 días." },
+      { id: "oxitocina", uso: "Metritis en perras: 5-20 UI/perra IM c12-24h hasta evacuar el contenido uterino." },
+      { nombre: "Povidona yodada 1%", uso: "Lavados de mamas con abscesos: cada 12 h durante 2-5 días." }
+    ]
+  },
+  {
+    id: "hiperplasia-fibroadenomatosa-felina", nombre: "Hiperplasia fibroadenomatosa mamaria felina", especie: "gato", capitulo: "Enfermedades urogenitales",
+    farmacos: [ { id: "aglepristona", uso: "10 mg/kg SC 4 a 5 días consecutivos." } ]
+  },
+  {
+    id: "galactorrea", nombre: "Galactorrea / pseudogestación", especie: "perro", capitulo: "Enfermedades urogenitales",
+    farmacos: [ { id: "cabergolina", uso: "2,5-5,0 mcg/kg VO c24h durante 4-6 días." } ]
+  },
+  {
+    id: "orquitis-epididimitis-brucelosis", nombre: "Orquitis-epididimitis y brucelosis", especie: "perro", capitulo: "Enfermedades urogenitales",
+    farmacos: [
+      { id: "trimetoprim-sulfametoxazol", uso: "Orquitis-epididimitis: 15 mg/kg VO c12h." },
+      { id: "enrofloxacino", uso: "5 mg/kg VO/SC c24h." },
+      { id: "marbofloxacino", uso: "2 mg/kg VO c24h." },
+      { id: "minociclina", uso: "Brucelosis (con castración): 12 mg/kg VO c12h 2 semanas." },
+      { id: "doxiciclina", uso: "Alternativa: 10 mg/kg VO c12h + enrofloxacino 10 mg/kg c24h durante 4 semanas." },
+      { id: "estreptomicina", uso: "Después: 5-10 mg/kg IM c12h 1 semana." }
+    ]
+  },
+  {
+    id: "prostatitis-hiperplasia-prostatica", nombre: "Prostatitis e hiperplasia prostática benigna", especie: "perro", capitulo: "Enfermedades urogenitales",
+    farmacos: [
+      { id: "enrofloxacino", uso: "Prostatitis por gramnegativos: 5 mg/kg c24h (4-6 semanas)." },
+      { id: "trimetoprim-sulfametoxazol", uso: "15 mg/kg c12h." },
+      { id: "eritromicina", uso: "Grampositivos: 10 mg/kg c8h." },
+      { id: "clindamicina", uso: "Grampositivos: 5,5-11,0 mg/kg c12h." },
+      { id: "finasterida", uso: "HPB: 0,1-1,0 mg/kg VO c24h durante 1-4 meses." },
+      { id: "osaterona", uso: "0,2-0,5 mg/kg VO c24h una semana, reevaluar cada 5 meses." }
+    ]
+  },
+  {
+    id: "criptorquidia", nombre: "Criptorquidia (inducción del descenso)", especie: "perro", capitulo: "Enfermedades urogenitales",
+    farmacos: [ { nombre: "Buserelina acetato", uso: "10 mcg SC en 3 dosis, una vez por semana (dosis fija; solo si el testículo está muy cerca del escroto y <16 semanas)." } ]
+  },
+  {
+    id: "incontinencia-urinaria", nombre: "Incontinencia urinaria (disfunción de almacenamiento e incompetencia uretral)", especie: "ambas", capitulo: "Enfermedades urogenitales",
+    farmacos: [
+      { id: "oxibutinina", uso: "Perros 0,2-0,3 mg/kg VO c8-12h; gatos 0,5 mg/gato c8-12h." },
+      { id: "imipramina", uso: "Perros 5-15 mg VO c12h; gatos 2,5-5 mg c12h." },
+      { id: "estriol", uso: "Perras: 2 mg VO c24h una semana, después 0,5-2,0 mg cada 2 días." },
+      { id: "testosterona", uso: "Perros: propionato de testosterona 2,2 mg/kg IM cada 4-8 semanas." },
+      { id: "fenilpropanolamina", uso: "Perras: 1-2 mg/kg VO c8-12h (mínimo 0,7 mg/kg)." },
+      { id: "efedrina", uso: "Perras 1-2 mg/kg VO c8-12h; gatas 2-4 mg/kg." }
+    ]
+  },
+  {
+    id: "lesion-renal-aguda", nombre: "Lesión renal aguda (LRA) / oliguria", especie: "ambas", capitulo: "Enfermedades urogenitales",
+    farmacos: [
+      { id: "manitol", uso: "Oliguria: 0,25-1,00 g/kg IV en 15-20 min (no en cardiopatía congestiva ni sobrehidratación)." },
+      { id: "furosemida", uso: "Solo en sobrehidratación: 2 mg/kg IV (duplicar a la hora si no hay diuresis; hasta 6 mg/kg); o infusión 0,25-1,00 mg/kg/h." },
+      { id: "diltiazem", uso: "Nefroprotector: infusión 2-6 mcg/kg/h." },
+      { nombre: "Fenoldopam", uso: "Gatos hipotensos: 0,1 mcg/kg/h IV (evidencia limitada)." },
+      { id: "gluconato-calcico", uso: "Hipocalcemia/hiperpotasemia grave: gluconato cálcico 10% 0,5-1,5 mL/kg IV en 20-30 min." },
+      { nombre: "Sulfato de magnesio", uso: "Magnesio ionizado bajo: 0,12-0,50 mmol/kg/día 24-48 h." },
+      { id: "ampicilina", uso: "Leptospirosis: 20 mg/kg IV c6h." },
+      { id: "doxiciclina", uso: "Leptospirosis (portador): 5 mg/kg VO c12h 2 semanas." },
+      { id: "omeprazol", uso: "Gastritis urémica (junto con famotidina/maropitant/ondansetrón)." }
+    ]
+  },
+  {
+    id: "enfermedad-renal-cronica", nombre: "Enfermedad renal crónica (ERC)", especie: "ambas", capitulo: "Enfermedades urogenitales",
+    farmacos: [
+      { id: "benazepril", uso: "Proteinuria/hipertensión: 0,5-1,0 mg/kg VO c12-24h." },
+      { id: "enalapril", uso: "0,5-1,0 mg/kg VO c12-24h (0,5-10 mg/kg como antihipertensivo)." },
+      { id: "telmisartan", uso: "1-2 mg/kg VO c24h." },
+      { id: "amlodipino", uso: "Gatos 0,625-2,5 mg/gato; perros 0,10-0,75 mg/kg VO c24h." },
+      { id: "atenolol", uso: "Antihipertensivo: 2 mg/kg VO c12-24h." },
+      { id: "hidralazina", uso: "0,5 mg/kg VO c12h." },
+      { id: "calcio-carbonato-chitosan", uso: "Hiperfosfatemia: carbonato cálcico 90-150 mg/kg/día VO." },
+      { id: "lantano-carbonato", uso: "12,5-25,0 mg/kg/día con la comida." },
+      { id: "sevelamero", uso: "Perros: 30-50 mg/kg VO c8h." },
+      { id: "calcitriol", uso: "Hiperparatiroidismo secundario: 2-3 ng/kg VO c24h (contraindicado carbonato cálcico)." },
+      { id: "metoclopramida", uso: "Vómitos (perros): 0,1 mg/kg VO c8-12h." },
+      { id: "maropitant", uso: "0,5-1,0 mg/kg VO c8-12h." },
+      { id: "ondansetron", uso: "0,1-0,2 mg/kg c8-12h." },
+      { id: "omeprazol", uso: "0,7 mg/kg VO c24h." },
+      { id: "mirtazapina", uso: "Apetito: gatos 1,88 mg/gato VO c48h; perros 3,75 mg c24h." },
+      { id: "darbepoetina-alfa", uso: "Anemia: 1 mcg/kg SC semanal (gatos) y 0,45 mcg/kg (perros) si Hto <20%." }
+    ]
+  },
+  {
+    id: "glomerulonefritis-amiloidosis", nombre: "Glomerulonefritis y amiloidosis", especie: "ambas", capitulo: "Enfermedades urogenitales",
+    farmacos: [
+      { id: "micofenolato-mofetilo", uso: "Inmunosupresión: 10 mg/kg VO c12h." },
+      { id: "prednisolona", uso: "Con ciclofosfamida: 1 mg/kg c12h inicialmente, retirada progresiva." },
+      { id: "clorambucilo", uso: "0,2 mg/kg VO c24-48h (más azatioprina 2 mg/kg solo en perros)." },
+      { id: "ciclosporina", uso: "5-20 mg/kg VO c12h." },
+      { id: "clopidogrel", uso: "2-4 mg/kg VO c24h (carga 10 mg/kg; gatos 18,75 mg/gato)." },
+      { id: "colchicina", uso: "Amiloidosis: 0,01-0,03 mg/kg VO c24h." },
+      { nombre: "Dimetilsulfóxido", uso: "Amiloidosis: 90 mg/kg VO/SC c48h." },
+      { nombre: "Bicarbonato sódico / citrato potásico", uso: "Acidosis: bicarbonato 8-12 mg/kg VO c8-12h; citrato potásico 0,3-0,5 mmol/kg VO c12h." }
+    ]
+  },
+  {
+    id: "urolitiasis", nombre: "Urolitiasis (estruvita, oxalato cálcico, urato, cistina, fosfato)", especie: "ambas", capitulo: "Enfermedades urogenitales",
+    farmacos: [
+      { id: "acetohidroxamico-acido", uso: "Estruvita: 12,5 mg/kg VO c12h (con dieta y antibióticos)." },
+      { id: "dl-metionina", uso: "Estruvita: 100 mg/kg VO c12h." },
+      { id: "potasio-citrato", uso: "Oxalato cálcico: 75 mg/kg VO c12-24h; urato 50-75 mg/kg c12h." },
+      { id: "piridoxina", uso: "Oxalato (perros, eficacia no demostrada): 2-4 mg/kg VO c24h." },
+      { id: "hidroclorotiazida", uso: "Oxalato/fosfato cálcico (perros): 2 mg/kg VO c12h." },
+      { id: "alopurinol", uso: "Urato (perros): 15 mg/kg VO c12h para disolver; 5-7 mg/kg c12-24h para prevenir." },
+      { id: "sodio-bicarbonato-urinario", uso: "Urato: 0,65-5,90 g/día VO hasta pH urinario 7,0-7,5." },
+      { id: "tiopronina", uso: "Cistina (perros): 15-20 mg/kg VO c12h disolución; 5-15 mg/kg c12h prevención." }
+    ]
+  },
+  {
+    id: "sindrome-urologico-felino", nombre: "Síndrome urológico felino (obstrucción / cistitis)", especie: "gato", capitulo: "Enfermedades urogenitales",
+    farmacos: [
+      { id: "buprenorfina", uso: "10-20 mcg/kg VO/SC c8-12h." },
+      { id: "acepromazina", uso: "Relajar la uretra: 0,02-0,10 mg/kg SC/IM/IV o 1-2 mg/kg VO c8-12h." },
+      { id: "prazosina", uso: "0,25-0,50 mg/gato VO c8-12h." },
+      { id: "amitriptilina", uso: "5,0-12,5 mg/gato VO c12-24h (cada vez menos recomendada)." }
+    ]
+  },
+  {
+    id: "dermatitis-inmunomediadas", nombre: "Dermatitis inmunomediadas (pénfigo, lupus discoide...)", especie: "ambas", capitulo: "Dermatología",
+    farmacos: [
+      { id: "prednisolona", uso: "Inducción perros 2-3 mg/kg VO/día; gatos doble; pénfigo foliáceo 1,5-3,0 mg/kg. Pulsos en pénfigo: 10 mg/kg c24h 3 días." },
+      { id: "azatioprina", uso: "Perros: 2 mg/kg VO c24h, luego días alternos." },
+      { id: "clorambucilo", uso: "Gatos: 0,1-0,2 mg/kg VO c24h." },
+      { id: "ciclosporina", uso: "Perros 5 mg/kg; gatos 7 mg/kg VO c24h (linfocitos T citotóxicos)." },
+      { id: "oclacitinib", uso: "Complemento en pénfigo foliáceo, dosis de inducción similar a prurito." },
+      { id: "doxiciclina", uso: "Con niacinamida en lupus discoide: 5 mg/kg VO c12h." },
+      { nombre: "Tetraciclina + nicotinamida", uso: "500 mg de cada VO c8h en perros >10 kg; 250 mg en <10 kg." }
+    ]
+  },
+  {
+    id: "pioderma-canina", nombre: "Pioderma canina (superficial, profunda y multirresistente)", especie: "perro", capitulo: "Dermatología",
+    farmacos: [
+      { id: "amoxicilina-clavulanico", uso: "12,5-25,0 mg/kg VO c12h." },
+      { id: "cefadroxilo", uso: "10-22 mg/kg VO c12h." },
+      { id: "cefalexina", uso: "15-30 mg/kg VO c12h (hasta 66 mg/kg/día en infecciones profundas)." },
+      { id: "clindamicina", uso: "11 mg/kg VO c24h (10 mg/kg c12h en intensas)." },
+      { id: "trimetoprim-sulfametoxazol", uso: "15-30 mg/kg VO c12h." },
+      { id: "cefovecina", uso: "Resistentes: 8 mg/kg SC cada 14 días." },
+      { id: "cloranfenicol", uso: "40-50 mg/kg VO c8h (fórmula magistral)." },
+      { id: "doxiciclina", uso: "10 mg/kg VO c24h." },
+      { id: "enrofloxacino", uso: "5 mg/kg VO/SC c24h (20 mg/kg en profundas)." },
+      { id: "marbofloxacino", uso: "2,75 mg/kg VO c24h (5,5 en intensas)." },
+      { id: "minociclina", uso: "5-10 mg/kg VO c12h." },
+      { id: "pradofloxacino", uso: "3 mg/kg VO c24h." },
+      { id: "azitromicina", uso: "Estafilococos multirresistentes: 10 mg/kg VO c24h (o 3 días/semana)." }
+    ]
+  },
+  {
+    id: "micosis-cutaneas", nombre: "Micosis cutáneas (dermatofitosis y dermatitis por Malassezia)", especie: "ambas", capitulo: "Dermatología",
+    farmacos: [
+      { id: "itraconazol", uso: "Gatos 5 mg/kg VO c24h semanas alternas; perros 5-10 mg/kg c24h. Malassezia: 5 mg/kg 2 días consecutivos/semana." },
+      { id: "ketoconazol", uso: "Perros: 10 mg/kg VO c24h." },
+      { id: "fluconazol", uso: "Gatos 5 mg/kg c24h; Malassezia 5 mg/kg c24h." },
+      { id: "terbinafina", uso: "30-40 mg/kg VO c24h (Malassezia: 30 mg/kg 2 días/semana)." }
+    ]
+  },
+  {
+    id: "trastornos-queratinizacion", nombre: "Trastornos de la queratinización (seborrea, ictiosis, comedones)", especie: "perro", capitulo: "Dermatología",
+    farmacos: [
+      { id: "acitretina", uso: "0,5-1,0 mg/kg VO c24h (seborrea idiopática)." },
+      { id: "isotretinoina", uso: "1-2 mg/kg VO c24h (síndrome de comedones del schnauzer)." },
+      { id: "vitamina-a-dermatologica", uso: "1.000 UI/kg/día en 2 tomas (no asociar a retinoides)." }
+    ]
+  },
+  {
+    id: "forunculosis-anal", nombre: "Forunculosis anal (fístulas perianales)", especie: "perro", capitulo: "Dermatología",
+    farmacos: [
+      { id: "ciclosporina", uso: "Protocolo A: 5 mg/kg VO c24h. Protocolo B: 2-4 mg/kg c24h + ketoconazol 5-10 mg/kg c24h." },
+      { id: "oclacitinib", uso: "0,9-1,1 mg/kg VO c12h (casos reportados)." },
+      { nombre: "Tacrolimus 0,1% tópico", uso: "1-2 veces al día en casos leves." }
+    ]
+  },
+  {
+    id: "abscesos-cutaneos", nombre: "Abscesos cutáneos (gato)", especie: "gato", capitulo: "Dermatología",
+    farmacos: [
+      { id: "clindamicina", uso: "Solo si hay signos sistémicos: 11 mg/kg VO c24h en 1-2 tomas." },
+      { id: "amoxicilina", uso: "20 mg/kg VO c12h." }
+    ]
+  },
+  {
+    id: "alopecias-no-inflamatorias", nombre: "Alopecias no inflamatorias (alopecia X, cíclica)", especie: "perro", capitulo: "Dermatología",
+    farmacos: [
+      { id: "melatonina", uso: "3 mg (perros pequeños) o 6-12 mg (medianos/grandes) VO c12h." },
+      { id: "osaterona", uso: "Alopecia X: 0,25-0,50 mg/kg VO c24h durante 7 días." },
+      { id: "trilostano", uso: "0,5-1,0 mg/kg VO c12h (máx. 30 mg por dosis)." },
+      { nombre: "Deslorelina (implantes)", uso: "4,7 mg dos veces al año (dosis fija)." }
+    ]
+  },
+  {
+    id: "otitis-externa", nombre: "Otitis externa", especie: "ambas", capitulo: "Dermatología",
+    farmacos: [
+      { id: "prednisolona", uso: "Estenosis/edema intenso: perros 1 mg/kg VO c24h, gatos 2 mg/kg, 1 semana y luego días alternos." },
+      { id: "cefalexina", uso: "22 mg/kg VO c12h." },
+      { id: "enrofloxacino", uso: "5 mg/kg VO/SC c24h (20 mg/kg frente a Pseudomonas)." },
+      { id: "marbofloxacino", uso: "2,75 mg/kg c24h (5,5 mg/kg frente a Pseudomonas)." },
+      { nombre: "Otológicos tópicos", uso: "Miconazol (levaduras), neomicina/polimixina B (cocos), gentamicina (bacilos), polimixina B o fluoroquinolonas (Pseudomonas). Limpiador con trisEDTA." }
+    ]
+  },
+  {
+    id: "leishmaniosis", nombre: "Leishmaniosis canina y felina", especie: "ambas", capitulo: "Dermatología",
+    farmacos: [
+      { id: "antimoniato-meglumina", uso: "Perros: 100 mg/kg SC c24h 4-6 semanas. Gatos: 20-50 mg/kg c24h 30 días." },
+      { id: "miltefosina", uso: "2 mg/kg VO c24h durante 28 días." },
+      { id: "alopurinol", uso: "Perros: 10 mg/kg VO c12h 6-12 meses. Gatos: 20 mg/kg/día." },
+      { id: "domperidona", uso: "Estadio 1: 0,5 mg/kg VO c24h durante un mes, repetir cada 4 meses." }
+    ]
+  },
+  {
+    id: "ectoparasitos-sarna-pulicosis", nombre: "Sarna, pulicosis y otras ectoparasitosis", especie: "ambas", capitulo: "Dermatología",
+    farmacos: [
+      { id: "doramectina", uso: "Demodicosis generalizada: 0,6 mg/kg SC semanal." },
+      { id: "ivermectina", uso: "Sarna sarcóptica/otodéctica: 0,3 mg/kg VO semanal o SC quincenal, 4-8 semanas." },
+      { id: "nitenpiram", uso: "Pulgas (gato): 1 comprimido en días alternos durante un mes (diagnóstico de alergia a la picadura de pulga)." },
+      { nombre: "Isoxazolinas (afoxolaner, fluralaner, sarolaner, lotilaner)", uso: "Tratamiento de elección de la sarna demodécica generalizada canina." },
+      { nombre: "Fipronil spray (cachorros <6 semanas)", uso: "1,2 mL cada 21 días, o esponja 6 mL/kg." }
+    ]
+  },
+  {
+    id: "urticaria-papilomatosis", nombre: "Urticaria y papilomatosis canina", especie: "perro", capitulo: "Dermatología",
+    farmacos: [
+      { id: "difenhidramina", uso: "Urticaria: 2-4 mg/kg VO 3 veces al día." },
+      { id: "hidroxizina", uso: "2 mg/kg VO c12h." },
+      { id: "azitromicina", uso: "Papilomatosis: 10 mg/kg VO c24h durante 10 días." }
+    ]
+  }
+);
+
+// ---- Cardiología y endocrinología (Guía terapéutica ConsultaVet) ----
+PATOLOGIAS.push(
+  {
+    id: "insuficiencia-cardiaca-aguda", nombre: "Insuficiencia cardiaca aguda / edema pulmonar cardiogénico", especie: "ambas", capitulo: "Cardiología",
+    farmacos: [
+      { id: "furosemida", uso: "Bolos IV 2-4 mg/kg cada 1-2 h en perros (1-2 mg/kg en gatos) hasta estabilizar la frecuencia respiratoria; o infusión 1 mg/kg/h." },
+      { id: "nitroprusiato-sodico", uso: "Edema muy grave: 0,5-2,5 mcg/kg/min IV (monitorizar presión, máx. 48 h)." },
+      { id: "pimobendan", uso: "Inyectable 0,15 mg/kg IV dosis única." },
+      { id: "dobutamina", uso: "2-20 mcg/kg/min IV (gatos 0,5-3,0 mcg/kg/min)." },
+      { id: "dopamina", uso: "Inicio 1 mcg/kg/min, subir 25-30% cada 30 min (máx. 10 mcg/kg/min)." },
+      { id: "milrinona", uso: "50 mcg/kg IV en 10 min; 0,375-0,750 mcg/kg/min en infusión." },
+      { id: "amrinona", uso: "1-2 mg/kg IV bolo; 10-100 mcg/kg/min." },
+      { id: "butorfanol", uso: "Ansiedad: 0,25 mg/kg IM." },
+      { id: "morfina", uso: "Perros: 0,05-0,10 mg/kg IV en bolo cada 2-3 min o 0,1-0,5 mg/kg IM/SC." },
+      { id: "teofilina", uso: "Perros 5-7 mg/kg IV lento o VO c8h; gatos 4 mg/kg c12h." }
+    ]
+  },
+  {
+    id: "insuficiencia-cardiaca-felina", nombre: "Insuficiencia cardiaca crónica felina", especie: "gato", capitulo: "Cardiología",
+    farmacos: [
+      { id: "furosemida", uso: "1 mg/kg c2-3 días hasta 2 mg/kg c8-12h." },
+      { id: "torasemida", uso: "0,1-0,3 mg/kg VO c12-24h." },
+      { id: "pimobendan", uso: "Fuera de registro: 0,25 mg/kg VO c12h." },
+      { id: "espironolactona", uso: "Al progresar la enfermedad: 0,5-2,0 mg/kg VO c12-24h." },
+      { id: "benazepril", uso: "0,5 mg/kg c24h." },
+      { id: "atenolol", uso: "Obstrucción del tracto de salida: 6,25 mg/gato (<5 kg) o 12,5 mg (>5 kg) c12-24h." },
+      { id: "hidroclorotiazida", uso: "1-2 mg/kg VO c12-24h (refractarios)." },
+      { id: "taurina", uso: "Carencia: 250-500 mg/gato VO c12h." }
+    ]
+  },
+  {
+    id: "hipertension-sistemica", nombre: "Hipertensión sistémica", especie: "ambas", capitulo: "Cardiología",
+    farmacos: [
+      { id: "amlodipino", uso: "Gatos (elección): 0,125-0,250 mg/kg VO c12-24h; perros 0,1-0,5 mg/kg c12-24h." },
+      { id: "benazepril", uso: "Perros: 0,25-0,50 mg/kg c24h." },
+      { id: "enalapril", uso: "Perros: 0,5 mg/kg c12-24h." },
+      { id: "telmisartan", uso: "1-2 mg/kg VO c24h." },
+      { id: "hidralazina", uso: "0,5-2,0 mg/kg VO c12h (edema grave, monitorizar presión)." },
+      { id: "prazosina", uso: "Perros <15 kg 0,5-1,0 mg; >15 kg 1,0-2,0 mg VO c8h." }
+    ]
+  },
+  {
+    id: "hipertension-pulmonar", nombre: "Hipertensión pulmonar (perro)", especie: "perro", capitulo: "Cardiología",
+    farmacos: [
+      { id: "sildenafilo", uso: "1-3 mg/kg VO 2-3 veces al día." },
+      { id: "tadalafilo", uso: "1-4 mg/kg VO c24h (empezar en 1 mg/kg)." },
+      { id: "pentoxifilina", uso: "10-15 mg/kg VO c12h." },
+      { id: "pimobendan", uso: "0,25 mg/kg VO c12h." }
+    ]
+  },
+  {
+    id: "bradiarritmias", nombre: "Bradiarritmias (parada sinusal, seno enfermo, bloqueo AV)", especie: "ambas", capitulo: "Cardiología",
+    farmacos: [
+      { id: "atropina", uso: "Perros: 0,04 mg/kg SC/VO c6-8h (test de respuesta 0,04 mg/kg IV/SC)." },
+      { id: "propantelina", uso: "Perros: 0,5-1,0 mg/kg VO c8h." },
+      { nombre: "Terbutalina", uso: "Perros 0,2 mg/kg VO c8-12h; gatos 0,625 mg/gato VO c12h." },
+      { id: "teofilina", uso: "Perros 5-7 mg/kg VO c8h; gatos (acción sostenida) 25 mg/kg c24h." }
+    ]
+  },
+  {
+    id: "taquiarritmias-supraventriculares", nombre: "Taquiarritmias supraventriculares y fibrilación atrial", especie: "ambas", capitulo: "Cardiología",
+    farmacos: [
+      { id: "digoxina", uso: "Perros: 0,003-0,010 mg/kg VO c12h (máx. 0,25 mg/perro); crítico 0,02-0,04 mg/kg IV. Gatos 0,007-0,015 mg/kg VO c24-48h." },
+      { id: "diltiazem", uso: "Perros: 0,5-1,5 mg/kg VO c8h; acción sostenida 2-3 mg/kg c12h. Gatos (CMH) 7,5 mg/gato c8h." },
+      { id: "atenolol", uso: "0,3-0,6 mg/kg VO c12h." },
+      { id: "carvedilol", uso: "Perros: 1,5-3,0 mg (total) VO c12-24h." },
+      { id: "verapamilo", uso: "Perros: 0,05-0,15 mg/kg IV lento (5 min), repetir hasta 3 veces (máx. 0,15 mg/kg); VO 5-10 mg/kg c8-12h." },
+      { id: "esmolol", uso: "0,25-0,50 mg/kg IV lento; perfusión 50-200 mcg/kg/min." },
+      { id: "amiodarona", uso: "5-15 mg/kg VO c12h; FA: 10-15 mg/kg c12h 1 semana y luego 8-10 mg/kg c24h." },
+      { id: "sotalol", uso: "0,5-2,0 mg/kg VO c8-12h." },
+      { id: "quinidina", uso: "FA sin cardiopatía: 5-10 mg/kg VO c6h." },
+      { id: "flecainida", uso: "1-5 mg/kg VO c8-12h (poco probado)." },
+      { id: "propafenona", uso: "3-4 mg/kg VO c8h (poco probado)." }
+    ]
+  },
+  {
+    id: "arritmias-ventriculares", nombre: "Arritmias ventriculares", especie: "perro", capitulo: "Cardiología",
+    farmacos: [
+      { id: "lidocaina", uso: "Primera elección: 2 mg/kg IV en bolo (hasta 3 veces cada 5 min); infusión 25-80 mcg/kg/min." },
+      { id: "procainamida", uso: "10-15 mg/kg IV en 1-2 min; infusión 25-50 mcg/kg/min." },
+      { id: "esmolol", uso: "0,5 mg/kg IV en bolo lento." },
+      { id: "amiodarona", uso: "2 mg/kg IV en 15 min (máx. 10 mg/kg/h); VO 10-15 mg/kg c12h 1 semana y 8-10 mg/kg c24h." },
+      { id: "sotalol", uso: "0,5-2,0 mg/kg VO c12h." },
+      { id: "mexiletina", uso: "4-8 mg/kg VO c8h (con atenolol 0,3-0,6 mg/kg c12h)." },
+      { id: "atenolol", uso: "0,3-0,6 mg/kg VO c12h; gatos, primera elección." }
+    ]
+  },
+  {
+    id: "dirofilariosis-canina", nombre: "Dirofilariosis canina (profilaxis y tratamiento)", especie: "perro", capitulo: "Cardiología",
+    farmacos: [
+      { id: "ivermectina", uso: "Profilaxis 6-12 mcg/kg VO mensual; microfilaricida 50 mcg/kg VO dosis única." },
+      { id: "milbemicina-oxima", uso: "Profilaxis 0,5-1,0 mg/kg VO mensual; microfilaricida 0,5-1,0 mg/kg." },
+      { id: "moxidectina", uso: "Profilaxis: inyectable 0,17 mg/kg SC cada 12 meses; tópica 2,5-6,25 mg/kg mensual; microfilaricida 3 mg/kg VO." },
+      { id: "selamectina", uso: "Profilaxis: 6-12 mg/kg tópica mensual." },
+      { id: "melarsomina", uso: "Adulticida: 2,5 mg/kg IM profunda lumbar, 2 dosis separadas 24 h (un mes después, pauta normal)." },
+      { id: "doxiciclina", uso: "10 mg/kg VO c12h 4 semanas (reduce Wolbachia)." },
+      { id: "prednisona", uso: "Con adulticida: 0,5 mg/kg c12h una semana, c24h la siguiente, 0,5 mg/kg c48h 2 semanas más." },
+      { id: "difenhidramina", uso: "Pretratamiento antes de microfilaricida: 2,2 mg/kg VO/IM." }
+    ]
+  },
+  {
+    id: "dirofilariosis-felina", nombre: "Dirofilariosis felina", especie: "gato", capitulo: "Cardiología",
+    farmacos: [
+      { id: "ivermectina", uso: "Profilaxis: 24 mcg/kg VO al mes." },
+      { id: "milbemicina-oxima", uso: "Profilaxis: 0,5-1,0 mg/kg VO al mes." },
+      { id: "selamectina", uso: "Profilaxis: 6-12 mg/kg tópica al mes." },
+      { id: "prednisona", uso: "Sintomático: 2 mg/kg VO c24h, bajando hasta 0,5 mg/kg c48h." }
+    ]
+  },
+  {
+    id: "hiposomatotropismo", nombre: "Hiposomatotropismo (déficit de GH)", especie: "perro", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "medroxiprogesterona-inyectable", uso: "2,5-5,0 mg/kg SC cada 3 semanas hasta 6 dosis, luego cada 6 semanas." },
+      { id: "somatotropina", uso: "GH sintética humana 0,1-0,3 UI/kg SC 3 veces por semana." },
+      { id: "levotiroxina", uso: "Si hay hipotiroidismo: 10 mcg/kg VO c12h." }
+    ]
+  },
+  {
+    id: "hipersomatotropismo", nombre: "Hipersomatotropismo (acromegalia)", especie: "ambas", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "aglepristona", uso: "Perras (progestágenos): 10 mg/kg SC cada 7 días." },
+      { id: "pasireotida", uso: "Gatos: 0,03 mg/kg SC c12h." },
+      { id: "octreotida", uso: "Gatos: 20-50 mcg/gato SC c12h." },
+      { id: "cabergolina", uso: "Gatos: 10 mg/kg VO c48h (dosis tal como figura en la guía; verificar)." }
+    ]
+  },
+  {
+    id: "diabetes-insipida", nombre: "Diabetes insípida", especie: "ambas", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "desmopresina", uso: "Vía conjuntival 1-4 gotas c12-24h (perro), 1 gota (gato); oral: perros 0,05 (<5 kg), 0,1 (5-20 kg) o 0,2 mg (>20 kg) c12h; gatos 0,025-0,05 mg c12h." },
+      { id: "hidroclorotiazida", uso: "Forma nefrogénica: 2,5-5,0 mg/kg VO c12h." }
+    ]
+  },
+  {
+    id: "hipotiroidismo-canino", nombre: "Hipotiroidismo canino", especie: "perro", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "levotiroxina", uso: "10-20 mcg/kg VO c12h (o 20 mcg/kg c24h); crisis hipotiroidea 5 mcg/kg IV c12h." }
+    ]
+  },
+  {
+    id: "hiperadrenocorticismo-canino", nombre: "Hiperadrenocorticismo canino (Cushing)", especie: "perro", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "trilostano", uso: "0,2-1,0 mg/kg VO c12h (empezar con la dosis mínima); control con estimulación ACTH." }
+    ]
+  },
+  {
+    id: "hipoadrenocorticismo-addison", nombre: "Hipoadrenocorticismo (enfermedad de Addison)", especie: "perro", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "dexametasona", uso: "Crisis: fosfato sódico 0,1-2,0 mg/kg IV (no interfiere con el cortisol)." },
+      { id: "hidrocortisona-sistemica", uso: "Crisis: hemisuccinato/fosfato 2-5 mg/kg IV c8h o 0,300-0,625 mg/kg/h." },
+      { id: "metilprednisolona", uso: "Succinato sódico 1-2 mg/kg IV c6h." },
+      { id: "desoxicorticosterona", uso: "DOCP: 2,2 mg/kg SC cada ~25 días (mineralocorticoide de elección)." },
+      { id: "fludrocortisona-sistemica", uso: "0,01-0,02 mg/kg VO c24h, repartida en 2 tomas si no se estabiliza." },
+      { id: "prednisona", uso: "Mantenimiento/estrés: 0,2 mg/kg VO c24h." }
+    ]
+  },
+  {
+    id: "masas-adrenales", nombre: "Masas adrenales (feocromocitoma, hiperaldosteronismo)", especie: "ambas", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "fenoxibenzamina", uso: "Feocromocitoma: 0,25 mg/kg VO c12h, aumentando hasta 0,75-1,00 mg/kg." },
+      { id: "prazosina", uso: "Alternativa: perros <15 kg 0,5-1,0 mg; >15 kg 1-2 mg c8h." },
+      { id: "atenolol", uso: "Si taquiarritmia: 0,2-1,0 mg/kg VO c12-24h (solo tras alfa-bloqueo)." },
+      { id: "labetalol", uso: "Hipertensión durante adrenalectomía: 0,2-1,1 mg/kg IV en infusión." },
+      { id: "espironolactona", uso: "Hiperaldosteronismo (gatos): 2-4 mg/kg VO al día." },
+      { id: "amlodipino", uso: "0,625-1,250 mg/gato o 0,1 mg/kg/día." },
+      { nombre: "Potasio", uso: "2-6 mmol/gato/día VO en 2-3 tomas." }
+    ]
+  },
+  {
+    id: "cetoacidosis-diabetica", nombre: "Cetoacidosis diabética", especie: "ambas", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "insulina-regular", uso: "IM: 0,2 UI/kg inicial y 0,1 UI/kg cada hora; infusión IV 0,05-0,10 UI/kg/h; SC 0,1-0,3 UI/kg c6-8h. En gatos glargina 2 UI c12h seguida de 0,5-1 UI IM c4h. Descenso de glucemia ≤50 mg/dL/h." }
+    ]
+  },
+  {
+    id: "hiperinsulinismo-insulinoma", nombre: "Hiperinsulinismo / insulinoma (hipoglucemia)", especie: "perro", capitulo: "Endocrinología",
+    farmacos: [
+      { nombre: "Glucosa 50% IV", uso: "1-5 mL en 10 min; luego glucosa 2,5-5% hasta recuperar." },
+      { id: "dexametasona", uso: "0,5-1,0 mg/kg IV las primeras 6 h, repetir c12-24h." },
+      { id: "glucagon", uso: "Refractarias: 5-10 ng/kg/min, ajustar para mantener 50-100 mg/dL." },
+      { id: "prednisolona", uso: "Crónico: perros 0,25 mg/kg VO c12h (gatos 0,5); sin superar 4-6 mg/kg/día." },
+      { id: "octreotida", uso: "10-50 mcg SC c8-12h." },
+      { id: "diazoxido", uso: "5 mg/kg VO c12h, hasta máx. 60 mg/kg/día." }
+    ]
+  },
+  {
+    id: "hiperparatiroidismo-hipercalcemia", nombre: "Hipercalcemia / hiperparatiroidismo primario", especie: "ambas", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "furosemida", uso: "1-4 mg/kg IV 2-3 veces al día o infusión 0,2-1,0 mg/kg/h; crónico 2-4 mg/kg VO c8-12h." },
+      { id: "prednisona", uso: "Agudo: perros 1,0-2,2 mg/kg IV/IM c12h; gatos 5-10 mg SC/día." },
+      { id: "dexametasona", uso: "0,10-0,22 mg/kg IV/SC c24h." },
+      { id: "calcitonina", uso: "4 UI/kg IV en infusión y 4-8 UI/kg SC c12-24h." },
+      { id: "acido-pamidronico", uso: "Perros 1,3-2,0 mg/kg IV en 2 h; gatos 1,5-2,0 mg/kg." },
+      { id: "acido-alendronico", uso: "Perros: 1-4 mg/kg VO c2-3 días." }
+    ]
+  },
+  {
+    id: "hipoparatiroidismo-hipocalcemia", nombre: "Hipoparatiroidismo / hipocalcemia", especie: "ambas", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "gluconato-calcico", uso: "Aguda: gluconato cálcico 10% 0,5-1,5 mL/kg IV lento (5-14 mg/kg de calcio) con monitorización ECG; luego infusión 60-90 mg/kg/día." },
+      { id: "calcitriol", uso: "20-30 ng/kg/día VO 2-4 días, luego 5-15 ng/kg/día." },
+      { id: "alfacalcidol", uso: "0,01-0,03 mcg/kg VO c24h." },
+      { nombre: "Carbonato cálcico", uso: "25-50 mg/kg/día VO en varias tomas." }
+    ]
+  }
+);
+
+// ---- Neurología/locomotor, neumología, oftalmología y antiinfecciosos (Guía terapéutica ConsultaVet) ----
+PATOLOGIAS.push(
+  {
+    id: "neuro-glucocorticoides", nombre: "Compresión medular, tumores cerebrales e hidrocefalia (corticoides antiinflamatorios)", especie: "ambas", capitulo: "Neurología y aparato locomotor",
+    farmacos: [
+      { id: "prednisolona", uso: "Prednisona/prednisolona/metilprednisolona 1 mg/kg VO c24h en perros (doble en gatos); en hidrocefalia bajar hasta 0,1 mg/kg c48h. Largo plazo, días alternos." },
+      { id: "furosemida", uso: "Hidrocefalia: 0,5-2,0 mg/kg VO c12-24h." },
+      { id: "omeprazol", uso: "Hidrocefalia (complemento): 10 mg (<20 kg) o 20 mg (>20 kg) VO c24h." }
+    ]
+  },
+  {
+    id: "meningoencefalitis-inmunomediada", nombre: "Meningitis-arteritis y meningoencefalitis inmunomediadas, cerebelitis, miositis", especie: "ambas", capitulo: "Neurología y aparato locomotor",
+    farmacos: [
+      { id: "prednisolona", uso: "Inmunosupresor: 2 mg/kg VO/día (perros) repartidos en 2 tomas; protocolo de reducción escalonada en meningitis-arteritis." },
+      { id: "azatioprina", uso: "2 mg/kg VO c24h (perros)." },
+      { id: "micofenolato-mofetilo", uso: "10 mg/kg VO c24h (perros)." },
+      { id: "ciclosporina", uso: "7 mg/kg VO c24h (gatos)." },
+      { nombre: "Citarabina", uso: "Meningoencefalitis granulomatosa: 50 mg/m² SC, 4 dosis c12h cada 3 semanas." }
+    ]
+  },
+  {
+    id: "miastenia-grave", nombre: "Miastenia grave adquirida", especie: "perro", capitulo: "Neurología y aparato locomotor",
+    farmacos: [
+      { id: "piridostigmina", uso: "0,5-3,0 mg/kg VO c8-12h (empezar con la dosis inferior)." },
+      { id: "neostigmina", uso: "Si regurgita: 0,04 mg/kg SC/IM c6h." },
+      { id: "prednisolona", uso: "Inmunosupresión en la forma adquirida." }
+    ]
+  },
+  {
+    id: "infecciones-neuromusculares", nombre: "Infecciones neuromusculares y articulares (discoespondilitis, meningitis, toxoplasmosis, neosporosis, Lyme, tétanos)", especie: "ambas", capitulo: "Neurología y aparato locomotor",
+    farmacos: [
+      { id: "amoxicilina-clavulanico", uso: "Discoespondilitis/artritis supurativa: 25 mg/kg VO c12h (6-8 semanas en artritis; 8-16 en discoespondilitis)." },
+      { nombre: "Cefotaxima", uso: "Meningitis bacteriana: 30-80 mg/kg IV c6-8h, ≥6 semanas." },
+      { id: "clindamicina", uso: "Toxoplasmosis: 12,5 mg/kg VO c12h 4 semanas. Neosporosis: 12,5 mg/kg c8h + sulfa-trimetoprim 15 mg/kg c12h 4-8 semanas." },
+      { id: "doxiciclina", uso: "Lyme: 10 mg/kg VO c24h durante un mes." },
+      { nombre: "Bencilpenicilina", uso: "Tétanos: 20.000-100.000 UI/kg IV 4 veces al día (o procaína IM c12h) 10 días." },
+      { id: "metronidazol", uso: "Tétanos: perros 10 mg/kg VO c8h; gatos 250 mg/gato c12-24h." },
+      { id: "antitoxina-tetanica", uso: "100-300 UI/kg IV lento (previa prueba intradérmica 0,1-0,2 mL SC)." }
+    ]
+  },
+  {
+    id: "edema-cerebral-traumatismo", nombre: "Edema cerebral secundario a traumatismo", especie: "ambas", capitulo: "Neurología y aparato locomotor",
+    farmacos: [
+      { nombre: "NaCl 7,5%", uso: "3-5 mL/kg IV lento." },
+      { id: "manitol", uso: "Signos de hipertensión craneal: 0,5-1,0 g/kg IV lento en 20 min, repetir 1-2 veces c4-8h." }
+    ]
+  },
+  {
+    id: "intoxicaciones-neuromusculares", nombre: "Intoxicaciones con signos neuromusculares (amitraz, carbamatos, plomo, organofosforados)", especie: "ambas", capitulo: "Neurología y aparato locomotor",
+    farmacos: [
+      { id: "atipamezol", uso: "Amitraz: 50-200 mcg/kg IM." },
+      { id: "atropina", uso: "Carbamatos/organofosforados (signos muscarínicos): 0,1-0,2 mg/kg (¼ IV lento, resto SC); repetir a los 20-30 min; SC/IV c6h." },
+      { id: "edetato-calcico-disodico", uso: "Plomo: 25 mg/kg SC c6h 2-5 días (máx. 2.000 mg/día, 5 días); diluir en glucosa 5% a 10 mg/mL." },
+      { id: "pralidoxima", uso: "Organofosforados: 10-20 mg/kg SC/IV lento (1-2 h) c8-12h 1-2 días; repetir la primera dosis a la hora; solo en las primeras 24-48 h." }
+    ]
+  },
+  {
+    id: "dolor-agudo-perioperatorio", nombre: "Dolor agudo y perioperatorio", especie: "ambas", capitulo: "Neurología y aparato locomotor (analgesia)",
+    farmacos: [
+      { id: "buprenorfina", uso: "10-20 mcg/kg IV/IM (gatos también transmucosa oral); efecto 4-8 h." },
+      { id: "butorfanol", uso: "0,1-0,4 mg/kg IV/IM; efecto 2-4 h." },
+      { id: "fentanilo", uso: "2,5-5,0 mcg/kg IV; infusión 5-10 mcg/kg/h intraoperatoria y 3-5 mcg/kg/h posoperatoria." },
+      { id: "metadona", uso: "0,1-0,5 mg/kg IV/IM; infusión: bolo 0,2-1,0 mg/kg y 0,05-0,20 mg/kg/h." },
+      { id: "morfina", uso: "0,1-0,5 mg/kg IM (perros IV); infusión bolo 0,3 mg/kg y 0,1-0,2 mg/kg/h." },
+      { id: "petidina", uso: "3-5 mg/kg SC; efecto 1-2 h." },
+      { id: "remifentanilo", uso: "0,25-1,00 mcg/kg/min sin bolo." },
+      { id: "tramadol", uso: "2-4 mg/kg cada 8 h." },
+      { id: "carprofeno", uso: "Perros 2,0-4,5 mg/kg VO/SC/IM/IV 2 h antes de cirugía; posoperatorio 4,5 mg/kg/día; gatos 2-4 mg/kg SC una vez." },
+      { id: "meloxicam", uso: "Perros 0,2 mg/kg VO/SC, luego 0,1 mg/kg/día; gatos 0,2-0,3 mg/kg." },
+      { id: "firocoxib", uso: "Perros: 5 mg/kg VO c24h." },
+      { id: "robenacoxib", uso: "Perros y gatos: 2 mg/kg SC antes de cirugía; luego 1 mg/kg VO c24h." },
+      { id: "cimicoxib", uso: "Perros: 2 mg/kg VO c24h." },
+      { id: "metamizol", uso: "Perros 25-35 mg/kg IM/IV lento c8-12h; gatos 25 mg/kg/día; infusión 10 mg/kg/h." },
+      { id: "paracetamol", uso: "Perros: 10 mg/kg IV/VO c8h." },
+      { id: "ketamina", uso: "Bolo 0,2-0,5 mg/kg IV + 10 mcg/kg/min (intraoperatorio); 2-5 mcg/kg/min posoperatorio." },
+      { id: "lidocaina", uso: "Perros: 2 mg/kg IV + 3-6 mg/kg/h intraoperatorio; 1-3 mg/kg/h posoperatorio. No en gatos." },
+      { id: "dexmedetomidina", uso: "0,5-2,0 mcg/kg/h IV." }
+    ]
+  },
+  {
+    id: "dolor-cronico-artrosis", nombre: "Dolor crónico (artrosis, neuropático, oncológico)", especie: "ambas", capitulo: "Neurología y aparato locomotor (analgesia)",
+    farmacos: [
+      { id: "carprofeno", uso: "Perros: inicio 4,5 mg/kg/día VO en 1-2 tomas." },
+      { id: "meloxicam", uso: "Perros 0,2 mg/kg inicial y 0,1 mg/kg/día; gatos 0,1-0,2 mg/kg y 0,05 mg/kg/día." },
+      { id: "robenacoxib", uso: "Perros y gatos: 1 mg/kg VO c24h." },
+      { id: "firocoxib", uso: "Perros: 5 mg/kg VO c24h." },
+      { id: "mavacoxib", uso: "Perros: 2 mg/kg VO, segunda dosis a los 14 días y luego mensual." },
+      { id: "enflicoxib", uso: "Perros: 8 mg/kg VO inicial y 4 mg/kg semanal." },
+      { id: "cimicoxib", uso: "Perros: 2 mg/kg c24h." },
+      { id: "grapiprant", uso: "Perros: 2 mg/kg VO c24h." },
+      { id: "gabapentina", uso: "Perros y gatos: 3-10 mg/kg VO c8-12h (subir hasta 15-20 mg/kg perros, 10-15 gatos)." },
+      { id: "pregabalina", uso: "Perros: 2-5 mg/kg VO c8-12h." },
+      { id: "amantadina", uso: "3-5 mg/kg VO c12-24h (mínimo 2 semanas)." },
+      { id: "amitriptilina", uso: "Perros 1-4 mg/kg VO c12-24h; gatos 0,5-2,0 mg/kg." },
+      { id: "acido-pamidronico", uso: "Neoplasia ósea: 1-2 mg/kg IV lento cada 3-4 semanas." },
+      { id: "acido-zoledronico", uso: "Neoplasia ósea: 0,1-0,2 mg/kg IV (máx. 4 mg) 15 min." },
+      { nombre: "Aceite de cannabidiol", uso: "Perros con artrosis: 1-2 mg/kg VO c12h; gatos 2-4 mg/kg c12h." },
+      { id: "tramadol", uso: "2-4 mg/kg VO c8h (menos eficaz en perros)." }
+    ]
+  },
+  {
+    id: "espasmos-musculares", nombre: "Espasmos musculares (hernias discales)", especie: "ambas", capitulo: "Neurología y aparato locomotor",
+    farmacos: [
+      { id: "diazepam", uso: "Perros: 0,2-0,5 mg/kg VO c8-12h." },
+      { id: "metocarbamol", uso: "20 mg/kg VO c8-12h durante 7-10 días." }
+    ]
+  },
+  {
+    id: "narcolepsia-disfuncion-cognitiva", nombre: "Narcolepsia y disfunción cognitiva", especie: "ambas", capitulo: "Neurología y aparato locomotor",
+    farmacos: [
+      { id: "imipramina", uso: "Narcolepsia: 0,5-1,5 mg/kg VO c12h (hasta 4 mg/kg en perros)." },
+      { id: "metilfenidato", uso: "Narcolepsia (perros): 0,25 mg/kg VO c12-24h." },
+      { id: "selegilina", uso: "Disfunción cognitiva: 0,5-1,0 mg/kg VO c24h por la mañana." },
+      { id: "nicergolina", uso: "0,25-0,50 mg/kg VO c24h (2 meses, luego meses alternos)." },
+      { id: "propentofilina", uso: "Perros: 3-5 mg/kg VO c12h antes de comer." }
+    ]
+  },
+  {
+    id: "trastornos-comportamiento", nombre: "Trastornos del comportamiento (ansiedad, fobias, compulsivos, eliminación inadecuada)", especie: "ambas", capitulo: "Neurología y aparato locomotor (comportamiento)",
+    farmacos: [
+      { id: "alprazolam", uso: "Perros 0,02-0,10 mg/kg VO c6-12h; gatos 0,125-0,250 mg/gato." },
+      { id: "clonazepam", uso: "Perros 0,1-1,0 mg/kg VO c8-12h; gatos 0,05-0,25 mg/kg." },
+      { id: "clorazepato", uso: "Perros 0,5-2,0 mg/kg VO c8-12h; gatos 0,5-2,0 mg/kg." },
+      { id: "diazepam", uso: "Perros 0,5-2,0 mg/kg VO c4h; gatos 0,2-1,0 mg/kg." },
+      { id: "lorazepam", uso: "Perros 0,02-0,10 mg/kg VO c8-24h; gatos 0,02-0,10 mg/kg." },
+      { id: "clomipramina", uso: "Ansiedad por separación y compulsivos (ISRS/tricíclicos)." },
+      { id: "fluoxetina", uso: "Eliminación inadecuada felina (8-16 semanas, retirada progresiva)." },
+      { id: "trazodona", uso: "Perros 3,0-7,5 mg/kg VO 2-4 h antes del evento (ansiedad/fobias)." },
+      { id: "gabapentina", uso: "Gatos: 50-150 mg/gato VO 2-3 h antes de la visita; perros 20-40 mg/kg." },
+      { id: "imepitoina", uso: "Fobia al ruido: desde 48 h antes del estímulo." },
+      { nombre: "Alfa-casozepina / teanina / feromonas", uso: "Nutracéuticos: alfa-casozepina 15 mg/kg/día; teanina 5 mg/kg c12h." }
+    ]
+  },
+  {
+    id: "rinitis-aspergilosis-criptococosis", nombre: "Rinitis fúngica (aspergilosis nasal, criptococosis)", especie: "ambas", capitulo: "Neumología",
+    farmacos: [
+      { id: "itraconazol", uso: "Aspergilosis perros 5-10 mg/kg VO c24-12h 3-6 meses; gatos 5 mg/kg c12h o 10 mg/kg c24h. Criptococosis gatos: 50 mg (<3,2 kg) o 100 mg (>3,2 kg)/día 8-9 meses." },
+      { id: "ketoconazol", uso: "Aspergilosis: 5-15 mg/kg c12h 6-10 semanas." },
+      { id: "fluconazol", uso: "Aspergilosis perros 2,5-5,0 mg/kg c12h; criptococosis felina (elección) 10 mg/kg VO c12h 3-6 meses." },
+      { id: "terbinafina", uso: "Aspergilosis: 15-20 mg/kg c12h." },
+      { id: "posaconazol", uso: "Gatos: 2,5-4,5 mg/kg VO c12h." },
+      { id: "voriconazol", uso: "Gatos: 5-12 mg/kg VO c24h (efectos neurológicos)." },
+      { id: "anfotericina-b", uso: "Criptococosis (alternativa): 0,5-0,8 mg/kg SC 2-3 veces por semana hasta 20 mg/kg acumulados." }
+    ]
+  },
+  {
+    id: "rinitis-virica-felina", nombre: "Rinitis vírica felina (calicivirus, herpesvirus)", especie: "gato", capitulo: "Neumología",
+    farmacos: [
+      { id: "interferon-omega-felino", uso: "Ciclos de 2,5 millones U/kg, 3 inyecciones SC (o IV) a días alternos." },
+      { id: "l-lisina", uso: "250-500 mg VO c12h." },
+      { id: "famciclovir", uso: "62,5-125 mg/gato VO c12-24h." },
+      { id: "fenilefrina-nasal", uso: "Descongestionante: 1-2 gotas 0,50-1,25% en cada fosa c8h." },
+      { id: "clorfenamina", uso: "Perros 0,22 mg/kg c8h; gatos 2-4 mg/animal c24h." }
+    ]
+  },
+  {
+    id: "rinitis-linfoplasmocitaria", nombre: "Rinitis linfoplasmocitaria idiopática (perro)", especie: "perro", capitulo: "Neumología",
+    farmacos: [
+      { id: "piroxicam", uso: "0,3 mg/kg VO c24h junto con doxiciclina 3-5 mg/kg c12h o azitromicina 5 mg/kg c24h." },
+      { id: "ciclosporina", uso: "5 mg/kg VO c24h ≥4 semanas, luego días alternos." },
+      { id: "itraconazol", uso: "Alternativa: 5 mg/kg VO c12h." }
+    ]
+  },
+  {
+    id: "edema-laringeo", nombre: "Edema laríngeo", especie: "ambas", capitulo: "Neumología",
+    farmacos: [
+      { id: "dexametasona", uso: "Glucocorticoide de acción rápida." },
+      { id: "adrenalina", uso: "Casos de anafilaxia." },
+      { id: "acepromazina", uso: "Sedación ligera: 0,01-0,05 mg/kg IM/IV (máx. 3 mg/perro)." },
+      { id: "buprenorfina", uso: "5 mcg/kg IV (o butorfanol 0,25 mg/kg IV)." }
+    ]
+  },
+  {
+    id: "traqueobronquitis-infecciosa", nombre: "Traqueobronquitis infecciosa canina (tos de las perreras)", especie: "perro", capitulo: "Neumología",
+    farmacos: [
+      { id: "doxiciclina", uso: "10 mg/kg VO c24h en 1-2 tomas (≥10 días)." },
+      { id: "amoxicilina-clavulanico", uso: "11 mg/kg VO c12h." },
+      { id: "azitromicina", uso: "Alternativa (ver ficha)." },
+      { id: "codeina", uso: "Antitusígeno solo si tos no productiva: 0,5-2 mg/kg VO c8h." }
+    ]
+  },
+  {
+    id: "neumonia-bacteriana-aspiracion", nombre: "Neumonía bacteriana, por aspiración y bronconeumonía", especie: "ambas", capitulo: "Neumología",
+    farmacos: [
+      { id: "doxiciclina", uso: "Neumonía leve (B. bronchiseptica/Mycoplasma): 10 mg/kg VO c24h." },
+      { id: "amoxicilina-clavulanico", uso: "Perros 11 mg/kg VO c12h; gatos 12,5 mg/kg c12h (o 22 mg/kg c8h)." },
+      { id: "ampicilina", uso: "22-30 mg/kg IV/SC c8h (con otro fármaco frente a gramnegativos)." },
+      { id: "cefazolina", uso: "25 mg/kg SC/IM/IV c6h." },
+      { id: "enrofloxacino", uso: "5-20 mg/kg VO/IM/IV c24h (perros; gatos máx. 5 mg/kg)." },
+      { id: "marbofloxacino", uso: "2,7-5,5 mg/kg VO c24h." },
+      { id: "clindamicina", uso: "Perros 10 mg/kg VO/SC c12h; gatos 10-15 mg/kg (hasta 20 mg/kg IV/SC c12h en neumonía)." },
+      { id: "amikacina", uso: "Perros 15 mg/kg; gatos 10 mg/kg IV/IM/SC c24h." },
+      { id: "gentamicina", uso: "Perros 9-14 mg/kg; gatos 5-8 mg/kg IV c24h." },
+      { id: "trimetoprim-sulfametoxazol", uso: "15-30 mg/kg VO c12h." },
+      { nombre: "Imipenem-cilastatina / meropenem", uso: "Multirresistentes: imipenem 3-10 mg/kg IV/IM c8h; meropenem perros 8,5 mg/kg SC c12h o 24 mg/kg IV c12h, gatos 10 mg/kg." },
+      { id: "maropitant", uso: "Aspiración con vómito refractario: 1 mg/kg SC c24h (ondansetrón 0,3-1,0 mg/kg IV/SC c12-24h)." }
+    ]
+  },
+  {
+    id: "fibrosis-pulmonar", nombre: "Fibrosis pulmonar", especie: "ambas", capitulo: "Neumología",
+    farmacos: [
+      { id: "prednisolona", uso: "1 mg/kg VO c12h con reducción gradual durante 28 días." },
+      { id: "micofenolato-mofetilo", uso: "10 mg/kg VO c12h 35 días; luego 250 mg cada 2 días." },
+      { id: "colchicina", uso: "Alternativa en intolerantes a inmunosupresores." },
+      { id: "sildenafilo", uso: "Hipertensión pulmonar: 1 mg/kg VO 3 veces al día." },
+      { id: "omeprazol", uso: "Junto a corticoides: gastroprotección (o antiH2)." }
+    ]
+  },
+  {
+    id: "edema-pulmonar-no-cardiogenico", nombre: "Edema pulmonar (hipoalbuminemia, sobrecarga vascular, permeabilidad)", especie: "ambas", capitulo: "Neumología",
+    farmacos: [
+      { id: "furosemida", uso: "Dosis inicial 2-4 mg/kg IV en perros y 1-2 mg/kg en gatos; repetir cada hora; mantenimiento infusión 1 mg/kg/h." },
+      { id: "torasemida", uso: "Hipoalbuminemia 0,1-0,3 mg/kg VO c12-24h; sobrecarga vascular 0,2-0,3 mg/kg VO c12-24h." }
+    ]
+  },
+  {
+    id: "neumonia-eosinofilica", nombre: "Neumonía eosinofílica", especie: "perro", capitulo: "Neumología",
+    farmacos: [
+      { id: "prednisona", uso: "1 mg/kg VO c12h una semana; luego días alternos y reducción hasta 0,125 mg/kg c48h (o 0,5 mg/kg c48h)." },
+      { id: "fenbendazol", uso: "Antihelmíntico empírico: 25-50 mg/kg/día VO 20 días." },
+      { id: "milbemicina-oxima", uso: "Con praziquantel semanal 4 semanas." },
+      { id: "moxidectina", uso: "Spot-on, dos dosis con 28 días de intervalo." }
+    ]
+  },
+  {
+    id: "tos-mucoliticos", nombre: "Tos: antitusígenos y mucolíticos", especie: "ambas", capitulo: "Neumología",
+    farmacos: [
+      { id: "codeina", uso: "Perros 0,5-2,0 mg/kg; gatos 0,25-4,00 mg/kg VO c8h." },
+      { id: "dextrometorfano", uso: "1-2 mg/kg VO c6-8h." },
+      { id: "butorfanol", uso: "0,5-1,0 mg/kg VO o 0,05-0,10 mg/kg SC/IM 2-4 veces al día." },
+      { id: "n-acetilcisteina", uso: "30-60 mg/kg VO c8-12h (máx. 600 mg)." },
+      { id: "bromhexina", uso: "Perros 2,0-2,5 mg/kg VO c12h; gatos 1 mg/kg c24h." }
+    ]
+  },
+  {
+    id: "oft-queratitis", nombre: "Queratitis ulcerativas y no ulcerativas", especie: "ambas", capitulo: "Oftalmología",
+    farmacos: [
+      { nombre: "Colirio antibiótico (neomicina-polimixina B-gramicidina o fluoroquinolona)", uso: "Según cultivo y antibiograma; no elegir gentamicina como primera opción." },
+      { id: "atropina", uso: "Ciclopléjico: colirio 0,5-1,0% 2-3 veces al día (2-3 días) y luego 1-2 al día." },
+      { nombre: "Ciclopentolato / tropicamida", uso: "Alternativa cicloplégica en queratoconjuntivitis seca." },
+      { id: "acetilcisteina-oftalmica", uso: "Anticolagenasa: colirio 2,5% cada 6-8 h hasta cura de la úlcera." },
+      { nombre: "Corticoides tópicos", uso: "Solo en queratitis no ulcerativas (15-30 días) o tras curar la herida; subconjuntival: triamcinolona 2-10 mg o metilprednisolona 5-40 mg." },
+      { id: "ciclosporina", uso: "Queratoconjuntivitis superficial crónica: ciclosporina A 0,2% o tacrolimús 0,03% tópicos." }
+    ]
+  },
+  {
+    id: "oft-qcs-conjuntivitis", nombre: "Queratoconjuntivitis seca y conjuntivitis", especie: "ambas", capitulo: "Oftalmología",
+    farmacos: [
+      { id: "ciclosporina", uso: "Ciclosporina A 0,2% tópica; alternativas tacrolimus 0,03% y pimecrolimus 1%." },
+      { nombre: "Pilocarpina 1%", uso: "Colirio cada 8 h, o VO 2-5 gotas c8h." },
+      { nombre: "Lágrimas artificiales, antibióticos tópicos, acetilcisteína en colirio", uso: "Según el resultado del test de Schirmer." }
+    ]
+  },
+  {
+    id: "oft-glaucoma", nombre: "Glaucoma y uveítis", especie: "ambas", capitulo: "Oftalmología",
+    farmacos: [
+      { id: "manitol", uso: "Glaucoma agudo: 1,0-1,5 g/kg IV en 15-20 min (al 20%)." },
+      { nombre: "Inhibidores de la anhidrasa carbónica tópicos (dorzolamida, brinzolamida)", uso: "Base del tratamiento crónico." },
+      { nombre: "Betabloqueantes tópicos (betaxolol, timolol) y prostaglandinas (latanoprost, bimatoprost, travoprost)", uso: "Asociados en la fase aguda." },
+      { id: "atropina", uso: "Uveítis: cicloplégico para prevenir sinequias." }
+    ]
+  },
+  {
+    id: "oft-retinitis-inmunomediada", nombre: "Retinitis inmunomediada", especie: "ambas", capitulo: "Oftalmología",
+    farmacos: [
+      { id: "doxiciclina", uso: "10 mg/kg VO c12h durante 4 semanas." },
+      { id: "prednisona", uso: "1-2 mg/kg VO c12h durante 4 semanas." }
+    ]
+  },
+  {
+    id: "gastritis-helicobacter", nombre: "Gastritis por Helicobacter", especie: "ambas", capitulo: "Antiinfecciosos sistémicos",
+    farmacos: [
+      { id: "amoxicilina", uso: "20 mg/kg VO c12h (combinada)." },
+      { id: "claritromicina", uso: "7,5 mg/kg VO c12h (combinada)." },
+      { id: "metronidazol", uso: "Gatos: 10 mg/kg VO c12h (combinado)." }
+    ]
+  },
+  {
+    id: "criptosporidiosis-coccidiosis", nombre: "Criptosporidiosis y coccidiosis", especie: "ambas", capitulo: "Antiinfecciosos sistémicos",
+    farmacos: [
+      { id: "paromomicina", uso: "Perros: 10 mg/kg VO c8h 5-10 días." },
+      { id: "azitromicina", uso: "Perros 5-10 mg/kg VO c12h; gatos 10 mg/kg c24h." },
+      { nombre: "Tilosina", uso: "Gatos 10-15 mg/kg VO c12h." },
+      { id: "sulfadimetoxina", uso: "Coccidiosis: 50-60 mg/kg VO c24h 5-20 días." }
+    ]
+  },
+  {
+    id: "pif-felina", nombre: "Peritonitis infecciosa felina (PIF)", especie: "gato", capitulo: "Antiinfecciosos sistémicos",
+    farmacos: [ { id: "remdesivir", uso: "8-15 mg/kg SC c24h." } ]
+  },
+  {
+    id: "encefalopatia-hepatica", nombre: "Encefalopatía hepática", especie: "ambas", capitulo: "Antiinfecciosos sistémicos",
+    farmacos: [
+      { id: "neomicina", uso: "20 mg/kg VO c8h." },
+      { id: "amoxicilina", uso: "10-15 mg/kg VO c8h." },
+      { id: "ampicilina", uso: "20 mg/kg IV c6-8h." },
+      { id: "metronidazol", uso: "7,5 mg/kg VO c12h." }
+    ]
+  }
+);
