@@ -774,3 +774,4 @@ label[for="concentracion"] { margin-top: 4px; }
   margin-top: 0;
   flex: 1;
 }
+#comercial-cimavet-detalle:empty { display: none; }
