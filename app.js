@@ -4321,7 +4321,7 @@ exportarDatosBoton.addEventListener("click", async () => {
   const dosDigitos = (n) => String(n).padStart(2, "0");
   const fecha = `${ahora.getFullYear()}-${dosDigitos(ahora.getMonth() + 1)}-${dosDigitos(ahora.getDate())}_${dosDigitos(ahora.getHours())}-${dosDigitos(ahora.getMinutes())}`;
   a.href = url;
-  a.download = `calculadora-dosis-backup-${fecha}.json`;
+  a.download = `calculadora-dosis-backup-v${VERSION_BD}-${fecha}.json`;
   document.body.appendChild(a);
   a.click();
   a.remove();
