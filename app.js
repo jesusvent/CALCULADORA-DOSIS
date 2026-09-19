@@ -198,6 +198,38 @@ const cimavetBuscarBoton = document.getElementById("cimavet-buscar-boton");
 const cimavetResultadoGeneralEl = document.getElementById("cimavet-resultado-general");
 
 // ============================================================
+// Fármacos según patología (PATOLOGIAS, en data.js)
+// ============================================================
+function renderPatologias() {
+  const q = normalizar(document.getElementById("patologia-busqueda").value.trim());
+  const lista = PATOLOGIAS.filter((p) => !q || normalizar(p.nombre + " " + p.capitulo).includes(q));
+  const el = document.getElementById("patologias-lista");
+  if (!lista.length) { el.innerHTML = `<div class="tarjeta"><p class="placeholder">Ninguna patología coincide con la búsqueda.</p></div>`; return; }
+  el.innerHTML = lista.map((p) => `
+    <div class="tarjeta">
+      <details ${q ? "open" : ""}>
+        <summary><strong>${escapeHtml(p.nombre)}</strong> <span class="ayuda">· ${escapeHtml(p.capitulo)} · ${p.especie === "ambas" ? "perro y gato" : escapeHtml(p.especie)}</span></summary>
+        ${p.farmacos.map((f) => {
+          const d = DRUGS.find((x) => x.id === f.id);
+          if (!d) return "";
+          return `<div class="cimavet-fila"><button type="button" class="boton-enlace boton-farmaco-patologia" data-id="${escapeHtml(f.id)}">${escapeHtml(d.principioActivo)}</button><p class="notas">${escapeHtml(f.uso)}</p></div>`;
+        }).join("")}
+        <p class="ayuda">Según guía terapéutica de ConsultaVet (Rejas López y cols., 8ª ed.).</p>
+      </details>
+    </div>`).join("");
+}
+document.getElementById("patologia-busqueda").addEventListener("input", renderPatologias);
+document.getElementById("patologias-lista").addEventListener("click", (e) => {
+  const btn = e.target.closest(".boton-farmaco-patologia");
+  if (!btn) return;
+  const farmaco = DRUGS.find((x) => x.id === btn.dataset.id);
+  if (!farmaco) return;
+  document.querySelector('.tab-principal[data-vista="calculadora"]').click();
+  seleccionarFarmaco(farmaco, farmaco.principioActivo);
+  seccionFarmaco.scrollIntoView({ behavior: "smooth" });
+});
+
+// ============================================================
 // Navegación entre vistas principales
 // ============================================================
 document.querySelectorAll(".tab-principal").forEach((btn) => {
@@ -207,6 +239,7 @@ document.querySelectorAll(".tab-principal").forEach((btn) => {
     document.querySelectorAll(".vista").forEach((v) => v.classList.add("oculto"));
     document.getElementById("vista-" + btn.dataset.vista).classList.remove("oculto");
     if (btn.dataset.vista === "protocolos") renderProtocolos();
+    if (btn.dataset.vista === "patologias") renderPatologias();
     if (btn.dataset.vista === "misfarmacos") { renderMisFarmacos(); renderProtocolosOcultos(); }
     if (btn.dataset.vista === "cri") actualizarCri();
   });

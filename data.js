@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-18T01:34:10";
-const VERSION_BD = 23;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-19T12:23:48";
+const VERSION_BD = 24;
 
 const DRUGS = [
   {
@@ -6996,4 +6996,126 @@ const CRI_FARMACOS_UCI = [
   { categoria: "Otros CRI de UCI", nombre: "Hidrocortisona", unidadFarmaco: "mg", dosisUnidad: "mgkgh",
     dosis: { ambas: { min: 0.08, max: 0.18 } },
     notas: "Shock vasopresor-dependiente con sospecha de CIRCI; no para todo shock. Carga: 1 mg/kg IV. Diluir tras reconstitución. Fotosensible. Glucosa, Na, infección y necesidades de vasopresor." }
+];
+
+// ============================================================
+// Fármacos según patología — fuente: "Uso de fármacos en..." de la Guía terapéutica del
+// animal de compañía (ConsultaVet, 8ª ed., Rejas López y cols.). Cada "id" es el id de un
+// fármaco de DRUGS (ficha con el cálculo por peso); "uso" resume la pauta de la guía para
+// esa patología. Piloto: se irán añadiendo más patologías.
+// ============================================================
+const PATOLOGIAS = [
+  {
+    id: "epilepsia-canina", nombre: "Epilepsia canina (control a largo plazo)", especie: "perro", capitulo: "Neurología",
+    farmacos: [
+      { id: "fenobarbital", uso: "Primera elección salvo disfunción hepática: 5 mg/kg/día VO en 2-3 tomas; ajustar un 10-30% según niveles séricos (20-35 mcg/mL)." },
+      { id: "bromuro-potasico", uso: "Elección en disfunción hepática o como complemento. Mantenimiento 30-40 mg/kg/día en 1-2 tomas; dosis de carga opcional 125 mg/kg/día 5 días." },
+      { id: "imepitoina", uso: "Cuadros leves (≥2 semanas entre crisis): 10-20 mg/kg c12h, hasta 30 mg/kg c12h." },
+      { id: "levetiracetam", uso: "Añadido en refractarios; tolerancia a los 4-6 meses. Crisis agudas repetitivas: 40-60 mg/kg inicial, luego 20 mg/kg c8h." },
+      { id: "zonisamida", uso: "Refractarios: 5 mg/kg c12h VO (10 mg/kg c12h si se combina con fenobarbital)." }
+    ]
+  },
+  {
+    id: "epilepsia-felina", nombre: "Epilepsia felina (control a largo plazo)", especie: "gato", capitulo: "Neurología",
+    farmacos: [
+      { id: "fenobarbital", uso: "Elección: 2,5 mg/kg c12h VO (empezar con 1-2 mg/kg para reducir sedación); niveles 15-30 mcg/mL." },
+      { id: "levetiracetam", uso: "Refractarios o contraindicación: 20 mg/kg c8h VO (sin tolerancia en gatos)." },
+      { id: "zonisamida", uso: "5-15 mg/kg VO c12-24h." }
+    ]
+  },
+  {
+    id: "crisis-convulsivas", nombre: "Crisis convulsivas urgentes / estatus epiléptico", especie: "ambas", capitulo: "Neurología",
+    farmacos: [
+      { id: "midazolam", uso: "Bolo IV 0,2-0,5 mg/kg (también intranasal 0,2-0,5 mg/kg); infusión continua 0,2-0,5 mg/kg/h." },
+      { id: "diazepam", uso: "IV lento 0,5-2 mg/kg; rectal 1-2 mg/kg (peor opción); infusión en perros 0,1-0,5 mg/kg/h." },
+      { id: "levetiracetam", uso: "Tras la benzodiacepina: 40-60 mg/kg IV, luego 20 mg/kg IV c6-8h." },
+      { id: "fenobarbital", uso: "IV lento: 2-3 mg/kg c12h; si no se controla, carga de 15-24 mg/kg en 24 h (4 dosis)." }
+    ]
+  },
+  {
+    id: "asma-felina", nombre: "Asma felina", especie: "gato", capitulo: "Neumología",
+    farmacos: [
+      { id: "dexametasona", uso: "Crisis: 0,25-2,5 mg/kg IV lento o IM." },
+      { id: "salbutamol", uso: "Inhalado: 100 mcg c12h; en crisis 100 mcg cada 30 min (máx. 8 inhalaciones). Solo en exacerbaciones." },
+      { id: "terbutalina", uso: "Broncoespasmo intenso: IV, IM o SC en la crisis." },
+      { id: "prednisolona", uso: "Mantenimiento: 1-2 mg/kg/día VO dividido en 2 tomas (hasta 3 mg/kg si no responde) 7-10 días y reducir a la dosis mínima." },
+      { id: "fluticasona", uso: "Inhalada: 250 mcg/inhalación c12h con cámara; tarda 10-14 días en actuar (asociar corticoide oral 2 semanas)." },
+      { id: "ciproheptadina", uso: "Refractarios: 2-4 mg/gato c12h VO (4-7 días para valorar respuesta)." },
+      { id: "ciclosporina", uso: "Refractarios o con diabetes/fallo cardiaco: 3 mg/kg c12h VO (niveles 500-1.000 ng/mL)." }
+    ]
+  },
+  {
+    id: "bronquitis-cronica", nombre: "Bronquitis crónica canina", especie: "perro", capitulo: "Neumología",
+    farmacos: [
+      { id: "prednisona", uso: "Base del tratamiento: 0,5 mg/kg (o el doble) c12h 5-7 días; reducir a la mitad cada 10-15 días hasta la mínima eficaz." },
+      { id: "teofilina", uso: "Broncodilatador si no basta el corticoide: 10 mg/kg c12h VO (acción sostenida)." },
+      { id: "salbutamol", uso: "0,02 mg/kg VO c12h; si no mejora hasta 0,05 mg/kg c8-12h." },
+      { id: "doxiciclina", uso: "Solo si hay infección o exacerbación: 5 mg/kg c12h VO." }
+    ]
+  },
+  {
+    id: "colapso-traqueal", nombre: "Colapso traqueal (perro)", especie: "perro", capitulo: "Neumología",
+    farmacos: [
+      { id: "prednisona", uso: "Exacerbaciones: 1 mg/kg/día en 5-7 días, reduciendo en 2-3 semanas." },
+      { id: "teofilina", uso: "Acción sostenida 10 mg/kg VO c12h." },
+      { id: "butorfanol", uso: "Antitusígeno oral 0,55 mg/kg VO 2-4 veces al día." },
+      { id: "codeina", uso: "Antitusígeno: 0,5-2 mg/kg VO c8h." },
+      { id: "trazodona", uso: "Perros que se excitan: 5 mg/kg VO c12h." }
+    ]
+  },
+  {
+    id: "insuficiencia-cardiaca-canina", nombre: "Insuficiencia cardiaca congestiva crónica (perro)", especie: "perro", capitulo: "Cardiología",
+    farmacos: [
+      { id: "furosemida", uso: "1 mg/kg días alternos (leve) hasta 4 mg/kg c8h (grave) VO; edema agudo 2-4 mg/kg IV cada 1-2 h." },
+      { id: "torasemida", uso: "Alternativa/refractarios: 0,1-0,3 mg/kg VO c12-24h." },
+      { id: "espironolactona", uso: "Añadida en enfermedad avanzada: 0,5-2 mg/kg VO una o dos veces al día." },
+      { id: "benazepril", uso: "IECA: 0,25-0,50 mg/kg c24h." },
+      { id: "pimobendan", uso: "0,25 mg/kg VO c12h (0,15 mg/kg IV en insuficiencia aguda)." },
+      { id: "digoxina", uso: "Fibrilación atrial/taquiarritmias: 0,003-0,010 mg/kg c12h VO (máx. 0,25 mg/perro)." }
+    ]
+  },
+  {
+    id: "hipertiroidismo-felino", nombre: "Hipertiroidismo felino", especie: "gato", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "metimazol", uso: "2,5-5 mg/gato/día VO en 2 tomas; ajustar cada 2-4 semanas (hasta 10-15 mg/día)." },
+      { id: "propranolol", uso: "Complemento sintomático: 7,5-15 mg/gato/día VO en 3 tomas (no en asmáticos ni ICC)." },
+      { id: "atenolol", uso: "Alternativa: 0,25-1 mg/kg VO una o dos veces al día (o 6,25 mg/gato)." },
+      { id: "amlodipino", uso: "Hipertensión moderada-intensa: 0,625-1,25 mg/gato VO c24h." }
+    ]
+  },
+  {
+    id: "diabetes-canina", nombre: "Diabetes mellitus canina", especie: "perro", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "insulina-veterinaria-intermedia", uso: "Insulina zinc porcina (Caninsulin): inicio 0,25-0,50 UI/kg SC c12h, empezando por la dosis inferior." },
+      { id: "insulina-protamina-zinc", uso: "PZI (ProZinc): 0,25-0,50 UI/kg SC c12-24h; no de primera elección en recién diagnosticados." }
+    ]
+  },
+  {
+    id: "diabetes-felina", nombre: "Diabetes mellitus felina", especie: "gato", capitulo: "Endocrinología",
+    farmacos: [
+      { id: "insulina-glargina", uso: "Mejor opción actual: 0,5 UI/kg SC c12h." },
+      { id: "insulina-protamina-zinc", uso: "PZI: 0,2-0,5 UI/kg o 1-2 UI/gato SC c12h." },
+      { id: "glipizida", uso: "Solo gatos estables no cetósicos: 2,5 mg/gato VO c12h con la comida (hasta 5 mg)." },
+      { id: "velagliflozina", uso: "Inhibidor SGLT-2 (solución oral 15 mg/mL); vigilar vómitos, deshidratación y anorexia." }
+    ]
+  },
+  {
+    id: "prurito-alergico-canino", nombre: "Prurito alérgico / dermatitis atópica canina", especie: "perro", capitulo: "Dermatología",
+    farmacos: [
+      { id: "prednisolona", uso: "Agudo: 0,5-1,0 mg/kg VO c24h; luego días alternos y bajar a la mínima (seguro a largo plazo <0,25 mg/kg c48h)." },
+      { id: "oclacitinib", uso: "0,4-0,6 mg/kg VO c12h 2 semanas, después c24h." },
+      { id: "lokivetmab", uso: "Anticuerpo anti-IL-31: mínimo 1 mg/kg SC una vez al mes (UE)." },
+      { id: "ciclosporina", uso: "Largo plazo (tarda 3-4 semanas): 5 mg/kg VO c24h; espaciar según mejoría." }
+    ]
+  },
+  {
+    id: "itu-bacteriana", nombre: "Infección bacteriana del tracto urinario", especie: "ambas", capitulo: "Enfermedades urogenitales",
+    farmacos: [
+      { id: "amoxicilina", uso: "12-22 mg/kg VO c8-12h." },
+      { id: "amoxicilina-clavulanico", uso: "12-22 mg/kg VO c8-12h." },
+      { id: "cefalexina", uso: "15-30 mg/kg VO c12h." },
+      { id: "enrofloxacino", uso: "5 mg/kg VO/SC c24h (si el antibiograma lo requiere)." },
+      { id: "marbofloxacino", uso: "2 mg/kg VO/SC c24h (evitar si hay otra opción válida)." }
+    ]
+  }
 ];

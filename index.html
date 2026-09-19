@@ -28,6 +28,7 @@
     <nav class="tabs-principales">
       <button class="tab-principal activa" data-vista="calculadora">Calculadora</button>
       <button class="tab-principal" data-vista="protocolos">Protocolos</button>
+      <button class="tab-principal" data-vista="patologias">Por patología</button>
       <button class="tab-principal" data-vista="cri">CRI</button>
       <button class="tab-principal" data-vista="cimavet">Buscador CIMAVET y CIMA</button>
       <button class="tab-principal" data-vista="misfarmacos">Mi base de datos</button>
@@ -214,6 +215,19 @@
         biblioteca de literatura científica. Los fármacos y dosis que añadas tú mismo en "Mi base de datos" son
         responsabilidad tuya y se guardan solo en este dispositivo. Verifica siempre la dosis antes de administrar.
       </p>
+    </section>
+
+    <!-- ================= VISTA: FÁRMACOS POR PATOLOGÍA ================= -->
+    <section id="vista-patologias" class="vista oculto">
+      <div class="tarjeta">
+        <h2 class="titulo-tarjeta">Fármacos según patología</h2>
+        <p class="ayuda">Pautas resumidas de la Guía terapéutica del animal de compañía (ConsultaVet, 8ª ed.). Pulsa un fármaco para abrir su ficha y calcular la dosis con el peso del paciente. Lista en ampliación.</p>
+        <div class="campo">
+          <label for="patologia-busqueda">Buscar patología</label>
+          <input type="text" id="patologia-busqueda" placeholder="Ej. epilepsia, asma, diabetes..." autocomplete="off" />
+        </div>
+      </div>
+      <div id="patologias-lista"></div>
     </section>
 
     <!-- ================= VISTA: PROTOCOLOS ================= -->
