@@ -775,3 +775,14 @@ label[for="concentracion"] { margin-top: 4px; }
   flex: 1;
 }
 #comercial-cimavet-detalle:empty { display: none; }
+
+/* Impresión del resumen del paciente: solo se imprime el tratamiento prescrito */
+.solo-impresion { display: none; }
+@media print {
+  body * { visibility: hidden; }
+  #tarjeta-resumen, #tarjeta-resumen * { visibility: visible; }
+  #tarjeta-resumen { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: none; margin: 0; padding: 0; }
+  #tarjeta-resumen .boton-eliminar, #vaciar-resumen, #imprimir-resumen { display: none !important; }
+  #tarjeta-resumen .solo-impresion { display: block; }
+  .resumen-fila { break-inside: avoid; }
+}

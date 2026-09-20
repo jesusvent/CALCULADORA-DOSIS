@@ -1937,6 +1937,16 @@ function cajaCalculoDosisHtml(med, principioActivo, nombreCorto) {
     </details>`;
 }
 
+// Si la caja de cálculo está en la ficha de un fármaco de la base de datos, añade su vía y
+// frecuencia de referencia (ej. "VO · cada 8-12 h") para que aparezcan en el resumen del paciente.
+function pautaAdministracionCaja(caja) {
+  if (!caja.closest("#comercial-cimavet-detalle")) return "";
+  const datos = datosEspecieActiva();
+  if (!datos) return "";
+  const partes = [datos.via, datos.frecuencia].filter(Boolean);
+  return partes.length ? " · " + partes.join(" · ") : "";
+}
+
 function recalcularCajaDosis(inputEl) {
   const caja = inputEl.closest(".calculo-dosis-caja");
   if (!caja) return;
@@ -1963,7 +1973,7 @@ function recalcularCajaDosis(inputEl) {
       <div class="resultado-volumen">${formatNum(dosisTotalMg)} mg totales ÷ ${formatNum(valorAuto)} mg/comprimido = <strong>${texto}</strong></div>
       <button type="button" class="boton-anadir calculo-dosis-anadir">+ Añadir al paciente (${texto})</button>`;
     caja.dataset.dosisTexto = `${formatNum(dosisTotalMg)} mg totales (${formatNum(dosisMgKg)} mg/kg)`;
-    caja.dataset.detalle = `${texto} de ${nombreCorto}`;
+    caja.dataset.detalle = `${texto} de ${nombreCorto}${pautaAdministracionCaja(caja)}`;
     return;
   }
 
@@ -1980,7 +1990,7 @@ function recalcularCajaDosis(inputEl) {
     <div class="resultado-volumen">${formatNum(dosisTotalMg)} mg totales ÷ ${formatNum(concentracion)} mg/ml = <strong>${formatNum(ml)} ml</strong></div>
     <button type="button" class="boton-anadir calculo-dosis-anadir">+ Añadir al paciente (${formatNum(ml)} ml)</button>`;
   caja.dataset.dosisTexto = `${formatNum(dosisTotalMg)} mg totales (${formatNum(dosisMgKg)} mg/kg)`;
-  caja.dataset.detalle = `${formatNum(ml)} ml de ${nombreCorto}`;
+  caja.dataset.detalle = `${formatNum(ml)} ml de ${nombreCorto}${pautaAdministracionCaja(caja)}`;
 }
 
 document.addEventListener("input", (e) => {
@@ -2711,6 +2721,12 @@ function eliminarDelPaciente(id) {
   renderResumenPaciente();
 }
 
+const imprimirResumenBtn = document.getElementById("imprimir-resumen");
+imprimirResumenBtn.addEventListener("click", () => {
+  document.getElementById("resumen-fecha-impresion").textContent = "Tratamiento prescrito · " + new Date().toLocaleDateString("es-ES");
+  window.print();
+});
+
 vaciarResumenBtn.addEventListener("click", () => {
   listaPaciente = [];
   renderResumenPaciente();
@@ -2719,6 +2735,7 @@ vaciarResumenBtn.addEventListener("click", () => {
 function renderResumenPaciente() {
   resumenContadorEl.textContent = listaPaciente.length ? `(${listaPaciente.length})` : "";
   vaciarResumenBtn.classList.toggle("oculto", listaPaciente.length === 0);
+  imprimirResumenBtn.classList.toggle("oculto", listaPaciente.length === 0);
 
   if (!listaPaciente.length) {
     resumenListaEl.innerHTML = `<p class="placeholder">Todavía no has añadido ningún fármaco para este paciente.</p>`;

@@ -199,11 +199,13 @@
 
       <div id="comercial-cimavet-detalle" class="tarjeta"></div>
 
-      <div class="tarjeta">
+      <div class="tarjeta" id="tarjeta-resumen">
         <h2 class="titulo-tarjeta">Resumen del paciente <span id="resumen-contador" class="contador"></span></h2>
+        <p class="solo-impresion" id="resumen-fecha-impresion"></p>
         <div id="resumen-lista">
           <p class="placeholder">Todavía no has añadido ningún fármaco para este paciente.</p>
         </div>
+        <button id="imprimir-resumen" class="boton-primario oculto" type="button">🖨 Imprimir tratamiento</button>
         <button id="vaciar-resumen" class="boton-secundario oculto">Vaciar lista</button>
         <div id="interacciones-lista"></div>
       </div>
