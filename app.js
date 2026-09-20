@@ -1957,23 +1957,48 @@ function estadoTexto(estado) {
 // ============================================================
 let cajaCalculoDosisContador = 0;
 
+// Todas las concentraciones por ml que aparecen en el nombre (ej. "149 mg/ml (2 mEq/ml)" ->
+// mg y mEq), para poder indicar la dosis en cualquiera de esas unidades. Solo formas líquidas.
+function extraerConcentracionesMed(med) {
+  if (esFormaSolida(med)) return [];
+  const re = /(\d+(?:[.,]\d+)?)\s*(mEq|mmol|mg|mcg|µg|ug|UI|g)\s*\/\s*ml/gi;
+  const nombre = med.nombre || "";
+  const vistas = new Map();
+  let m;
+  while ((m = re.exec(nombre))) {
+    let u = m[2].toLowerCase();
+    u = u === "meq" ? "mEq" : u === "ui" ? "UI" : u === "µg" || u === "ug" ? "mcg" : u;
+    if (!vistas.has(u)) vistas.set(u, parseFloat(m[1].replace(",", ".")));
+  }
+  return [...vistas].map(([u, v]) => ({ u, v }));
+}
+
 function cajaCalculoDosisHtml(med, principioActivo, nombreCorto) {
   const id = ++cajaCalculoDosisContador;
   const p = extraerPresentacionMed(med);
-  const detectadoTexto = p
+  const concs = extraerConcentracionesMed(med);
+  const multi = concs.length > 1;
+  const detectadoTexto = multi
+    ? `Detectado en el nombre del producto: ${concs.map((c) => `${formatNum(c.v)} ${c.u}/ml`).join(" · ")}. Elige en qué unidad indicas la dosis.`
+    : p
     ? `Detectado en el nombre del producto: ${etiquetaPresentacion(p)}.`
     : "No se ha podido detectar la concentración automáticamente en el nombre del producto — indícala tú abajo.";
-  const mostrarConcManual = !p || p.tipo === "liquido";
+  const mostrarConcManual = !multi && (!p || p.tipo === "liquido");
   return `
     <details class="calculo-dosis-detalle">
       <summary>🧮 Calcular dosis con este medicamento</summary>
-      <div class="calculo-dosis-caja" data-tipo="${p ? p.tipo : ""}" data-valor="${p ? p.valor : ""}" data-principio="${escapeHtml(principioActivo || "")}" data-nombre="${escapeHtml(nombreCorto || "")}">
+      <div class="calculo-dosis-caja" data-tipo="${p ? p.tipo : ""}" data-valor="${p ? p.valor : ""}" data-principio="${escapeHtml(principioActivo || "")}" data-nombre="${escapeHtml(nombreCorto || "")}" ${multi ? `data-concs="${encodeURIComponent(JSON.stringify(concs))}"` : ""}>
         <p class="ayuda">${detectadoTexto}</p>
         <div class="fila">
           <div class="campo">
-            <label for="calculo-dosis-valor-${id}">Dosis (mg/kg)</label>
+            <label for="calculo-dosis-valor-${id}">Dosis (${multi ? "por kg" : "mg/kg"})</label>
             <input type="number" id="calculo-dosis-valor-${id}" class="calculo-dosis-valor" min="0" step="any" placeholder="Ej. 5" />
           </div>
+          ${multi ? `
+          <div class="campo">
+            <label for="calculo-dosis-unidad-${id}">Unidad</label>
+            <select id="calculo-dosis-unidad-${id}" class="calculo-dosis-unidad">${concs.map((c) => `<option value="${escapeHtml(c.u)}">${escapeHtml(c.u)}/kg</option>`).join("")}</select>
+          </div>` : ""}
           ${mostrarConcManual ? `
           <div class="campo">
             <label for="calculo-dosis-conc-${id}">${p ? "Concentración (si prefieres indicarla tú)" : "Concentración (mg/ml)"}</label>
@@ -2014,6 +2039,19 @@ function recalcularCajaDosis(inputEl) {
   }
   const dosisTotalMg = dosisMgKg * paciente.peso;
 
+  if (caja.dataset.concs) {
+    const concs = JSON.parse(decodeURIComponent(caja.dataset.concs));
+    const u = caja.querySelector(".calculo-dosis-unidad").value;
+    const c = concs.find((x) => x.u === u) || concs[0];
+    const ml = dosisTotalMg / c.v;
+    resultadoEl.innerHTML = `
+      <div class="resultado-volumen">${formatNum(dosisTotalMg)} ${c.u} totales ÷ ${formatNum(c.v)} ${c.u}/ml = <strong>${formatNum(ml)} ml</strong></div>
+      <button type="button" class="boton-anadir calculo-dosis-anadir">+ Añadir al paciente (${formatNum(ml)} ml)</button>`;
+    caja.dataset.dosisTexto = `${formatNum(dosisTotalMg)} ${c.u} totales (${formatNum(dosisMgKg)} ${c.u}/kg)`;
+    caja.dataset.detalle = `${formatNum(ml)} ml de ${nombreCorto}${pautaAdministracionCaja(caja)}`;
+    return;
+  }
+
   if (tipo === "solido" && valorAuto) {
     const cantidad = dosisTotalMg / valorAuto;
     const texto = textoComprimidos(cantidad, cantidad);
@@ -2042,7 +2080,7 @@ function recalcularCajaDosis(inputEl) {
 }
 
 document.addEventListener("input", (e) => {
-  if (e.target.classList.contains("calculo-dosis-valor") || e.target.classList.contains("calculo-dosis-conc")) {
+  if (e.target.classList.contains("calculo-dosis-valor") || e.target.classList.contains("calculo-dosis-conc") || e.target.classList.contains("calculo-dosis-unidad")) {
     recalcularCajaDosis(e.target);
   }
 });
