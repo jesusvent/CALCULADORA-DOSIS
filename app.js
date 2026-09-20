@@ -200,6 +200,14 @@ const cimavetResultadoGeneralEl = document.getElementById("cimavet-resultado-gen
 // ============================================================
 // Fármacos según patología (PATOLOGIAS, en data.js)
 // ============================================================
+const patologiasAbiertas = new Set();
+document.getElementById("patologias-lista").addEventListener("click", (e) => {
+  const s = e.target.closest("summary");
+  const d = s && s.parentElement;
+  if (!d || !d.dataset.id) return;
+  setTimeout(() => { if (d.open) patologiasAbiertas.add(d.dataset.id); else patologiasAbiertas.delete(d.dataset.id); }, 0);
+});
+
 function renderPatologias() {
   const q = normalizar(document.getElementById("patologia-busqueda").value.trim());
   const lista = PATOLOGIAS.filter((p) => !q || normalizar(p.nombre + " " + p.capitulo + " " + p.farmacos.map((f) => f.nombre || f.id).join(" ")).includes(q));
@@ -207,7 +215,7 @@ function renderPatologias() {
   if (!lista.length) { el.innerHTML = `<div class="tarjeta"><p class="placeholder">Ninguna patología coincide con la búsqueda.</p></div>`; return; }
   el.innerHTML = lista.map((p) => `
     <div class="tarjeta">
-      <details ${q ? "open" : ""}>
+      <details data-id="${escapeHtml(p.id)}" ${q || patologiasAbiertas.has(p.id) ? "open" : ""}>
         <summary><strong>${escapeHtml(p.nombre)}</strong> <span class="badge-humano">Guía terapéutica ConsultaVet</span> <span class="ayuda">· ${escapeHtml(p.capitulo)} · ${p.especie === "ambas" ? "perro y gato" : escapeHtml(p.especie)}</span></summary>
         ${p.farmacos.map((f) => {
           const d = f.id ? DRUGS.find((x) => x.id === f.id) : null;
