@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-19T18:20:31";
-const VERSION_BD = 25;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-20T23:17:44";
+const VERSION_BD = 26;
 
 const DRUGS = [
   {
@@ -8133,3 +8133,358 @@ PATOLOGIAS.push(
     ]
   }
 );
+
+// ---- Tratamientos no calculables por peso (tópicos, dietas, nutracéuticos, protocolos, medidas de soporte) ----
+// Se añaden a las patologías existentes con apoyo:true, o como patologías nuevas. Fuente: guía ConsultaVet.
+function PAT_MAS(id, items) {
+  const p = PATOLOGIAS.find((x) => x.id === id);
+  if (p) items.forEach((i) => p.farmacos.push(Object.assign({ apoyo: !i.id }, i)));
+}
+const PA = (nombre, uso) => ({ nombre, uso, apoyo: true });
+
+PAT_MAS("prurito-alergico-canino", [
+  { nombre: "Dieta de eliminación (proteínas hidrolizadas)", uso: "Hill's z/d, Royal Canin Anallergenic/Hypoallergenic, Purina HA, etc.; única opción en la fase de diagnóstico de reacción adversa a alimentos." },
+  { nombre: "Champús / baños con clorhexidina 2-4%", uso: "Control de sobrecrecimientos bacterianos/levaduras en recaídas; champús hidratantes semanales con ceramidas (CeraVe, Cetaphil Restoraderm, Curél, Eucerin) como coadyuvante." },
+  { nombre: "Glucocorticoides tópicos (aceponato de hidrocortisona, metilprednisolona)", uso: "Diarios 2-4 semanas para remitir lesiones localizadas; terapia proactiva: 2 días consecutivos a la semana en piel previamente lesionada." },
+  { nombre: "Tacrolimús 0,1% tópico", uso: "Dos veces al día en lesiones localizadas." },
+  { id: "palmitoiletanolamida", uso: "10 mg/kg/día VO en perros atópicos con prurito moderado." },
+  { nombre: "Ácidos grasos omega-3", uso: "60-75 mg/kg/día de EPA + DHA (o piensos enriquecidos)." },
+  { nombre: "Otros tópicos y probióticos", uso: "Antagonista TRPV1 en aerosol (Travaderm) y aerosol de lactobacilos (Linkskin)." },
+  { nombre: "Inmunoterapia alérgeno-específica (desensibilización)", uso: "Opción a largo plazo." },
+  { id: "ilunocitinib", uso: "Inhibidor JAK de próxima comercialización; puede interferir con las vacunas (evitar un mes tras la vacunación y 1-3 meses antes)." }
+]);
+PATOLOGIAS.push({
+  id: "prurito-alergico-felino", nombre: "Prurito alérgico felino", especie: "gato", capitulo: "Dermatología",
+  farmacos: [
+    { id: "prednisolona", uso: "Los corticoides orales (prednisolona o metilprednisolona; dosis de inducción el doble que en perros) y la ciclosporina son los únicos con evidencia razonable. Prednisona no recomendada (algunos gatos no la metabolizan)." },
+    { id: "dexametasona", uso: "Si a la semana no hay control: 0,2 mg/kg VO c24h; después c48h y la mínima dosis eficaz." },
+    { id: "ciclosporina", uso: "Dosis inicial 7 mg/kg VO c24h; comprobar antes FeLV/FIV y toxoplasma negativos." },
+    { id: "maropitant", uso: "Procesos agudos si no se pueden usar corticoides: 2,2 mg/kg VO c24h." },
+    { id: "oclacitinib", uso: "Uso no autorizado en gatos: 0,7-1,2 mg/kg VO c12h, solo si los corticoides están contraindicados." },
+    { id: "metilprednisolona", uso: "Depósito (acetato): 4-5 mg/kg SC/IM cada 3-4 meses (último recurso)." },
+    { id: "triamcinolona-acetonido-depot", uso: "5 mg/gato SC/IM cada 3-4 meses." },
+    PA("Palmitoiletanolamida", "15 mg/kg/día en gatos (ensayada).")
+  ]
+});
+PAT_MAS("pioderma-canina", [
+  PA("Baños antisépticos", "Clorhexidina 2-4% (elección; activa también contra Malassezia) o peróxido de benzoilo 2,5% (limpieza folicular, muy secante: combinar con hidratantes). 2-3 baños semanales en superficiales; diario en profundas y reducir según mejoría."),
+  PA("Antibióticos tópicos", "Ácido fusídico o clindamicina (acné canino, forunculosis) y peróxido de benzoilo 2,5-5% o tretinoína; astringentes 2-3 veces al día en dermatitis aguda húmeda; glucocorticoide + antibiótico tópicos en intertrigo."),
+  PA("Estafilococos multirresistentes (medidas tópicas)", "Baños con antisépticos, ácido fusídico o sulfadiazina de plata; solución de lejía casera 5% de hipoclorito diluida (30 mL por litro de agua) recién preparada, sin aclarar.")
+]);
+PAT_MAS("micosis-cutaneas", [
+  PA("Sulfuro de cal 3-6% (baños)", "Producto más eficaz en dermatofitosis, con efecto residual: 1-2 veces por semana, sin aclarar. Recortar el pelo largo y continuar hasta cultivos negativos."),
+  PA("Malassezia (tópico)", "Clorhexidina 2-4% con o sin miconazol 2%; champús antiseborreicos desengrasantes; en lesiones localizadas imidazol tópico (miconazol) 2 veces al día o terbinafina tópica."),
+  PA("Desinfección ambiental", "Lejía al 1% (decolora), peróxido de hidrógeno acelerado (Oxivir H+) o desinfectantes con eficacia frente a Trichophyton.")
+]);
+PAT_MAS("trastornos-queratinizacion", [
+  PA("Champús / lociones", "Escamas ligeras: humectantes/emolientes (ácidos grasos linoleico y gammalinolénico); escamas intensas: azufre + ácido salicílico; muy grasos: peróxido de benzoilo; fitoesfingosina y gluconato de zinc en seborrea seca o grasa. Baños 2-3 veces/semana al inicio y luego espaciar."),
+  PA("Tretinoína tópica", "Lesiones localizadas, acné e hiperplasia de la glándula caudal: 0,05% en perros y 0,010-0,025% en gatos, cada 12 h y luego según se requiera."),
+  PA("Hiperqueratosis nasal idiopática", "Aplicación diaria de bálsamo específico (Dermoscent Bio Balm).")
+]);
+PAT_MAS("otitis-externa", [
+  PA("Limpieza del oído", "Membrana rota o desconocida: suero fisiológico o ácido acético 2%. Exudado purulento: clorhexidina 0,05-0,20%, povidona yodada 0,1% o secantes (ácido salicílico/bórico, isopropanol); ceruminolíticos (docusato sódico, propilenglicol, glicerina, escualeno) si exudado céreo. Mantenimiento en recurrentes: limpiador 2-4 veces al mes; Pseudomonas: ácido acético 2% 4 veces/semana."),
+  PA("Otológicos tópicos según el microorganismo", "Levaduras: miconazol; cocos: neomicina o polimixina B (el pus las inactiva) o framicetina/florfenicol/ácido fusídico; bacilos: gentamicina o fluoroquinolona; Pseudomonas: polimixina B, marbofloxacino, orbifloxacino, ciprofloxacino (o enrofloxacino 0,6%, marbofloxacino 0,2%, gentamicina 0,3%, amikacina 0,1%, ceftazidima 1,7% diluidas en limpiador con trisEDTA). Con membrana timpánica rota: fluoroquinolonas, ceftazidima y gentamicina inyectables."),
+  PA("Otitis alérgica recurrente", "0,44 mL de aceponato de hidrocortisona dos veces por semana."),
+  PA("Otodectes", "Tratamiento sistémico con antiparasitarios (puede haber ácaros fuera del conducto).")
+]);
+PAT_MAS("abscesos-cutaneos", [
+  PA("Manejo local", "Compresas tibias diarias, drenaje y limpieza con peróxido de hidrógeno y agua estéril a partes iguales o suero fisiológico, después clorhexidina 0,05-0,10% o povidona yodada 1%; desbridar tejido necrótico. Sin antibiótico salvo signos sistémicos, fiebre o afectación tisular difusa.")
+]);
+PAT_MAS("dermatitis-inmunomediadas", [
+  PA("Glucocorticoides tópicos", "Pénfigo focal y lupus discoide: moléculas de alta actividad 1-2 veces al día hasta controlar; después de menor actividad cada 2-3 días."),
+  PA("Tacrolimús 0,1% tópico", "Dos veces al día en lupus eritematoso discoide y pénfigo focal.")
+]);
+PAT_MAS("ectoparasitos-sarna-pulicosis", [
+  PA("Control de pulgas", "Adulticida + regulador del crecimiento (metopreno, piriproxifeno) en el ambiente; aspirar tapicerías. Nitenpiram (acción inmediata, sin residual), dinotefuran (mata por contacto), selamectina/isoxazolinas."),
+  PA("Ambiente en sarna y pulicosis", "Insecticidas piretrinas-piretroides; fipronil, piretroides o isoxazolinas para garrapatas; pipetas de permetrina en la mosca del establo; pediculosis: fipronil, baños o ivermectina 0,3 mg/kg SC; miasis: nitenpiram; Neotrombicula: fipronil (gatos) o selamectina/sarolaner (perros).")
+]);
+PATOLOGIAS.push({
+  id: "mastocitoma", nombre: "Mastocitomas cutáneos", especie: "perro", capitulo: "Dermatología",
+  farmacos: [
+    { id: "masitinib", uso: "Inhibidor de tirosina cinasa: mastocitomas de grado 2-3." },
+    { id: "toceranib", uso: "Inhibidor de tirosina cinasa: mastocitomas de grado 2-3." },
+    { id: "tigilanol-tiglato", uso: "Mastocitomas (sub)cutáneos irresecables y no metastásicos: dosis intratumoral según volumen." },
+    PA("Miel tópica", "Para el tratamiento de úlceras.")
+  ]
+});
+
+PAT_MAS("insuficiencia-cardiaca-canina", [
+  PA("Dieta y suplementos", "Dieta moderadamente restringida en sodio (≈30 mg/kg/día); omega-3: EPA 30-40 mg/kg/día y DHA 20-25 mg/kg/día; triglicéridos de cadena media; vitamina E, magnesio; L-carnitina 1-2 g VO 2-3 veces al día si hay carencia; taurina 500-1.000 mg c12h en cocker con MCD."),
+  PA("Nitroglicerina en pomada 2%", "1-4 cm en la piel interior del pabellón auricular o cara interna del muslo, 1-2 veces al día (edema pulmonar refractario; a la hora de acostarse en casa)."),
+  PA("Oxigenoterapia y reposo", "Jaula de oxígeno 6-10 L/min (concentraciones 50-100% no más de 24 h); reducir el estrés; furosemida SC alternada con oral si se vuelve refractaria.")
+]);
+PAT_MAS("insuficiencia-cardiaca-aguda", [
+  PA("Oxigenoterapia", "Jaula con flujo de 6-10 L/min (mascarilla, catéter nasal o intubación si es necesario)."),
+  PA("Nitroglicerina en pomada", "Para redistribuir el volumen y aliviar el edema pulmonar."),
+  PA("Ansiolíticos", "Butorfanol 0,25 mg/kg IM; buprenorfina 0,0075-0,01 mg/kg + acepromazina 0,01-0,03 mg/kg IM/SC (perros); butorfanol 0,1-0,5 mg/kg + acepromazina 0,01-0,10 mg/kg IM (gatos); diazepam 2-5 mg IV (gatos) o 5-10 mg IV (perros).")
+]);
+
+PAT_MAS("hipertiroidismo-felino", [
+  PA("Carbimazol (no disponible en España)", "10 mg VO c24h si T4 total 50-100 nmol/L; 15 mg c24h si >100 nmol/L. La guía no recomienda su uso al no haber referencias con el preparado humano."),
+  PA("Dieta restringida en yodo", "Único alimento durante ~3 semanas; controles a las 4, 8 y 12 semanas."),
+  PA("Yodo radiactivo (I-131)", "Tratamiento de elección: dosis única ajustada a cada paciente; hospitalización aproximadamente una semana."),
+  PA("Tiroidectomía", "Estabilizar antes con tratamiento médico varias semanas.")
+]);
+PAT_MAS("diabetes-canina", [
+  PA("Insulinas de uso humano (excepcionalmente)", "Glargina U-300 (Toujeo) o degludec U-100 (Tresiba) en pacientes no controlables con las insulinas veterinarias."),
+  PA("Acarbosa (inhibidor de la alfa-glucosidasa)", "Puede reducir la dosis de insulina; la guía no indica una dosis concreta."),
+  PA("Dieta", "Hidratos de carbono complejos y lentos, poca grasa (<17% MS) y alto contenido en fibra; comida repartida en dos tomas antes de cada inyección.")
+]);
+PAT_MAS("diabetes-felina", [
+  PA("Dieta", "Alta en proteína y baja en hidratos de carbono; control del peso; ejercicio."),
+  PA("Remisión", "En gatos es posible la remisión; controlar la glucemia antes de cada inyección.")
+]);
+PAT_MAS("cetoacidosis-diabetica", [
+  PA("Fluidoterapia", "Solución no clorurada (Ringer lactato, Isofundin, Plasmalyte 148); 60-100 mL/kg/día IV, rehidratando en 24-48 h (75% del déficit en las primeras 24 h). Vigilar la diuresis."),
+  PA("Potasio y fosfato", "Reponer según los niveles tras iniciar la insulina; bicarbonato solo si es <11 mmol/L.")
+]);
+PAT_MAS("hipoadrenocorticismo-addison", [
+  PA("Fluidoterapia en la crisis", "Solución con menos cloro (Plasmalyte 148) 40-80 mL/kg/h IV la primera hora o dos; luego 30-50 mL/kg/día; evitar subir el sodio más de 10-12 mmol/L en 24 h."),
+  PA("Sal de mesa", "0,1 g/día en la dieta puede ayudar a mantener la natremia.")
+]);
+PATOLOGIAS.push({
+  id: "sobrepeso-obesidad", nombre: "Sobrepeso y obesidad", especie: "ambas", capitulo: "Endocrinología",
+  farmacos: [
+    PA("Dieta de prescripción veterinaria con energía restringida", "Para perder peso: 63 ± 10,2 kcal × peso ideal^0,75 al día en perros; 52 ± 4,9 kcal × peso ideal^0,711 en gatos. Pérdida semanal recomendada 1-2% (perros) y 0,5-1,0% (gatos); revisar cada 2-4 semanas."),
+    PA("Ejercicio", "Diario, ligero y de corta duración, aumentando de forma progresiva."),
+    PA("Farmacología", "No existe actualmente ningún tratamiento farmacológico registrado para el control del apetito.")
+  ]
+});
+
+PAT_MAS("enfermedad-renal-cronica", [
+  PA("Dieta renal", "Restricción de proteínas, fósforo y sodio (Hill's k/d, etc.); en gatos aumentar el aporte de potasio; ratio omega-6/omega-3 adecuada; antioxidantes (vitaminas E y C)."),
+  PA("Fluidoterapia subcutánea de mantenimiento", "Ringer lactato SC 75-125 mL/kg cada 24-72 h (gatos)."),
+  PA("Alimentación asistida", "Sondas nasoesofágicas, esofágicas, gástricas o yeyunales si hay anorexia marcada."),
+  PA("Células madre mesenquimales", "Terapia en investigación para protección y reparación renal.")
+]);
+PAT_MAS("urolitiasis", [
+  PA("Dieta (estruvita)", "Hill's s/d 3-4 meses en perros y gatos con urolitos infecciosos (1 mes en estériles); continuar 1 mes tras la disolución radiográfica; prevención con c/d."),
+  PA("Dieta (oxalato cálcico)", "No hay protocolos de disolución (hay que eliminarlos). Perros: w/d o u/d; gatos: k/d; más agua o dieta húmeda."),
+  PA("Dieta (urato y cistina)", "Hill's u/d (húmeda en cistina)."),
+  PA("Fosfato cálcico y sílice", "Sin disolución; corregir hipercalcemia/paratiroides; evitar dietas ricas en proteína vegetal y aumentar el consumo de agua.")
+]);
+PAT_MAS("sindrome-urologico-felino", [
+  PA("Medidas asociadas", "Descomprimir la vejiga (cistocentesis), fluidoterapia tras desobstruir, sonda permanente si hay atonía; reducir el estrés con feromonas; urocultivo cada 2-3 meses; aumentar la ingesta de agua (gelatinas Purina Hydra Care) y dieta húmeda.")
+]);
+PATOLOGIAS.push({
+  id: "balanopostitis", nombre: "Balanopostitis", especie: "perro", capitulo: "Enfermedades urogenitales",
+  farmacos: [
+    PA("Lavado con clorhexidina 5%", "De la cavidad prepucial y escarificación de pápulas."),
+    PA("Pomada antimicrobiana", "En la cavidad prepucial durante varios días.")
+  ]
+});
+PAT_MAS("hiperplasia-endometrial-piometra", [
+  PA("Ovariohisterectomía", "Tratamiento de elección; el tratamiento médico solo en piómetra de cuello abierto y escasos signos de enfermedad sistémica, informando de recidivas.")
+]);
+
+PAT_MAS("crisis-convulsivas", [
+  { nombre: "Glucosa (hipoglucemia)", uso: "Perros y gatos: bolo lento IV de 0,5 g/kg de glucosa hipertónica y perfusión al 2,5-5%; en cachorros 1-3 mL de glucosa al 50% VO; antes 25-50 mg de tiamina IM.", apoyo: true },
+  { nombre: "Calcio (hipocalcemia)", uso: "5-15 mg/kg de calcio IV lento en unos 15 min (0,5-1,5 mL/kg de gluconato cálcico 10%).", apoyo: true },
+  { id: "propofol", uso: "Refractarias: bolo IV lento 1-6 mg/kg y luego infusión 0,1-0,6 mg/kg/min (con ventilación controlada)." },
+  { id: "ketamina", uso: "Refractarias: bolo IV 3-5 mg/kg seguido de perfusión creciente de 0,1-0,5 mg/kg/h." },
+  { id: "dexmedetomidina", uso: "Refractarias: bolo IV 0,5 mcg/kg y perfusión creciente de 0,5-3,0 mcg/kg/h." },
+  PA("Isoflurano", "Último recurso: anestesia inhalatoria.")
+]);
+PAT_MAS("epilepsia-canina", [
+  PA("Dieta con triglicéridos de cadena media", "Como complemento al tratamiento farmacológico reduce la frecuencia de crisis en 2 de cada 3 pacientes (Purina NC NeuroCare)."),
+  PA("Politerapia", "Si el fenobarbital no controla, añadir imepitoína o bromuro potásico; con bromuro >1,5 mg/mL reducir el fenobarbital un 25% al mes.")
+]);
+PAT_MAS("narcolepsia-disfuncion-cognitiva", [
+  PA("Nutracéuticos", "Fosfatidilserina y antioxidantes, S-adenosilmetionina, apoaequorina (Neutricks, no comercializado en España); dietas apropiadas (Hill's b/d, Purina One Vibrant Maturity 7+, Purina NC NeuroCare)."),
+  PA("Ansiedad secundaria", "Nutracéuticos a base de alfa-casozepina.")
+]);
+PAT_MAS("trastornos-comportamiento", [
+  PA("Feromona apaciguante canina", "Resultados similares a la clomipramina en ansiedad por separación; también feromonas felinas sintéticas (hasta 95% de éxitos) en eliminación inadecuada y alopecia psicógena."),
+  PA("Retirada de fármacos", "Mantener el tratamiento 1-2 meses tras lograr el objetivo y retirar gradualmente (−25% cada 1-2 semanas); los ISRS tardan 6-8 semanas en mostrar eficacia."),
+  PA("Castración y dietas hipoproteicas", "Ayuda en agresividad canina hacia personas.")
+]);
+PAT_MAS("dolor-cronico-artrosis", [
+  { id: "bedinvetmab", uso: "Anticuerpo monoclonal anti-NGF (perros): inyección SC que alivia el dolor al menos un mes." },
+  { id: "frunevetmab", uso: "Anticuerpo monoclonal anti-NGF (gatos): inyección SC mensual." },
+  PA("Nutracéuticos", "Omega-3 (EPA + DHA) 50-100 mg/kg/día; combinación de omega-3 con palmitoiletanolamida y curcumina (Glupacur) reduce la dosis necesaria de meloxicam. Glucosamina y condroitina: no se recomiendan."),
+  PA("Terapias intervencionistas", "Infiltraciones, bombas elastoméricas, técnicas perineurales/intraarticulares (corticoides, anestésicos locales, ácido hialurónico, factores de crecimiento, células madre, 117mSn)."),
+  PA("Fentanilo transdérmico (parches, no autorizado en veterinaria)", "Gatos y perros pequeños (<10 kg): 25 mcg/h; perros 10-20 kg: 50 mcg/h; 20-30 kg: 75 mcg/h; >30 kg: 100 mcg/h. Actúa 72 h (12-24 h en alcanzar niveles eficaces; en gatos 12 h de acción)."),
+  PA("Tratamiento multimodal", "Control del peso, ejercicio ligero y rehabilitación; en gatos con periostio afectado: gabapentina y amantadina.")
+]);
+PAT_MAS("dolor-agudo-perioperatorio", [
+  PA("Analgesia epidural (dosis, inicio y duración)", "Lidocaína 2%: 5 mg/kg, 0,25 mL/kg (inicio 4-6 min, 1 h). Mepivacaína 2%: 5 mg/kg, 0,25 mL/kg (4-6 min, 1-2 h). Bupivacaína 0,5%: 0,5-1,0 mg/kg, 0,20-0,25 mL/kg (5-15 min, >2 h). Morfina: 0,1 mg/kg, 0,1 mL/kg (0,25 para tórax) (45-90 min, 12-24 h). Con estricta asepsia; contraindicada con hipovolemia, coagulopatía, septicemia o infección lumbosacra."),
+  PA("Anestesia locorregional", "Epidural, plexo braquial y bloqueos regionales mejoran la analgesia y reducen la mortalidad perianestésica."),
+  PA("Escalas de dolor", "Valorar con Glasgow (perros) y UNESP-Botucatu/Glasgow abreviada (gatos).")
+]);
+PAT_MAS("analgesia-perfusion-continua", [
+  PA("Dosis de carga en 'triple gotero'", "Carga (sin usar la solución): fentanilo 3 mcg/kg + lidocaína 1 mg/kg + ketamina 0,5 mg/kg. Preparación en 250 mL de NaCl 0,9%: 12 mL fentanilo (50 mcg/mL) + 1,5 mL ketamina (100 mg/mL) + 18,8 mL lidocaína 2% a 1 mL/kg/h; variante con morfina o metadona 0,12 mg/kg/h.")
+]);
+PAT_MAS("anestesia-cardiopatas", [ PA("Agentes inhalatorios", "Isoflurano o sevoflurano; preoxigenar 10-15 min con mascarilla al 100%.") ]);
+PAT_MAS("anestesia-neonatos", [ PA("Inhalatorios", "Preoxigenar 5-10 min; inducción con mascarilla con isoflurano o sevoflurano; intubar (en el gato, insensibilizar las cuerdas vocales con 0,2 mL de lidocaína 2% o mepivacaína 2%). Evitar barbitúricos y alfa-2.") ]);
+PAT_MAS("anestesia-cesarea", [ PA("Inhalatorios", "Isoflurano o sevoflurano; preoxigenar 10-15 min; la CAM baja ~40% en gestantes.") ]);
+PAT_MAS("anestesia-renal-hepatica", [ PA("Inhalatorios y fluidos", "Isoflurano o sevoflurano vigilando la hipotensión; fluidoterapia pre-, intra- y posoperatoria; evitar fenotiazinas.") ]);
+PAT_MAS("anestesia-torsion-gastrica", [ PA("Estabilización previa", "Descomprimir el estómago (punción o sonda), oxígeno, varias vías y fluidos a dosis altas (60-90 mL/kg/h IV), corregir acidosis e hipocaliemia; no anestesiar hasta estabilizar; mantenimiento con isoflurano o sevoflurano.") ]);
+PAT_MAS("anestesia-traumatizados", [ PA("Estabilización y mantenimiento", "Vía aérea, oxígeno, fluidoterapia, dobutamina/dopamina y transfusión si procede; mantenimiento con isoflurano o sevoflurano.") ]);
+
+PAT_MAS("asma-felina", [
+  PA("Oxigenoterapia y broncodilatadores en crisis", "Oxígeno por el método menos estresante; broncodilatadores (terbutalina IV, IM o SC; salbutamol) para el broncoespasmo."),
+  PA("Corticoides de depósito", "Acetato de metilprednisolona 10-20 mg/gato SC cada 2-4 semanas, solo en gatos que no toleran la medicación oral (último recurso)."),
+  PA("Levalbuterol (Xopenex)", "Enantiómero R del salbutamol, especialidad extranjera de 45 mcg/pulsación."),
+  { id: "masitinib", uso: "Experimental: 50 mg/gato VO c24h durante 4 semanas (sin datos suficientes)." },
+  PA("Medidas ambientales e inmunoterapia", "Filtros HEPA, evitar humo/polvo/aerosoles, cambiar la cama; inmunoterapia alérgeno-específica como único tratamiento potencialmente curativo.")
+]);
+PAT_MAS("bronquitis-cronica", [
+  { id: "maropitant", uso: "Ensayo: 2 mg/kg cada 48 h durante 14 días (efecto antitusígeno; no recomendado como estrategia)." },
+  PA("Nebulización con suero salino estéril", "Una o dos veces al día para facilitar la eliminación de secreciones."),
+  PA("Corticoides inhalados", "Preferibles a la vía oral para minimizar efectos secundarios.")
+]);
+PAT_MAS("rinitis-aspergilosis-criptococosis", [
+  PA("Enilconazol (autorización suspendida)", "Infusión con catéteres permanentes, dos lavados diarios 7-10 días con solución al 5% (50 mg/mL), 5-10 mL (10 mg/kg) por fosa nasal; tasa de curación próxima al 90%."),
+  PA("Clotrimazol 1% tópico", "Infusión a través de tubos de sinusotomía durante 1 hora (o en crema); con tasas de curación cercanas al 90%; casos graves con tratamiento sistémico simultáneo.")
+]);
+PAT_MAS("rinitis-virica-felina", [
+  PA("Limpieza y humidificación", "Lavado nasal con salina bajo sedación, nebulización diaria, hidratación y alimentación; antibióticos de forma profiláctica si hay secreción mucopurulenta (preferir formas líquidas)."),
+  { id: "maropitant", uso: "Rinitis inflamatoria crónica (ensayo, sin estudios): dilución 1:9 (0,1 mL de maropitant hasta 1 mL con salino), 1 gota intranasal al día." }
+]);
+PAT_MAS("tos-mucoliticos", [
+  PA("Hidratación y humidificación", "Fluidoterapia, humidificadores y nebulización (15-30 min, varias veces al día, salino; N-acetilcisteína o aminoglucósidos nebulizados 50 mg en 3 mL de agua estéril, 10 min 2 veces al día 3 días)."),
+  PA("Oxigenoterapia y fisioterapia", "Oxígeno hasta que el animal esté estable sin él (jaula, sonda nasal, catéter transtraqueal, capucha); ejercicio moderado, cambios posturales y golpes de 'masaje' torácico para estimular la tos.")
+]);
+
+PAT_MAS("oft-queratitis", [
+  PA("Tratamiento de la úlcera", "Eliminar la causa (entropión, triquiasis, pestañas ectópicas); AINE tópicos o sistémicos (uveítis leve solo tópicos); clortetraciclina o acetilcisteína 2,5% cada 6-8 h como anticolagenasa; suero autólogo; lentes de contacto, membrana amniótica, colgajos de tercer párpado o conjuntiva. Los glucocorticoides están contraindicados mientras persista la úlcera."),
+  PA("Queratitis no ulcerativas", "Glucocorticoides tópicos 15-30 días; casos avanzados: subconjuntival 2-10 mg de triamcinolona o 5-40 mg de metilprednisolona, repetir cada 21-30 días.")
+]);
+PAT_MAS("oft-qcs-conjuntivitis", [
+  PA("Según el test de Schirmer", "5-10 mm: ciclosporina A + antibióticos; 2-5 mm: + lágrimas artificiales; 0-2 mm: + acetilcisteína y pilocarpina."),
+  PA("Conjuntivitis", "Antibióticos o antivirales tópicos según la causa, retirar costras, antibióticos sistémicos en casos intensos, glucocorticoides tópicos/sistémicos en alérgicas, collar isabelino; blefaritis: tratar la causa (ver dermatología).")
+]);
+PAT_MAS("oft-glaucoma", [
+  PA("Glaucoma crónico", "Inhibidores de la anhidrasa carbónica tópicos (dorzolamida, brinzolamida), betabloqueantes (betaxolol, timolol), parasimpaticomiméticos (bromuro de demecario 0,125-0,25%, Humorsol), simpaticomiméticos (dipivefrina) y prostaglandinas (latanoprost, bimatoprost, travoprost, latanoprosteno bunod). Medir la presión cada 24 h hasta normalizar, luego cada 72 h; retirar betabloqueante y prostaglandina si hay normotensión."),
+  PA("Antiinflamatorios", "Corticoides tópicos (prednisolona, betametasona, dexametasona) si hay inflamación intraocular.")
+]);
+PAT_MAS("oft-retinitis-inmunomediada", [ PA("Respuesta", "Las recaídas revierten en 1-2 días al volver a subir la dosis de esteroides; puede ser necesario tratamiento a largo plazo.") ]);
+PATOLOGIAS.push({
+  id: "oft-uveitis", nombre: "Uveítis", especie: "ambas", capitulo: "Oftalmología",
+  farmacos: [
+    { id: "atropina", uso: "Cicloplégico: previene la formación de sinequias." },
+    PA("Tratamiento etiológico", "Infecciones (perro: virus, hongos, bacterias, parásitos; gato: FIV, FeLV, PIF, herpes, toxoplasma, Cryptosporidium), úlceras, inmunomediadas, traumáticas."),
+    PA("Corticoides tópicos y sistémicos", "Si no hay úlcera corneal."),
+    PA("AINE tópicos y sistémicos", "Control de la inflamación crónica o uveítis asociada a úlceras."),
+    PA("Antibióticos tópicos y sistémicos", "Para controlar o prevenir infección por el aumento de permeabilidad.")
+  ]
+});
+
+PAT_MAS("choque-no-cardiogenico", [
+  PA("Deshidratación: vía de rehidratación", "Oral (rehidratantes) si es <8% del peso y sin vómitos; IV si >8% (4-6 h y luego oral/SC 48-96 h); intraósea en animales pequeños; SC solo con soluciones isotónicas no irritantes (KCl máx. 30-40 mmol/L)."),
+  PA("Volumen a administrar", "Mantenimiento adultos: (30 × peso kg) + 70 = mL/día; cachorros 8-12% del peso (perros <12 semanas) y 6-8% (gatos), más las pérdidas manifestadas."),
+  PA("Velocidades de perfusión", "Máxima segura: 90 mL/kg/h en perros y 55 mL/kg/h en gatos (choque); después 20-30 y luego 10 mL/kg/h; deshidratación grave 50 mL/kg/h (15-30 mL/kg/h si es menos grave); mantenimiento 2 mL/kg/h. Gotero adulto 20 gotas/mL, pediátrico 60 gotas/mL."),
+  PA("Solución según la situación", "Reemplazo: Ringer lactato, Isofundin; mantenimiento: SteroVet (o Ringer + glucosa 5% con 20 mmol/L de KCl); acidosis: Plasmalyte 148; alcalosis: NaCl 0,9% + 20-30 mmol/L KCl; hipernatremia >48 h: glucosalino; acidosis intensa por lesión renal: bicarbonato; en hiperlactatemia o insuficiencia hepática, Plasmalyte 148/Isofundin.")
+]);
+
+PATOLOGIAS.push(
+  {
+    id: "linfoma-wisconsin-perros", nombre: "Linfoma canino — protocolo 1 (Wisconsin-Madison, 25 semanas)", especie: "perro", capitulo: "Hematología y oncología",
+    farmacos: [
+      PA("Semana 1", "Prednisona 2 mg/kg VO c24h + vincristina 0,5-0,7 mg/m² IV."),
+      PA("Semana 2", "Prednisona 1,5 mg/kg + ciclofosfamida 250 mg/m² IV + furosemida 1 mg/kg IV (reduce la cistitis hemorrágica)."),
+      PA("Semana 3", "Prednisona 1 mg/kg + vincristina 0,5-0,7 mg/m² IV."),
+      PA("Semana 4", "Prednisona 0,5 mg/kg + doxorrubicina 30 mg/m² IV."),
+      PA("Semanas 6, 8, 11, 15, 19 y 23", "Vincristina 0,5-0,7 mg/m² IV."),
+      PA("Semanas 7, 13 y 21", "Ciclofosfamida 250 mg/m² IV + furosemida 1 mg/kg IV."),
+      PA("Semanas 9 (si remisión completa se salta a la 11), 17 y 25", "Doxorrubicina 30 mg/m² IV."),
+      PA("Semana 20", "Si hay remisión completa se detiene el tratamiento."),
+      PA("Cálculo", "Los fármacos se dosifican por superficie corporal (mg/m²): usar la tabla de conversión de la guía (m² = 10,1 × peso en g^⅔ / 10.000 en perros).")
+    ]
+  },
+  {
+    id: "linfoma-wisconsin-gatos", nombre: "Linfoma felino — protocolo 1 (Wisconsin-Madison)", especie: "gato", capitulo: "Hematología y oncología",
+    farmacos: [
+      PA("Semana 1", "Prednisona 2 mg/kg VO c24h + vincristina 0,5-0,7 mg/m² IV."),
+      PA("Semana 2", "Prednisona 2 mg/kg + ciclofosfamida 200 mg/m² IV."),
+      PA("Semana 3", "Prednisona 1 mg/kg + vincristina 0,5-0,7 mg/m² IV."),
+      PA("Semana 4", "Prednisona 1 mg/kg c48h hasta el final + doxorrubicina 25 mg/m² IV."),
+      PA("Semanas 6, 8, 11, 15, 19 y 23", "Vincristina 0,5-0,7 mg/m² IV."),
+      PA("Semanas 7, 13 y 21", "Ciclofosfamida 200 mg/m² IV. Si hay linfoma renal o afectación del SNC, desde la semana 7 sustituir por citarabina 600 mg/m² SC c12h 2 días."),
+      PA("Semanas 9 (si remisión completa se salta a la 11), 17 y 25", "Doxorrubicina 25 mg/m² IV."),
+      PA("Cálculo", "Dosis por superficie corporal (m² = peso en g^⅔ / 1.000 en gatos).")
+    ]
+  },
+  {
+    id: "linfoma-coap-mantenimiento", nombre: "Linfoma — protocolo 2 (COAP, intensificación, mantenimiento y reinducción)", especie: "ambas", capitulo: "Hematología y oncología",
+    farmacos: [
+      PA("Inducción (COAP, 6-10 semanas)", "Vincristina 0,5 mg/m² IV c7d; ciclofosfamida 50 mg/m² VO c48h (perros) o 200-300 mg/m² c3 semanas (gatos); prednisona 50 mg/m² VO c24h una semana y luego 20 mg/m² c48h; citarabina 100 mg/m² SC/IV c24h 2 días (gato) o 4 días (perro)."),
+      PA("Intensificación", "Perro: L-asparaginasa 10.000-20.000 UI/m² IM (1-2 dosis) o vincristina 0,5-0,7 mg/m² c1-2 semanas. Gato: doxorrubicina 1 mg/kg c3 semanas o mitoxantrona 4-6 mg/m² c3 semanas."),
+      PA("Mantenimiento", "Alternativa 1: repetir vincristina-ciclofosfamida-prednisona-citarabina semanal 6 semanas, luego cada 3 y cada 4 semanas. Alternativa 2: clorambucilo 20 mg/m² VO c14d + metotrexato 2,5 mg/m² VO c3-4d + prednisona 20 mg/m² c48h hasta recidiva."),
+      PA("Reinducción perros", "D-MAC (14 días): dexametasona 0,23 mg/kg VO/SC días 1 y 8; actinomicina D 0,75 mg/m² día 1; citarabina 200-300 mg/m² IV 4 h o SC día 1; melfalán 20 mg/m² VO día 8. AC (21 días): doxorrubicina 30 mg/m² (1 mg/kg si <10 kg) día 1 + ciclofosfamida 100-150 mg/m² VO días 15 y 16. ADIC: doxorrubicina + dacarbazina 700-1.000 mg/m² IV en 6-8 h. CHOP (21 días): ciclofosfamida 200-300 mg/m² VO día 10; doxorrubicina 30 mg/m² día 1; vincristina 0,75 mg/m² días 8 y 15; prednisona 20-25 mg/m² c48h."),
+      PA("Reinducción gatos", "MiC: mitoxantrona 4-6 mg/m² IV 4-6 h día 1 + ciclofosfamida 200-300 mg/m² VO días 10-11. AC: doxorrubicina 1 mg/kg día 1 + ciclofosfamida. MiCA: MiC + citarabina 200 mg/m² en la misma bolsa. CHOP: ciclofosfamida 200-300 mg/m² día 10; doxorrubicina 1 mg/kg día 1; vincristina 0,5 mg/m² días 8 y 15; prednisona 20-25 mg/m² c48h."),
+      PA("Linfoma intestinal felino de bajo grado", "Prednisolona 2 mg/kg c24h + clorambucilo 2 mg/gato c48h; supervivencias de 1,5-3 años."),
+      PA("Protocolos económicos (no recomendados)", "Prednisona 50 mg/m² c24h una semana y luego 25 mg/m² c48h; clorambucilo 20 mg/m² cada 2 semanas; lomustina 60-90 mg/m² c3 semanas en perros (10 mg totales en gatos); prednisona con clorambucilo o lomustina."),
+      PA("Verdinexor (Laverdia-CA1)", "Inhibidor de exportina-1 (autorización parcial FDA): opción paliativa en linfoma canino en lugar de prednisona.")
+    ]
+  }
+);
+PAT_MAS("anemia-trombocitopenia-inmunomediada", [
+  PA("Medidas de soporte", "Oxigenoterapia, fluidoterapia, transfusión de eritrocitos compatibles o plasma (contraindicada la transfusión de plaquetas en trombocitopenia inmunomediada); reposo y minimizar traumatismos; descartar antes causas infecciosas o neoplásicas.")
+]);
+
+PATOLOGIAS.push(
+  {
+    id: "enfermedad-periodontal-gingivoestomatitis", nombre: "Enfermedad periodontal y gingivoestomatitis crónica felina", especie: "ambas", capitulo: "Antiinfecciosos sistémicos",
+    farmacos: [
+      { id: "clindamicina", uso: "5,5-11,0 mg/kg VO c12h." },
+      { id: "doxiciclina", uso: "5 mg/kg VO c12h." },
+      { id: "metronidazol", uso: "10 mg/kg VO c12h, combinado o no con espiramicina." },
+      { id: "amoxicilina", uso: "Profilaxis de tratamiento periodontal: 20 mg/kg IM media hora antes." },
+      { id: "interferon-omega-felino", uso: "Gingivoestomatitis crónica: 100.000 U/gato en la mucosa oral c24h." }
+    ]
+  },
+  {
+    id: "diarrea-aguda-enteritis-cronica", nombre: "Diarrea aguda y enteritis crónica", especie: "ambas", capitulo: "Antiinfecciosos sistémicos",
+    farmacos: [
+      { id: "ampicilina", uso: "Diarrea aguda: 10-20 mg/kg IV c6-8h o 22 mg/kg VO c8-12h." },
+      { id: "enrofloxacino", uso: "Diarrea aguda 5 mg/kg SC/IV lento c24h; enteritis crónica (perros) 10-15 mg/kg VO c24h." },
+      { id: "metronidazol", uso: "Diarrea aguda 10-20 mg/kg IV c12h; enteritis crónica perros 10 mg/kg c12h, gatos 15 mg/kg c24h." },
+      { nombre: "Tilosina", uso: "Enteritis crónica (perros): 25 mg/kg VO c24h." },
+      { id: "hidroxicobalamina", uso: "Enteritis crónica felina: 300 mcg/gato IM cada 2 semanas (cobalamina)." }
+    ]
+  },
+  {
+    id: "colangitis-pancreatitis-hepatitis", nombre: "Colangitis neutrofílica y pancreatitis felinas; hepatitis crónica canina no asociada al cobre", especie: "ambas", capitulo: "Antiinfecciosos sistémicos",
+    farmacos: [
+      { id: "amoxicilina", uso: "10-20 mg/kg VO c12h." },
+      { id: "cefalexina", uso: "15 mg/kg VO c12h." },
+      { id: "cefazolina", uso: "15-30 mg/kg SC/IM/IV c8h." },
+      { id: "enrofloxacino", uso: "5 mg/kg VO c24h, combinado con metronidazol." },
+      { id: "metronidazol", uso: "7,5 mg/kg VO c12h, combinado con enrofloxacino." }
+    ]
+  },
+  {
+    id: "leptospirosis", nombre: "Leptospirosis (perro)", especie: "perro", capitulo: "Antiinfecciosos sistémicos",
+    farmacos: [
+      { id: "doxiciclina", uso: "5 mg/kg VO/IV c12h durante 2 semanas (eliminar el estado de portador)." },
+      { id: "ampicilina", uso: "Fase aguda: 20 mg/kg IV c6h." }
+    ]
+  }
+);
+
+// ---- Oftalmología: colirios y tópicos con pauta concreta ----
+PAT_MAS("oft-queratitis", [
+  { id: "atropina", uso: "Colirio 0,5-1,0%: 2-3 veces al día durante 2-3 días y luego 1-2 veces al día (dolor/ciclopléjico)." },
+  PA("Ciclopentolato (colirio)", "En queratoconjuntivitis seca, misma pauta que la atropina."),
+  PA("Tropicamida (colirio)", "Alternativa cicloplégica: 3-4 veces al día."),
+  { id: "neomicina-polimixina-oftalmica", uso: "Colirio poliantibiótico (neomicina, polimixina B, gramicidina) o fluoroquinolona tópica, elegidos según antibiograma; no usar gentamicina como primera opción." },
+  { id: "clortetraciclina-oftalmica", uso: "Anticolagenasa: colirio de clortetraciclina cada 6-8 h hasta que cure la úlcera." },
+  { id: "acetilcisteina-oftalmica", uso: "Anticolagenasa: colirio al 2,5% cada 6-8 h hasta que cure la úlcera." },
+  PA("Colirio antiviral", "En queratitis de origen vírico (herpesvirus felino), según el caso."),
+  PA("Ciclosporina A 0,2% / tacrolimús 0,03%", "Queratoconjuntivitis superficial crónica del pastor alemán: tratamiento tópico junto a glucocorticoides de por vida.")
+]);
+PAT_MAS("oft-qcs-conjuntivitis", [
+  { id: "acetilcisteina-oftalmica", uso: "Colirio de acetilcisteína: fluidifica el exceso de bridas mucosas." },
+  PA("Lágrimas artificiales / mucinas sintéticas", "Sustituyen la película precorneal (según Schirmer)."),
+  PA("Pilocarpina 1%", "Estimulante de la producción de lágrimas: colirio cada 8 h, o VO 2-5 gotas cada 8 h (suele ser poco eficaz)."),
+  PA("Ciclosporina A 0,2%", "Inhibe la autoinmunidad; efecto en 3-4 semanas. Alternativas dermatológicas: tacrolimús 0,03% y pimecrolimús 1% (solo en QCS que no responde a ciclosporina)."),
+  PA("Antibióticos tópicos", "Control de la infección secundaria en QCS y conjuntivitis bacterianas (estafilococos, clamidias).")
+]);
+PAT_MAS("oft-glaucoma", [
+  PA("Manitol 20% (glaucoma agudo)", "1,0-1,5 g/kg IV en 15-20 min para bajar la presión intraocular a <20 mmHg lo antes posible (ver ficha de manitol)."),
+  PA("Dorzolamida / brinzolamida (colirio)", "Inhibidores de la anhidrasa carbónica tópicos: se inicia con uno de ellos + betabloqueante + prostaglandina."),
+  PA("Betaxolol / timolol (colirio)", "Betabloqueantes adrenérgicos."),
+  PA("Latanoprost / bimatoprost / travoprost / latanoprosteno bunod", "Prostaglandinas tópicas (latanoprosteno bunod, especialidad extranjera Vyzulta)."),
+  PA("Bromuro de demecario 0,125-0,25%", "Parasimpaticomimético (especialidad extranjera Humorsol) y dipivefrina (simpaticomimético) si no se toleran o no se controla con lo anterior.")
+]);

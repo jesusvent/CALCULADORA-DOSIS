@@ -208,6 +208,19 @@ document.getElementById("patologias-lista").addEventListener("click", (e) => {
   setTimeout(() => { if (d.open) patologiasAbiertas.add(d.dataset.id); else patologiasAbiertas.delete(d.dataset.id); }, 0);
 });
 
+function filasFarmacosPatologia(items) {
+  return items.map((f) => {
+    const d = f.id ? DRUGS.find((x) => x.id === f.id) : null;
+    if (!d) {
+      const nombre = f.nombre || f.id;
+      const termino = (f.buscar || nombre.split(/\s[(—–]/)[0]).trim();
+      const buscable = !f.apoyo || nombre.length <= 45;
+      return `<div class="cimavet-fila"><strong>${escapeHtml(nombre)}</strong>${buscable ? ` <button type="button" class="boton-enlace boton-buscar-patologia" data-buscar="${escapeHtml(termino)}">🔎 Buscar en la calculadora</button>` : ""}<p class="notas">${escapeHtml(f.uso)}</p></div>`;
+    }
+    return `<div class="cimavet-fila"><button type="button" class="boton-enlace boton-farmaco-patologia" data-id="${escapeHtml(f.id)}">${escapeHtml(d.principioActivo)}</button><p class="notas">${escapeHtml(f.uso)}</p></div>`;
+  }).join("");
+}
+
 function renderPatologias() {
   const q = normalizar(document.getElementById("patologia-busqueda").value.trim());
   const lista = PATOLOGIAS.filter((p) => !q || normalizar(p.nombre + " " + p.capitulo + " " + p.farmacos.map((f) => f.nombre || f.id).join(" ")).includes(q));
@@ -217,17 +230,23 @@ function renderPatologias() {
     <div class="tarjeta">
       <details data-id="${escapeHtml(p.id)}" ${q || patologiasAbiertas.has(p.id) ? "open" : ""}>
         <summary><strong>${escapeHtml(p.nombre)}</strong> <span class="badge-humano">Guía terapéutica ConsultaVet</span> <span class="ayuda">· ${escapeHtml(p.capitulo)} · ${p.especie === "ambas" ? "perro y gato" : escapeHtml(p.especie)}</span></summary>
-        ${p.farmacos.map((f) => {
-          const d = f.id ? DRUGS.find((x) => x.id === f.id) : null;
-          if (!d) return `<div class="cimavet-fila"><strong>${escapeHtml(f.nombre || f.id)}</strong><p class="notas">${escapeHtml(f.uso)}</p></div>`;
-          return `<div class="cimavet-fila"><button type="button" class="boton-enlace boton-farmaco-patologia" data-id="${escapeHtml(f.id)}">${escapeHtml(d.principioActivo)}</button><p class="notas">${escapeHtml(f.uso)}</p></div>`;
-        }).join("")}
+        ${filasFarmacosPatologia(p.farmacos.filter((f) => !f.apoyo))}
+        ${p.farmacos.some((f) => f.apoyo) ? `<h4 class="subtitulo">Otros tratamientos (tópicos, dieta, nutracéuticos, protocolos y medidas de soporte — no se calculan por peso)</h4>${filasFarmacosPatologia(p.farmacos.filter((f) => f.apoyo))}` : ""}
         <p class="ayuda">Según guía terapéutica de ConsultaVet (Rejas López y cols., 8ª ed.).</p>
       </details>
     </div>`).join("");
 }
 document.getElementById("patologia-busqueda").addEventListener("input", renderPatologias);
 document.getElementById("patologias-lista").addEventListener("click", (e) => {
+  const busq = e.target.closest(".boton-buscar-patologia");
+  if (busq) {
+    document.querySelector('.tab-principal[data-vista="calculadora"]').click();
+    const inp = document.getElementById("busqueda");
+    inp.value = busq.dataset.buscar;
+    inp.dispatchEvent(new Event("input", { bubbles: true }));
+    inp.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
   const btn = e.target.closest(".boton-farmaco-patologia");
   if (!btn) return;
   const farmaco = DRUGS.find((x) => x.id === btn.dataset.id);
