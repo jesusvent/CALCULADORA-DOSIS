@@ -200,6 +200,33 @@ const cimavetResultadoGeneralEl = document.getElementById("cimavet-resultado-gen
 // ============================================================
 // Fármacos según patología (PATOLOGIAS, en data.js)
 // ============================================================
+// Indicaciones de la guía (por patología) para el fármaco buscado en la Calculadora, aunque no
+// tenga dosis por kg en la base de datos (ej. cloruro potásico).
+function renderGuiaFarmaco() {
+  const el = document.getElementById("guia-farmaco");
+  const texto = farmacoActivo ? farmacoActivo.principioActivo : inputBusqueda.value.trim();
+  const t = normalizar(texto);
+  if (t.length < 4) { el.classList.add("oculto"); el.innerHTML = ""; return; }
+  const filas = [];
+  for (const p of PATOLOGIAS) {
+    for (const f of p.farmacos) {
+      const d = f.id ? DRUGS.find((x) => x.id === f.id) : null;
+      const nombre = d ? d.principioActivo : (f.nombre || "");
+      const coincide = (farmacoActivo && f.id === farmacoActivo.id) || normalizar(nombre).includes(t);
+      if (coincide) filas.push({ p, f, sinCalculo: !d });
+    }
+  }
+  if (!filas.length) { el.classList.add("oculto"); el.innerHTML = ""; return; }
+  el.innerHTML = `
+    <details ${farmacoActivo ? "" : "open"}>
+      <summary><strong>Indicaciones en la guía terapéutica de ConsultaVet</strong> <span class="badge-humano">Guía terapéutica ConsultaVet</span> <span class="ayuda">· ${filas.length} indicación(es) por patología para "${escapeHtml(texto)}"</span></summary>
+      ${filas.map(({ p, f, sinCalculo }) => `<div class="cimavet-fila"><strong>${escapeHtml(p.nombre)}</strong> <span class="ayuda">· ${escapeHtml(p.capitulo)}${sinCalculo ? "" : ""}</span>${sinCalculo && f.nombre ? `<div class="ayuda">${escapeHtml(f.nombre)}</div>` : ""}<p class="notas">${escapeHtml(f.uso)}</p></div>`).join("")}
+      <p class="ayuda">Origen: Guía terapéutica del animal de compañía (ConsultaVet, Rejas López y cols., 8ª ed.). Información orientativa: verifica siempre la pauta.</p>
+    </details>`;
+  el.classList.remove("oculto");
+}
+inputBusqueda.addEventListener("input", renderGuiaFarmaco);
+
 const patologiasAbiertas = new Set();
 document.getElementById("patologias-lista").addEventListener("click", (e) => {
   const s = e.target.closest("summary");
@@ -378,6 +405,7 @@ function cerrarBusquedaFarmaco() {
   concentracionInput.value = "";
   dosisPersonalizadaValorInput.value = "";
   avisoNoEnBdEl.classList.add("oculto");
+  renderGuiaFarmaco();
 }
 
 // ============================================================
@@ -574,6 +602,7 @@ function seleccionarFarmaco(farmaco, terminoBuscado) {
 
   seccionFarmaco.classList.remove("oculto");
   actualizarFichaFarmaco();
+  renderGuiaFarmaco();
 
   // Un fármaco personalizado con una composición reconocible (ej. "200 mg/ml") ya trae su
   // propia concentración indicada por el usuario: se usa directamente esa, sin lanzar una
