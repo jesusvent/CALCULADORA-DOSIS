@@ -2628,6 +2628,21 @@ function normalizarConcentracionLiquida(match) {
   return { valor: valorBruto / 1000, unidad: "mg/ml" }; // mcg, µg, ug, microgramo(s)
 }
 
+// "250 mg/25 ml" (cantidad total en un volumen, ej. SEGURIL) = 10 mg/ml.
+const PATRON_CANTIDAD_EN_VOLUMEN = /(\d+(?:[.,]\d+)?)\s*(mg|mcg|[uµ]g|microgramos?|UI|g)\s*\/\s*(\d+(?:[.,]\d+)?)\s*ml/i;
+
+// Busca la concentración líquida en un texto: primero "X mg/ml" y, si no, "X mg/Y ml".
+function buscarConcentracionLiquida(texto) {
+  const m = PATRON_CONCENTRACION_LIQUIDA.exec(texto || "");
+  if (m) return normalizarConcentracionLiquida(m);
+  const v = PATRON_CANTIDAD_EN_VOLUMEN.exec(texto || "");
+  if (!v) return null;
+  const ml = parseFloat(v[3].replace(",", "."));
+  if (!ml) return null;
+  const n = normalizarConcentracionLiquida(v);
+  return { valor: n.valor / ml, unidad: n.unidad };
+}
+
 // A partir del match de PATRON_MG_COMPRIMIDO, devuelve el valor ya normalizado a mg
 // (convirtiendo gramos ×1000, ej. "2 g" -> 2000 mg por comprimido).
 function normalizarValorSolido(match) {
@@ -2652,9 +2667,9 @@ function extraerPresentacionMed(med) {
     if (!m) return null;
     return { tipo: "solido", valor: normalizarValorSolido(m), unidad: "mg/comprimido" };
   }
-  const m = PATRON_CONCENTRACION_LIQUIDA.exec(nombre);
-  if (!m) return null;
-  return { tipo: "liquido", ...normalizarConcentracionLiquida(m) };
+  const liq = buscarConcentracionLiquida(nombre);
+  if (!liq) return null;
+  return { tipo: "liquido", ...liq };
 }
 
 function etiquetaPresentacion(p) {
@@ -2667,9 +2682,9 @@ function etiquetaPresentacion(p) {
 // indica la concentración (p. ej. "BUTOMIDOR 10 mg/ml..."), se lee de ahí
 // aunque no se capturara al elegirlo en el desplegable.
 function extraerPresentacionDeTexto(nombre) {
-  const m = PATRON_CONCENTRACION_LIQUIDA.exec(nombre || "");
-  if (!m) return null;
-  return { tipo: "liquido", ...normalizarConcentracionLiquida(m) };
+  const liq = buscarConcentracionLiquida(nombre);
+  if (!liq) return null;
+  return { tipo: "liquido", ...liq };
 }
 
 // Extrae la presentación (líquida o en comprimido/cápsula) directamente del campo
@@ -2679,8 +2694,8 @@ function extraerPresentacionDeTexto(nombre) {
 // reconoce la forma sólida si el texto la menciona explícitamente.
 function extraerPresentacionDeComposicion(composicion) {
   if (!composicion) return null;
-  const mLiquido = PATRON_CONCENTRACION_LIQUIDA.exec(composicion);
-  if (mLiquido) return { tipo: "liquido", ...normalizarConcentracionLiquida(mLiquido) };
+  const liqComp = buscarConcentracionLiquida(composicion);
+  if (liqComp) return { tipo: "liquido", ...liqComp };
   if (/comprimid|c[aá]psula|tableta/i.test(composicion)) {
     const mSolido = PATRON_MG_COMPRIMIDO.exec(composicion);
     if (mSolido) return { tipo: "solido", valor: normalizarValorSolido(mSolido), unidad: "mg/comprimido" };
@@ -3953,7 +3968,7 @@ criBUnidadFarmacoSelect.addEventListener("change", () => { poblarUnidadesDosisCr
 // Al elegir un producto se detecta su concentración líquida (mg/ml o UI/ml) automáticamente;
 // las presentaciones sólidas (comprimidos/cápsulas) no sirven para una infusión IV, así que
 // en ese caso se avisa en vez de rellenar nada.
-function crearBuscadorFarmacoCri(nombreInput, sugerenciasEl, estadoEl, unidadFarmacoSelect, dosisUnidadSelect, concVialInput, recalcular) {
+function crearBuscadorFarmacoCri(nombreInput, sugerenciasEl, estadoEl, unidadFarmacoSelect, dosisUnidadSelect, concVialInput, recalcular, dosisValorInput, notasEl) {
   let debounceTimer = null;
   nombreInput.addEventListener("input", () => {
     clearTimeout(debounceTimer);
@@ -3964,15 +3979,52 @@ function crearBuscadorFarmacoCri(nombreInput, sugerenciasEl, estadoEl, unidadFar
       sugerenciasEl.classList.add("oculto");
       return;
     }
-    debounceTimer = setTimeout(() => buscarFarmacoParaCri(texto, { nombreInput, sugerenciasEl, estadoEl, unidadFarmacoSelect, dosisUnidadSelect, concVialInput, recalcular }), 400);
+    debounceTimer = setTimeout(() => buscarFarmacoParaCri(texto, { nombreInput, sugerenciasEl, estadoEl, unidadFarmacoSelect, dosisUnidadSelect, concVialInput, recalcular, dosisValorInput, notasEl }), 400);
   });
   nombreInput.addEventListener("focus", () => {
     if (sugerenciasEl.innerHTML && nombreInput.value.trim().length >= 3) sugerenciasEl.classList.remove("oculto");
   });
 }
 
+// Fármacos de la tabla de CRI (CRI_FARMACOS_UCI) cuyo principio activo coincide con el del producto
+// elegido (ej. SEGURIL -> furosemida).
+function pautasCriDeProducto(it) {
+  const tokens = normalizar(`${it.principio || ""} ${it.nombre || ""}`).split(/[^a-z0-9]+/).filter((w) => w.length >= 5 && !/^\d/.test(w));
+  const vistas = new Set();
+  const res = [];
+  for (const f of CRI_FARMACOS_UCI) {
+    const n = normalizar(f.nombre);
+    if (tokens.some((t) => n.includes(t)) && !vistas.has(f.nombre)) { vistas.add(f.nombre); res.push(f); }
+  }
+  return res;
+}
+
+// Sugiere la dosis de CRI de la guía para el producto elegido: rellena unidad, dosis (punto medio)
+// y notas, y lista el resto de pautas del mismo fármaco.
+function sugerirDosisCri(it, ctx) {
+  const { unidadFarmacoSelect, dosisUnidadSelect, dosisValorInput, notasEl, estadoEl } = ctx;
+  if (!dosisValorInput) return;
+  const pautas = pautasCriDeProducto(it);
+  if (!pautas.length) return;
+  const esp = paciente.especie;
+  const aplicable = (f) => f.dosis.ambas || f.dosis[esp];
+  const f = pautas.find(aplicable) || pautas[0];
+  const rango = f.dosis.ambas || f.dosis[esp] || f.dosis.perro || f.dosis.gato;
+  const unidadDetectada = it.presentacion && it.presentacion.tipo === "liquido" ? (it.presentacion.unidad === "UI/ml" ? "UI" : "mg") : null;
+  if (unidadDetectada && unidadDetectada !== f.unidadFarmaco) return;
+  unidadFarmacoSelect.value = f.unidadFarmaco;
+  poblarUnidadesDosisCri(unidadFarmacoSelect, dosisUnidadSelect);
+  dosisUnidadSelect.value = f.dosisUnidad;
+  dosisValorInput.value = (rango.min + rango.max) / 2;
+  const etiqueta = dosisUnidadSelect.selectedOptions[0].textContent;
+  const otras = pautas.filter((x) => x !== f).map((x) => x.nombre).join(", ");
+  const texto = `💡 Dosis de CRI sugerida (tabla de CRI, ${f.nombre}): ${formatNum(rango.min)}${rango.min === rango.max ? "" : "-" + formatNum(rango.max)} ${etiqueta}${rango.min === rango.max ? "" : " (se ha puesto el punto medio)"}. ${f.notas}${otras ? " Otras pautas: " + otras + "." : ""}`;
+  if (notasEl) notasEl.textContent = texto;
+  else estadoEl.textContent += ` ${texto}`;
+}
+
 async function buscarFarmacoParaCri(texto, ctx) {
-  const { nombreInput, sugerenciasEl, estadoEl, unidadFarmacoSelect, dosisUnidadSelect, concVialInput, recalcular } = ctx;
+  const { nombreInput, sugerenciasEl, estadoEl, unidadFarmacoSelect, dosisUnidadSelect, concVialInput, recalcular, dosisValorInput, notasEl } = ctx;
   sugerenciasEl.innerHTML = `<li class="sugerencia-info">Buscando en CIMAVET y CIMA...</li>`;
   sugerenciasEl.classList.remove("oculto");
 
@@ -3991,8 +4043,8 @@ async function buscarFarmacoParaCri(texto, ctx) {
   if (nombreInput.value.trim() !== texto) return; // el usuario ha seguido escribiendo mientras tanto
 
   let items = [
-    ...cimavetResultados.map((m) => ({ nombre: m.nombre, fuente: "cimavet", detalle: m.labtitular || "", presentacion: extraerPresentacionMed(m) })),
-    ...cimaResultados.map((m) => ({ nombre: m.nombre, fuente: "cima", detalle: m.labtitular || "", presentacion: extraerPresentacionMed(m) }))
+    ...cimavetResultados.map((m) => ({ nombre: m.nombre, fuente: "cimavet", detalle: m.labtitular || "", presentacion: extraerPresentacionMed(m), principio: m.pactivos || (m.principiosActivos || []).map((x) => x.nombre).join(" ") || "" })),
+    ...cimaResultados.map((m) => ({ nombre: m.nombre, fuente: "cima", detalle: m.labtitular || "", presentacion: extraerPresentacionMed(m), principio: (m.vtm && m.vtm.nombre) || "" }))
   ];
   items.sort((a, b) => (esFavoritoCri(b.nombre) ? 1 : 0) - (esFavoritoCri(a.nombre) ? 1 : 0));
 
@@ -4038,13 +4090,14 @@ async function buscarFarmacoParaCri(texto, ctx) {
       } else {
         estadoEl.textContent = `⚠ No se ha detectado una concentración líquida para "${it.nombre}"; indícala manualmente si conoces el vial inyectable.`;
       }
+      sugerirDosisCri(it, ctx);
       recalcular();
     });
   });
 }
 
-crearBuscadorFarmacoCri(criANombreInput, criASugerenciasEl, criAConcentracionEstadoEl, criAUnidadFarmacoSelect, criADosisUnidadSelect, criAConcVialInput, calcularCriA);
-crearBuscadorFarmacoCri(criBNombreInput, criBSugerenciasEl, criBConcentracionEstadoEl, criBUnidadFarmacoSelect, criBDosisUnidadSelect, criBConcVialInput, calcularCriB);
+crearBuscadorFarmacoCri(criANombreInput, criASugerenciasEl, criAConcentracionEstadoEl, criAUnidadFarmacoSelect, criADosisUnidadSelect, criAConcVialInput, calcularCriA, criADosisValorInput, null);
+crearBuscadorFarmacoCri(criBNombreInput, criBSugerenciasEl, criBConcentracionEstadoEl, criBUnidadFarmacoSelect, criBDosisUnidadSelect, criBConcVialInput, calcularCriB, criBDosisValorInput, null);
 
 document.addEventListener("click", (e) => {
   [criASugerenciasEl, criBSugerenciasEl, criCSugerenciasEl].forEach((ul) => {
@@ -4195,7 +4248,7 @@ criCUnidadFarmacoSelect.addEventListener("change", () => { poblarUnidadesDosisCr
 // El nombre del fármaco busca en vivo en CIMAVET/CIMA igual que en las calculadoras A y B,
 // para poder enlazar con un producto real y detectar su concentración automáticamente; el
 // desplegable de abajo es solo un atajo para precargar dosis/notas de la guía de CRI.
-crearBuscadorFarmacoCri(criCNombreInput, criCSugerenciasEl, criCConcentracionEstadoEl, criCUnidadFarmacoSelect, criCDosisUnidadSelect, criCConcVialInput, calcularCriC);
+crearBuscadorFarmacoCri(criCNombreInput, criCSugerenciasEl, criCConcentracionEstadoEl, criCUnidadFarmacoSelect, criCDosisUnidadSelect, criCConcVialInput, calcularCriC, criCDosisValorInput, criCFarmacoNotasEl);
 
 // Agrupa el desplegable por categoría (Analgesia, Vasopresores e inotropos...) para que sea
 // fácil de recorrer con ~35 fármacos.
