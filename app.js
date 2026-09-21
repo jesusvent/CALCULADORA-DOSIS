@@ -220,7 +220,11 @@ function renderGuiaFarmaco(textoOverride) {
   el.innerHTML = `
     <details ${farmacoActivo ? "" : "open"}>
       <summary><strong>Indicaciones en la guía terapéutica de ConsultaVet</strong> <span class="badge-humano">Guía terapéutica ConsultaVet</span> <span class="ayuda">· ${filas.length} indicación(es) por patología para "${escapeHtml(texto)}"</span></summary>
-      ${filas.map(({ p, f, sinCalculo }) => `<div class="cimavet-fila"><strong>${escapeHtml(p.nombre)}</strong> <span class="ayuda">· ${escapeHtml(p.capitulo)}${sinCalculo ? "" : ""}</span>${sinCalculo && f.nombre ? `<div class="ayuda">${escapeHtml(f.nombre)}</div>` : ""}<p class="notas">${escapeHtml(f.uso)}</p></div>`).join("")}
+      ${filas.map(({ p, f, sinCalculo }) => {
+        const dg = paciente.peso > 0 ? parseDosisGuia(f.uso, paciente.especie) : null;
+        const calc = dg ? (() => { const k = dg.unidad === "mcg/kg" ? 1 : 1; const a = dg.min * paciente.peso * k, b = dg.max * paciente.peso * k; const u = unidadTotal(dg.unidad); return `<div class="resultado-volumen">${paciente.peso} kg (${paciente.especie === "gato" ? "gato" : "perro"}) → <strong>${a === b ? formatNum(a) : formatNum(a) + " – " + formatNum(b)} ${u}</strong> (${dg.min === dg.max ? dg.min : dg.min + "–" + dg.max} ${dg.unidad})</div>`; })() : "";
+        return `<div class="cimavet-fila"><strong>${escapeHtml(p.nombre)}</strong> <span class="ayuda">· ${escapeHtml(p.capitulo)}</span>${sinCalculo && f.nombre ? `<div class="ayuda">${escapeHtml(f.nombre)}</div>` : ""}<p class="notas">${escapeHtml(f.uso)}</p>${calc}</div>`;
+      }).join("")}
       <p class="ayuda">Origen: Guía terapéutica del animal de compañía (ConsultaVet, Rejas López y cols., 8ª ed.). Información orientativa: verifica siempre la pauta.</p>
     </details>`;
   el.classList.remove("oculto");
@@ -1970,25 +1974,74 @@ function farmacoGuiaParaMed(med, principioActivo) {
 
 // Calcula y muestra, dentro de la caja de un producto, la dosis de referencia de la guía/base de
 // datos con el peso actual (mg totales y ml o comprimidos de ese producto concreto).
+// Entradas de la guía por patología (PATOLOGIAS) en las que figura un fármaco de la base de datos.
+function filasGuiaDeFarmaco(g) {
+  const filas = [];
+  for (const p of PATOLOGIAS) for (const f of p.farmacos) if (f.id === g.id) filas.push({ p, f });
+  return filas;
+}
+
+// Extrae del texto de la guía la dosis por kg de la especie del paciente (ej. "Perros 25-35 mg/kg ...;
+// gatos 25 mg/kg/día" -> gato: 25 mg/kg). Ignora las infusiones (mg/kg/h, mcg/kg/min).
+function parseDosisGuia(uso, especie) {
+  const otra = especie === "gato" ? /perros?/i : /gatos?/i;
+  const propia = especie === "gato" ? /^\s*gatos?/i : /^\s*perros?/i;
+  const segs = (uso || "").split(/;/);
+  let seg = segs.find((s) => propia.test(s));
+  if (!seg) {
+    if (otra.test(uso || "") && !/perros? y gatos|gatos? y perros?/i.test(uso || "")) return null;
+    seg = uso || "";
+  }
+  const re = /(\d+(?:[.,]\d+)?)(?:\s*[-–]\s*(\d+(?:[.,]\d+)?))?\s*(mg|mcg|UI)\s*\/\s*kg(?!\s*\/\s*(?:h|min))/i;
+  const m = re.exec(seg);
+  if (!m) return null;
+  const min = parseFloat(m[1].replace(",", "."));
+  const max = m[2] ? parseFloat(m[2].replace(",", ".")) : min;
+  return { min, max, unidad: `${m[3]}/kg`.replace(/^ui/i, "UI"), texto: seg.trim() };
+}
+
+// Dosis de referencia de un fármaco para la especie del paciente: primero la de la base de datos
+// y, si no hay dosis por kg para esa especie, la de la guía terapéutica de ConsultaVet por patología.
+function dosisReferenciaFarmaco(g) {
+  const db = g.especies[paciente.especie];
+  if (db && db.dosisMin != null && db.dosisMax != null) {
+    return { min: db.dosisMin, max: db.dosisMax, unidad: db.unidad, via: db.via, frecuencia: db.frecuencia, notas: db.notas, dosisMaxima: db.dosisMaxima, origen: "base de datos" };
+  }
+  for (const { p, f } of filasGuiaDeFarmaco(g)) {
+    const d = parseDosisGuia(f.uso, paciente.especie);
+    if (d) return { min: d.min, max: d.max, unidad: d.unidad, via: "", frecuencia: "", notas: f.uso, origen: "guía", patologia: p };
+  }
+  return db ? { fija: true, via: db.via, frecuencia: db.frecuencia, notas: db.notas, origen: "base de datos" } : null;
+}
+
 function actualizarGuiaCaja(caja) {
   const cont = caja.querySelector(".calculo-guia");
   if (!cont || !caja.dataset.guiaId) return;
   const g = DRUGS.find((d) => d.id === caja.dataset.guiaId);
-  const datos = g && g.especies[paciente.especie];
   delete caja.dataset.guiaTexto;
-  if (!datos) { cont.innerHTML = `<p class="ayuda">${escapeHtml(g ? g.principioActivo : "")}: sin pauta registrada para ${paciente.especie === "gato" ? "gatos" : "perros"} en la base de datos.</p>`; return; }
-  const rango = datos.dosisMin === datos.dosisMax ? `${datos.dosisMin}` : `${datos.dosisMin}–${datos.dosisMax}`;
-  let html = `<p><strong>Dosis de referencia de ${escapeHtml(g.principioActivo)}:</strong> ${datos.dosisMin != null ? `${rango} ${escapeHtml(datos.unidad)} · ` : ""}${escapeHtml(datos.via)} · ${escapeHtml(datos.frecuencia)}</p>`;
-  if (datos.notas) html += `<p class="ayuda">${escapeHtml(datos.notas)}</p>`;
-  if (!/ConsultaVet|CIMAVET|Fuente/i.test(datos.notas || "")) html += `<p class="ayuda">Fuente: base de datos de la calculadora (guía terapéutica de ConsultaVet y otras referencias; ver también las indicaciones por patología de la guía más arriba).</p>`;
+  const filasGuia = filasGuiaDeFarmaco(g);
+  const listaGuia = filasGuia.length
+    ? `<div class="ayuda"><strong>Guía terapéutica de ConsultaVet (por patología):</strong>${filasGuia.slice(0, 4).map(({ p, f }) => `<br>· ${escapeHtml(p.nombre)}: ${escapeHtml(f.uso)}`).join("")}</div>`
+    : "";
+  const d = dosisReferenciaFarmaco(g);
+  if (!d) { cont.innerHTML = `<p class="ayuda">${escapeHtml(g.principioActivo)}: sin dosis por kg registrada para ${paciente.especie === "gato" ? "gatos" : "perros"} en la base de datos ni en la guía.</p>${listaGuia}`; return; }
+  const rango = d.fija ? "" : (d.min === d.max ? `${d.min}` : `${d.min}–${d.max}`);
+  let html = `<p><strong>Dosis de referencia de ${escapeHtml(g.principioActivo)} (${paciente.especie === "gato" ? "gato" : "perro"}):</strong> ${rango ? `${rango} ${escapeHtml(d.unidad)}` : ""}${d.via ? ` · ${escapeHtml(d.via)}` : ""}${d.frecuencia ? ` · ${escapeHtml(d.frecuencia)}` : ""}</p>`;
+  if (d.origen === "guía") {
+    html += `<p class="ayuda">Sin dosis por kg en la base de datos para esta especie: tomada de la guía terapéutica de ConsultaVet — ${escapeHtml(d.patologia.nombre)} (${escapeHtml(d.patologia.capitulo)}): «${escapeHtml(d.notas)}»</p>`;
+  } else {
+    if (d.notas) html += `<p class="ayuda">${escapeHtml(d.notas)}</p>`;
+    if (!/ConsultaVet|CIMAVET|Fuente/i.test(d.notas || "")) html += `<p class="ayuda">Fuente: base de datos de la calculadora.</p>`;
+  }
+  html += listaGuia;
   const tipo = caja.dataset.tipo;
   const valor = caja.dataset.valor ? parseFloat(caja.dataset.valor) : null;
-  if (datos.dosisMin != null && datos.dosisMax != null && paciente.peso > 0) {
-    const f = datos.unidad === "mcg/kg" ? 1 / 1000 : 1;
-    const totMin = datos.dosisMin * paciente.peso, totMax = datos.dosisMax * paciente.peso;
-    const unidadTot = unidadTotal(datos.unidad);
+  if (!d.fija && paciente.peso > 0) {
+    const f = d.unidad === "mcg/kg" ? 1 / 1000 : 1;
+    const totMin = d.min * paciente.peso, totMax = d.max * paciente.peso;
+    const unidadTot = unidadTotal(d.unidad);
     let cantidad = null;
-    const baseOk = datos.unidad !== "UI/kg" || caja.dataset.unidadMl === "UI";
+    const baseOk = d.unidad !== "UI/kg" || caja.dataset.unidadMl === "UI";
     if (valor && baseOk) {
       const a = totMin * f / valor, b = totMax * f / valor;
       cantidad = tipo === "solido"
@@ -1997,10 +2050,12 @@ function actualizarGuiaCaja(caja) {
     }
     const totTxt = totMin === totMax ? `${formatNum(totMin)} ${unidadTot}` : `${formatNum(totMin)} – ${formatNum(totMax)} ${unidadTot}`;
     html += `<div class="resultado-volumen">${paciente.peso} kg → <strong>${totTxt}</strong>${cantidad ? ` → <strong>${cantidad}</strong> de este producto` : ""}</div>`;
-    caja.dataset.guiaTexto = totTxt;
+    caja.dataset.guiaTexto = `${totTxt} (${rango} ${d.unidad})`;
     caja.dataset.guiaCantidad = cantidad || "";
-    if (cantidad) html += `<button type="button" class="boton-anadir calculo-guia-anadir">+ Añadir al paciente (${cantidad}, dosis de la guía)</button>`;
-  } else if (datos.dosisMin == null) {
+    caja.dataset.guiaViaFrec = [d.via, d.frecuencia].filter(Boolean).join(" · ");
+    caja.dataset.guiaOrigen = d.origen === "guía" ? "Dosis de la guía terapéutica ConsultaVet" : "Dosis de la base de datos";
+    if (cantidad) html += `<button type="button" class="boton-anadir calculo-guia-anadir">+ Añadir al paciente (${cantidad})</button>`;
+  } else if (d.fija) {
     html += `<p class="ayuda">Dosis fija por animal, no calculable por peso: ver la pauta indicada arriba.</p>`;
   } else {
     html += `<p class="placeholder">Introduce el peso del paciente para calcular la dosis.</p>`;
@@ -2018,14 +2073,13 @@ document.addEventListener("click", (e) => {
   if (!btn) return;
   const caja = btn.closest(".calculo-dosis-caja");
   const g = DRUGS.find((d) => d.id === caja.dataset.guiaId);
-  const datos = g.especies[paciente.especie];
   añadirAlPaciente({
     principioActivo: g.principioActivo,
     principioActivoReal: g.principioActivo,
     categoria: g.categoria,
-    dosisTexto: `${caja.dataset.guiaTexto} (${datos.dosisMin === datos.dosisMax ? datos.dosisMin : datos.dosisMin + "–" + datos.dosisMax} ${datos.unidad})`,
-    detalle: `${caja.dataset.guiaCantidad} de ${caja.dataset.nombre} · ${datos.via} · ${datos.frecuencia}`,
-    origen: "Dosis de la guía / base de datos"
+    dosisTexto: caja.dataset.guiaTexto,
+    detalle: `${caja.dataset.guiaCantidad} de ${caja.dataset.nombre}${caja.dataset.guiaViaFrec ? " · " + caja.dataset.guiaViaFrec : ""}`,
+    origen: caja.dataset.guiaOrigen || "Dosis de la base de datos"
   });
   btn.textContent = "✓ Añadido al resumen del paciente";
   btn.disabled = true;
