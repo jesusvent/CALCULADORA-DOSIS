@@ -252,12 +252,58 @@ function filasFarmacosPatologia(items) {
   }).join("");
 }
 
-function renderPatologias() {
-  const q = normalizar(document.getElementById("patologia-busqueda").value.trim());
-  const lista = PATOLOGIAS.filter((p) => !q || normalizar(p.nombre + " " + p.capitulo + " " + p.farmacos.map((f) => f.nombre || f.id).join(" ")).includes(q));
+// Principios activos obtenidos de CIMA/CIMAVET para el texto buscado (marcas comerciales no
+// incluidas en la base de datos), por texto normalizado.
+const principiosPatologiaCache = new Map();
+let patologiaBuscaTimer = null;
+
+// Términos por los que buscar un texto: él mismo + el principio activo de cualquier fármaco de la
+// base de datos que lo tenga como nombre comercial + los principios activos detectados en CIMA.
+function terminosBusquedaPatologia(q) {
+  const t = new Set([q]);
+  for (const d of DRUGS) {
+    if ((d.nombresComerciales || []).some((n) => normalizar(n).includes(q))) t.add(normalizar(d.principioActivo));
+  }
+  (principiosPatologiaCache.get(q) || []).forEach((p) => t.add(p));
+  return [...t];
+}
+
+function coincidePatologia(p, terminos) {
+  const bolsa = normalizar(p.nombre + " " + p.capitulo + " " + p.farmacos.map((f) => {
+    const d = f.id ? DRUGS.find((x) => x.id === f.id) : null;
+    return `${f.nombre || ""} ${f.id || ""} ${d ? d.principioActivo : ""}`;
+  }).join(" "));
+  return terminos.some((t) => t.length >= 3 && bolsa.includes(t));
+}
+
+async function buscarPrincipioPatologia(q, textoOriginal) {
+  try {
+    const [a, b] = await Promise.all([
+      buscarCimavet(textoOriginal, 15).catch(() => ({ resultados: [] })),
+      buscarCima(textoOriginal).catch(() => ({ resultados: [] }))
+    ]);
+    const nombres = new Set();
+    for (const m of (a.resultados || [])) String(m.pactivos || (m.principiosActivos || []).map((x) => x.nombre).join(" ")).split(/[,+]/).forEach((s) => s.trim() && nombres.add(normalizar(s.trim())));
+    for (const m of (b.resultados || [])) if (m.vtm && m.vtm.nombre) nombres.add(normalizar(m.vtm.nombre));
+    principiosPatologiaCache.set(q, [...nombres]);
+  } catch (e) { principiosPatologiaCache.set(q, []); }
+  if (normalizar(document.getElementById("patologia-busqueda").value.trim()) === q) renderPatologias(true);
+}
+
+function renderPatologias(desdeBusquedaOnline) {
+  const textoOriginal = document.getElementById("patologia-busqueda").value.trim();
+  const q = normalizar(textoOriginal);
+  const terminos = q ? terminosBusquedaPatologia(q) : [];
+  const lista = PATOLOGIAS.filter((p) => !q || coincidePatologia(p, terminos));
   const el = document.getElementById("patologias-lista");
-  if (!lista.length) { el.innerHTML = `<div class="tarjeta"><p class="placeholder">Ninguna patología coincide con la búsqueda.</p></div>`; return; }
-  el.innerHTML = lista.map((p) => `
+  if (q && q.length >= 3 && !principiosPatologiaCache.has(q) && desdeBusquedaOnline !== true) {
+    clearTimeout(patologiaBuscaTimer);
+    patologiaBuscaTimer = setTimeout(() => { if (!principiosPatologiaCache.has(q)) buscarPrincipioPatologia(q, textoOriginal); }, 500);
+  }
+  const extra = q ? (principiosPatologiaCache.get(q) || []) : [];
+  const avisoBusqueda = extra.length ? `<div class="tarjeta"><p class="ayuda">Buscado también por el principio activo detectado en CIMA/CIMAVET: <strong>${escapeHtml(extra.join(", "))}</strong>.</p></div>` : "";
+  if (!lista.length) { el.innerHTML = avisoBusqueda + `<div class="tarjeta"><p class="placeholder">${q && q.length >= 3 && !principiosPatologiaCache.has(q) ? "Buscando el principio activo en CIMA/CIMAVET..." : "Ninguna patología coincide con la búsqueda."}</p></div>`; return; }
+  el.innerHTML = avisoBusqueda + lista.map((p) => `
     <div class="tarjeta">
       <details data-id="${escapeHtml(p.id)}" ${q || patologiasAbiertas.has(p.id) ? "open" : ""}>
         <summary><strong>${escapeHtml(p.nombre)}</strong> <span class="badge-humano">Guía terapéutica ConsultaVet</span> <span class="ayuda">· ${escapeHtml(p.capitulo)} · ${p.especie === "ambas" ? "perro y gato" : escapeHtml(p.especie)}</span></summary>
