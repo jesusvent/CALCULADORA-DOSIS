@@ -202,9 +202,9 @@ const cimavetResultadoGeneralEl = document.getElementById("cimavet-resultado-gen
 // ============================================================
 // Indicaciones de la guía (por patología) para el fármaco buscado en la Calculadora, aunque no
 // tenga dosis por kg en la base de datos (ej. cloruro potásico).
-function renderGuiaFarmaco() {
+function renderGuiaFarmaco(textoOverride) {
   const el = document.getElementById("guia-farmaco");
-  const texto = farmacoActivo ? farmacoActivo.principioActivo : inputBusqueda.value.trim();
+  const texto = typeof textoOverride === "string" ? textoOverride : (farmacoActivo ? farmacoActivo.principioActivo : inputBusqueda.value.trim());
   const t = normalizar(texto);
   if (t.length < 4) { el.classList.add("oculto"); el.innerHTML = ""; return; }
   const filas = [];
@@ -1957,6 +1957,80 @@ function estadoTexto(estado) {
 // ============================================================
 let cajaCalculoDosisContador = 0;
 
+// Fármaco de la base de datos/guía cuyo principio activo coincide con el de un producto de
+// CIMA/CIMAVET (ej. "METAMIZOL MAGNESICO" -> "Metamizol"), para calcular con su dosis de referencia.
+function farmacoGuiaParaMed(med, principioActivo) {
+  const t = normalizar((med.vtm && med.vtm.nombre) || principioActivo || "");
+  if (t.length < 5) return null;
+  return DRUGS.find((d) => {
+    const n = normalizar(d.principioActivo);
+    return n.length >= 5 && (t.includes(n) || n.includes(t));
+  }) || null;
+}
+
+// Calcula y muestra, dentro de la caja de un producto, la dosis de referencia de la guía/base de
+// datos con el peso actual (mg totales y ml o comprimidos de ese producto concreto).
+function actualizarGuiaCaja(caja) {
+  const cont = caja.querySelector(".calculo-guia");
+  if (!cont || !caja.dataset.guiaId) return;
+  const g = DRUGS.find((d) => d.id === caja.dataset.guiaId);
+  const datos = g && g.especies[paciente.especie];
+  delete caja.dataset.guiaTexto;
+  if (!datos) { cont.innerHTML = `<p class="ayuda">${escapeHtml(g ? g.principioActivo : "")}: sin pauta registrada para ${paciente.especie === "gato" ? "gatos" : "perros"} en la base de datos.</p>`; return; }
+  const rango = datos.dosisMin === datos.dosisMax ? `${datos.dosisMin}` : `${datos.dosisMin}–${datos.dosisMax}`;
+  let html = `<p><strong>Dosis de referencia de ${escapeHtml(g.principioActivo)}:</strong> ${datos.dosisMin != null ? `${rango} ${escapeHtml(datos.unidad)} · ` : ""}${escapeHtml(datos.via)} · ${escapeHtml(datos.frecuencia)}</p>`;
+  if (datos.notas) html += `<p class="ayuda">${escapeHtml(datos.notas)}</p>`;
+  if (!/ConsultaVet|CIMAVET|Fuente/i.test(datos.notas || "")) html += `<p class="ayuda">Fuente: base de datos de la calculadora (guía terapéutica de ConsultaVet y otras referencias; ver también las indicaciones por patología de la guía más arriba).</p>`;
+  const tipo = caja.dataset.tipo;
+  const valor = caja.dataset.valor ? parseFloat(caja.dataset.valor) : null;
+  if (datos.dosisMin != null && datos.dosisMax != null && paciente.peso > 0) {
+    const f = datos.unidad === "mcg/kg" ? 1 / 1000 : 1;
+    const totMin = datos.dosisMin * paciente.peso, totMax = datos.dosisMax * paciente.peso;
+    const unidadTot = unidadTotal(datos.unidad);
+    let cantidad = null;
+    const baseOk = datos.unidad !== "UI/kg" || caja.dataset.unidadMl === "UI";
+    if (valor && baseOk) {
+      const a = totMin * f / valor, b = totMax * f / valor;
+      cantidad = tipo === "solido"
+        ? textoComprimidos(a, b)
+        : (a === b ? `${formatNum(a)} ml` : `${formatNum(a)} – ${formatNum(b)} ml`);
+    }
+    const totTxt = totMin === totMax ? `${formatNum(totMin)} ${unidadTot}` : `${formatNum(totMin)} – ${formatNum(totMax)} ${unidadTot}`;
+    html += `<div class="resultado-volumen">${paciente.peso} kg → <strong>${totTxt}</strong>${cantidad ? ` → <strong>${cantidad}</strong> de este producto` : ""}</div>`;
+    caja.dataset.guiaTexto = totTxt;
+    caja.dataset.guiaCantidad = cantidad || "";
+    if (cantidad) html += `<button type="button" class="boton-anadir calculo-guia-anadir">+ Añadir al paciente (${cantidad}, dosis de la guía)</button>`;
+  } else if (datos.dosisMin == null) {
+    html += `<p class="ayuda">Dosis fija por animal, no calculable por peso: ver la pauta indicada arriba.</p>`;
+  } else {
+    html += `<p class="placeholder">Introduce el peso del paciente para calcular la dosis.</p>`;
+  }
+  cont.innerHTML = html;
+}
+
+document.addEventListener("toggle", (e) => {
+  const c = e.target.querySelector && e.target.querySelector(".calculo-dosis-caja");
+  if (c && e.target.open) actualizarGuiaCaja(c);
+}, true);
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".calculo-guia-anadir");
+  if (!btn) return;
+  const caja = btn.closest(".calculo-dosis-caja");
+  const g = DRUGS.find((d) => d.id === caja.dataset.guiaId);
+  const datos = g.especies[paciente.especie];
+  añadirAlPaciente({
+    principioActivo: g.principioActivo,
+    principioActivoReal: g.principioActivo,
+    categoria: g.categoria,
+    dosisTexto: `${caja.dataset.guiaTexto} (${datos.dosisMin === datos.dosisMax ? datos.dosisMin : datos.dosisMin + "–" + datos.dosisMax} ${datos.unidad})`,
+    detalle: `${caja.dataset.guiaCantidad} de ${caja.dataset.nombre} · ${datos.via} · ${datos.frecuencia}`,
+    origen: "Dosis de la guía / base de datos"
+  });
+  btn.textContent = "✓ Añadido al resumen del paciente";
+  btn.disabled = true;
+});
+
 // Todas las concentraciones por ml que aparecen en el nombre (ej. "149 mg/ml (2 mEq/ml)" ->
 // mg y mEq), para poder indicar la dosis en cualquiera de esas unidades. Solo formas líquidas.
 function extraerConcentracionesMed(med) {
@@ -1984,10 +2058,12 @@ function cajaCalculoDosisHtml(med, principioActivo, nombreCorto) {
     ? `Detectado en el nombre del producto: ${etiquetaPresentacion(p)}.`
     : "No se ha podido detectar la concentración automáticamente en el nombre del producto — indícala tú abajo.";
   const mostrarConcManual = !multi && (!p || p.tipo === "liquido");
+  const guia = farmacoActivo ? null : farmacoGuiaParaMed(med, principioActivo);
   return `
-    <details class="calculo-dosis-detalle">
+    <details class="calculo-dosis-detalle"${guia ? " open" : ""}>
       <summary>🧮 Calcular dosis con este medicamento</summary>
-      <div class="calculo-dosis-caja" data-tipo="${p ? p.tipo : ""}" data-valor="${p ? p.valor : ""}" data-principio="${escapeHtml(principioActivo || "")}" data-nombre="${escapeHtml(nombreCorto || "")}" ${multi ? `data-concs="${encodeURIComponent(JSON.stringify(concs))}"` : ""}>
+      <div class="calculo-dosis-caja" data-tipo="${p ? p.tipo : ""}" data-valor="${p ? p.valor : ""}" data-principio="${escapeHtml(principioActivo || "")}" data-nombre="${escapeHtml(nombreCorto || "")}" ${guia ? `data-guia-id="${guia.id}" data-unidad-ml="${p && p.unidad === "UI/ml" ? "UI" : "mg"}"` : ""} ${multi ? `data-concs="${encodeURIComponent(JSON.stringify(concs))}"` : ""}>
+        ${guia ? `<div class="calculo-guia"></div>` : ""}
         <p class="ayuda">${detectadoTexto}</p>
         <div class="fila">
           <div class="campo">
@@ -2280,6 +2356,7 @@ async function buscarEnCimaComoRespaldo(texto, contenedorEl, principioActivo, no
     contenedorEl.innerHTML = `<p class="aviso-inline">⚠ "${escapeHtml(texto)}" no es un medicamento veterinario autorizado en España, pero sí existe como medicamento de uso humano en CIMA (${resultados.length} resultado(s)). Su uso en animales sería fuera de ficha técnica (off-label), bajo prescripción y responsabilidad del veterinario.</p>` +
       bibliografiaHtml +
       resultados.map((m) => filaCimaHtml(m, texto)).join("");
+    if (!farmacoActivo && principioActivoDetectado) renderGuiaFarmaco(principioActivoDetectado);
     if (!farmacoActivo) cargarBibliografiaPubMedParaTexto(terminoBibliografia, contenedorEl.querySelector(".bibliografia-busqueda-resultados"));
   } catch (err) {
     contenedorEl.innerHTML += `<p class="aviso-inline">⚠ No se ha podido conectar con CIMA (${escapeHtml(err.message)}).</p>`;
