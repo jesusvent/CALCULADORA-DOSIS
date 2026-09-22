@@ -306,10 +306,10 @@ function renderPatologias(desdeBusquedaOnline) {
   el.innerHTML = avisoBusqueda + lista.map((p) => `
     <div class="tarjeta">
       <details data-id="${escapeHtml(p.id)}" ${q || patologiasAbiertas.has(p.id) ? "open" : ""}>
-        <summary><strong>${escapeHtml(p.nombre)}</strong> <span class="badge-humano">Guía terapéutica ConsultaVet</span> <span class="ayuda">· ${escapeHtml(p.capitulo)} · ${p.especie === "ambas" ? "perro y gato" : escapeHtml(p.especie)}</span></summary>
+        <summary><strong>${escapeHtml(p.nombre)}</strong> <span class="badge-humano">${escapeHtml(p.fuente || "Guía terapéutica ConsultaVet")}</span> <span class="ayuda">· ${escapeHtml(p.capitulo)} · ${p.especie === "ambas" ? "perro y gato" : escapeHtml(p.especie)}</span></summary>
         ${filasFarmacosPatologia(p.farmacos.filter((f) => !f.apoyo))}
         ${p.farmacos.some((f) => f.apoyo) ? `<h4 class="subtitulo">Otros tratamientos (tópicos, dieta, nutracéuticos, protocolos y medidas de soporte — no se calculan por peso)</h4>${filasFarmacosPatologia(p.farmacos.filter((f) => f.apoyo))}` : ""}
-        <p class="ayuda">Según guía terapéutica de ConsultaVet (Rejas López y cols., 8ª ed.).</p>
+        <p class="ayuda">${p.fuenteTexto || "Según guía terapéutica de ConsultaVet (Rejas López y cols., 8ª ed.)."}</p>
       </details>
     </div>`).join("");
 }

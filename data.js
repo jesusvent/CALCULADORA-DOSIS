@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-20T23:17:44";
-const VERSION_BD = 26;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-22T09:45:48";
+const VERSION_BD = 27;
 
 const DRUGS = [
   {
@@ -8488,3 +8488,31 @@ PAT_MAS("oft-glaucoma", [
   PA("Latanoprost / bimatoprost / travoprost / latanoprosteno bunod", "Prostaglandinas tópicas (latanoprosteno bunod, especialidad extranjera Vyzulta)."),
   PA("Bromuro de demecario 0,125-0,25%", "Parasimpaticomimético (especialidad extranjera Humorsol) y dipivefrina (simpaticomimético) si no se toleran o no se controla con lo anterior.")
 ]);
+
+// ---- Gingivoestomatitis crónica felina (FCGS): protocolo de buenas prácticas de AniCura ----
+// Fuente distinta de la guía de ConsultaVet: "Buenas prácticas médicas — Gingivoestomatitis
+// crónica felina (FCGS)", AniCura (comité técnico Lisanne van der Hoek; veterinaria dental
+// Esther Soeteman, AniCura Países Bajos; actualizado el 2 de abril de 2025). El documento no
+// siempre da una dosis en mg/kg concreta (se ha dejado así, con la pauta descrita en el
+// protocolo) — completar/ajustar estas entradas con el criterio clínico y la ficha de cada
+// fármaco cuando corresponda.
+PATOLOGIAS.push({
+  id: "gingivoestomatitis-felina-anicura",
+  nombre: "Gingivoestomatitis crónica felina (FCGS) — protocolo AniCura",
+  especie: "gato",
+  capitulo: "Odontología (buenas prácticas AniCura)",
+  fuente: "AniCura — Buenas prácticas médicas",
+  fuenteTexto: "Fuente: AniCura, \"Buenas prácticas médicas — Gingivoestomatitis crónica felina (FCGS)\" (comité técnico Lisanne van der Hoek; veterinaria dental Esther Soeteman, AniCura Países Bajos; actualizado el 2 de abril de 2025). No es la guía terapéutica de ConsultaVet.",
+  farmacos: [
+    PA("Instrucciones generales (todas las etapas)", "1) Comenzar de inmediato con AINE y alimento que el paciente tolere mejor. 2) Extracciones dentales. 3) Limitar el uso de antibióticos: solo como medicamento de rescate si el gato deja de comer por hinchazón y dolor (la gingivitis aislada nunca es indicación de antibiótico), despliegue máximo de 2 semanas. 4) Ciclosporina, interferón y prednisolona son solo una opción DESPUÉS de las extracciones — antes están contraindicados."),
+    PA("AINE", "Se inicia de inmediato junto con la dieta que el paciente tolere mejor. — Fármaco y dosis concretos: (sin especificar en el protocolo; usar la ficha del AINE elegido)."),
+    PA("Antibiótico de rescate", "Solo si el gato no quiere comer por hinchazón/dolor tras la estomatitis grave (no indicado en gingivitis aislada); despliegue máximo de 2 semanas, según el último formulario. — Fármaco y dosis concretos: (sin especificar en el protocolo; elegir según cultivo/antibiograma si procede)."),
+    PA("Limpieza y extracciones dentales", "Limpieza y pulido dental por ultrasonidos bajo anestesia; radiografías de todos los elementos; extracción con control radiográfico (sin restos radiculares) de los elementos afectados (y de premolares/molares completos, o de toda la boca, en pacientes recurrentes o con estomatitis caudal). Comida húmeda/blanda los primeros 10 días; seguimiento a la semana y a las 4 semanas. Los gatos se declaran refractarios solo 6 meses después de la extracción."),
+    { id: "ciclosporina", uso: "Opción de tratamiento 2 en pacientes recurrentes (20-40% de los casos), solo tras las extracciones: empezar con la dosis inicial habitual; si la respuesta es insuficiente, puede ser necesario exceder la concentración habitual en sangre (mejor efecto con concentración sanguínea >300 ng/mL). Retirar progresivamente cuando sea posible. Con esta opción mejora/cura alrededor del 50% de los gatos." },
+    { id: "interferon-omega-felino", uso: "Opción de tratamiento 3 en pacientes recurrentes, solo tras las extracciones: Virbagen Omega, 0,1 MU/día. Diluir un vial de 10 MU en 100 mL de solución salina y congelar en porciones (p. ej. jeringas de 10 mL); administrar 1 mL de la porción descongelada en la mucosa oral (la jeringa ya descongelada aguanta 3 semanas en nevera). Evaluar la respuesta a los 100 días." },
+    { id: "prednisolona", uso: "Opción de tratamiento 4 en pacientes recurrentes, solo tras las extracciones: preferible por ser de acción corta. En monoterapia, empezar con 1 mg/kg y controlar a los 14 días; después reducir a la dosis más baja posible. Suele dar buena respuesta inicial, pero con el uso prolongado suele necesitarse cada vez más dosis hasta dejar de funcionar — el tratamiento a largo plazo con corticosteroides empeora el pronóstico." },
+    PA("Clorhexidina (tratamiento diario de la boca)", "Opción de tratamiento 5, en combinación con otras opciones: tratamiento diario de la boca con clorhexidina, como alternativa o complemento. — Dosis/formulación concreta: (sin especificar en el protocolo)."),
+    PA("Células madre mesenquimales", "También puede ser eficaz como tratamiento adicional en estomatitis refractaria grave (opción de tratamiento 5)."),
+    PA("Pronóstico orientativo", "Sin estomatitis caudal: buen pronóstico tras extracciones parciales o totales. Con estomatitis caudal: 60-80% se curan tras las extracciones; del 20-40% restante, con ciclosporina/interferón/prednisolona se cura la mitad; el grupo residual (10-20%) es difícil de tratar. Peor pronóstico: extracción tardía, estomatitis caudal grave de larga duración, corticosteroides a largo plazo, FeLV positivo (7,5 veces más probable no responder). FIV suele responder mejor a las extracciones.")
+  ]
+});
