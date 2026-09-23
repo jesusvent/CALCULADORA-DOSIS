@@ -25,8 +25,8 @@
 // pone la hora actual y suma 1 a VERSION_BD — no hace falta tocarlos a mano. Ambos se muestran
 // en la cabecera de la app para que, comparándolos entre dos ordenadores, cualquiera pueda
 // saber si su copia de la base de datos compartida está al día.
-const ULTIMA_ACTUALIZACION_BD = "2026-09-22T09:45:48";
-const VERSION_BD = 27;
+const ULTIMA_ACTUALIZACION_BD = "2026-09-23T09:00:51";
+const VERSION_BD = 28;
 
 const DRUGS = [
   {
@@ -8070,29 +8070,36 @@ PATOLOGIAS.push(
   {
     id: "oft-queratitis", nombre: "Queratitis ulcerativas y no ulcerativas", especie: "ambas", capitulo: "Oftalmología",
     farmacos: [
-      { nombre: "Colirio antibiótico (neomicina-polimixina B-gramicidina o fluoroquinolona)", uso: "Según cultivo y antibiograma; no elegir gentamicina como primera opción." },
-      { id: "atropina", uso: "Ciclopléjico: colirio 0,5-1,0% 2-3 veces al día (2-3 días) y luego 1-2 al día." },
-      { nombre: "Ciclopentolato / tropicamida", uso: "Alternativa cicloplégica en queratoconjuntivitis seca." },
-      { id: "acetilcisteina-oftalmica", uso: "Anticolagenasa: colirio 2,5% cada 6-8 h hasta cura de la úlcera." },
-      { nombre: "Corticoides tópicos", uso: "Solo en queratitis no ulcerativas (15-30 días) o tras curar la herida; subconjuntival: triamcinolona 2-10 mg o metilprednisolona 5-40 mg." },
-      { id: "ciclosporina", uso: "Queratoconjuntivitis superficial crónica: ciclosporina A 0,2% o tacrolimús 0,03% tópicos." }
+      { id: "neomicina-polimixina-oftalmica", uso: "Colirio poliantibiótico de elección para infecciones del polo anterior (párpados, conjuntiva y córnea): 2 gotas cada 3-4 h. Presentación veterinaria: Duomyxin. Equivalente humano: Oftalmowell (neomicina + polimixina B + gramicidina)." },
+      { id: "clortetraciclina-oftalmica", uso: "Alternativa antibiótica: pomada cada 3-4 h. Presentación veterinaria: Ophtocycline (clortetraciclina 1%). Equivalentes humanos: Oftalmolosa Cusi Aureomicina (clortetraciclina 0,5%), Oftalmolosa Cusi Cloramfenicol (cloranfenicol 1%), Terramicina Oftálmica (oxitetraciclina 1%)." },
+      { nombre: "Otras opciones antibióticas tópicas (según cultivo y antibiograma)", apoyo: true, uso: "No elegir gentamicina como primera opción. Aplicar 2 gotas de colirio o una fina capa de pomada cada 3-4 h. Veterinaria: Isathal (ácido fusídico 1%) y Soligental (gentamicina 3.000 UI/mL), colirios. Humana: Cetraflux u Oftacilox (ciprofloxacino 0,3%), Colircusi Gentamicina u Oftalmolosa Cusi Gentamicina (gentamicina 0,3%), Tobrex (tobramicina 0,3%), colirios; Fucithalmic (ácido fusídico 1%), gel. Fuente: ConsultaVet, \"Descripción de especialidades: Órganos de los sentidos\"." },
+      { id: "atropina", uso: "Ciclopléjico: colirio 0,5-1,0% 2-3 veces al día (2-3 días) y luego 1-2 al día. Presentación humana: Colirfota Atropina (0,5 y 1%)." },
+      { nombre: "Ciclopentolato / tropicamida", apoyo: true, uso: "Alternativa cicloplégica en queratoconjuntivitis seca; aplicar 1-3 gotas cada 8-12 h inicialmente (no en glaucoma de ángulo estrecho). Presentaciones humanas: Colirfota Ciclopléjico (ciclopentolato 1%) y Colirfota Tropicamida." },
+      { id: "acetilcisteina-oftalmica", uso: "Anticolagenasa: colirio 2,5% cada 6-8 h hasta cura de la úlcera. Presentación veterinaria: Stromease (acetilcisteína 2,5%)." },
+      { nombre: "Corticoides tópicos", apoyo: true, uso: "Solo en queratitis no ulcerativas (15-30 días) o tras curar la herida; subconjuntival: triamcinolona 2-10 mg o metilprednisolona 5-40 mg, según el tamaño del paciente, repetir cada 21-30 días si es necesario. Solos (humanos): Isopto Flucon, Maxidex, Pred Forte, colirios; Oftalmolosa Cusi Hidrocortisona, pomada. Combinados con antibiótico: OftalmoVet (cloranfenicol, veterinario); Maxitrol (polimixina + neomicina) y Tobradex (tobramicina 0,3%), colirios; Oftalmolosa Cusi Prednisona Neomicina (neomicina 0,35%), pomada (humanos)." },
+      { id: "ciclosporina", uso: "Queratoconjuntivitis superficial crónica: ciclosporina A 0,2% o tacrolimús 0,03% tópicos; aplicar 1 cm de pomada cada 12 h (no en hembras gestantes ni si se sospecha infección fúngica). Presentación veterinaria: Optimmune (ciclosporina 0,2%), pomada. Presentación humana: Ikervis (ciclosporina 0,1%), colirio." }
     ]
   },
   {
     id: "oft-qcs-conjuntivitis", nombre: "Queratoconjuntivitis seca y conjuntivitis", especie: "ambas", capitulo: "Oftalmología",
     farmacos: [
-      { id: "ciclosporina", uso: "Ciclosporina A 0,2% tópica; alternativas tacrolimus 0,03% y pimecrolimus 1%." },
-      { nombre: "Pilocarpina 1%", uso: "Colirio cada 8 h, o VO 2-5 gotas c8h." },
-      { nombre: "Lágrimas artificiales, antibióticos tópicos, acetilcisteína en colirio", uso: "Según el resultado del test de Schirmer." }
+      { id: "ciclosporina", uso: "Ciclosporina A 0,2% tópica; alternativas tacrolimus 0,03% y pimecrolimus 1%. Presentación veterinaria: Optimmune (ciclosporina 0,2%), pomada. Presentación humana: Ikervis (ciclosporina 0,1%), colirio." },
+      { nombre: "Pilocarpina", apoyo: true, uso: "Colirio al 1% cada 8 h, o VO 2-5 gotas cada 8 h (suele ser poco eficaz para incrementar la producción de lágrimas); no en glaucoma de ángulo estrecho. Presentación humana: Colircusi Pilocarpina (pilocarpina al 2%)." },
+      { nombre: "Lágrimas artificiales / mucinas sintéticas", apoyo: true, uso: "Aplicar 1-3 gotas o una fina capa de pomada según se necesite. Paraveterinarias: Lacriforte, Lagrinet Neo, Lagripets, Lubrithal, Ocucan Rufus, Regefluid. Humanas: Acuolens, Siccafluid. Parafarmacia: Systane." },
+      { id: "neomicina-polimixina-oftalmica", uso: "Control de la infección secundaria: colirio poliantibiótico, 2 gotas cada 3-4 h. Presentación veterinaria: Duomyxin. Equivalente humano: Oftalmowell." },
+      { nombre: "Otros antibióticos tópicos (control de la infección secundaria)", apoyo: true, uso: "Mismas opciones que en queratitis (ver esa patología): Isathal, Soligental, Ophtocycline (veterinarios); Cetraflux/Oftacilox, Colircusi/Oftalmolosa Cusi Gentamicina, Tobrex, Fucithalmic, Oftalmolosa Cusi Aureomicina/Cloramfenicol, Terramicina Oftálmica (humanos)." },
+      { id: "acetilcisteina-oftalmica", uso: "Fluidifica el exceso de bridas mucosas, en colirio. Presentación veterinaria: Stromease (acetilcisteína 2,5%)." }
     ]
   },
   {
     id: "oft-glaucoma", nombre: "Glaucoma y uveítis", especie: "ambas", capitulo: "Oftalmología",
     farmacos: [
       { id: "manitol", uso: "Glaucoma agudo: 1,0-1,5 g/kg IV en 15-20 min (al 20%)." },
-      { nombre: "Inhibidores de la anhidrasa carbónica tópicos (dorzolamida, brinzolamida)", uso: "Base del tratamiento crónico." },
-      { nombre: "Betabloqueantes tópicos (betaxolol, timolol) y prostaglandinas (latanoprost, bimatoprost, travoprost)", uso: "Asociados en la fase aguda." },
-      { id: "atropina", uso: "Uveítis: cicloplégico para prevenir sinequias." }
+      { nombre: "Inhibidores de la anhidrasa carbónica tópicos (dorzolamida, brinzolamida)", apoyo: true, uso: "Base del tratamiento crónico; dorzolamida cada 8 h, brinzolamida cada 12 h. Presentaciones humanas: Trusopt (dorzolamida al 2%), Azopt (brinzolamida al 1%)." },
+      { nombre: "Betabloqueantes tópicos (betaxolol, timolol)", apoyo: true, uso: "Asociados en la fase aguda; timolol cada 8 h, betaxolol cada 12 h. Presentaciones humanas: Timoftol (timolol al 0,25 y 0,5%), Betoptic Suspension (betaxolol al 0,25%)." },
+      { nombre: "Prostaglandinas tópicas (latanoprost, bimatoprost, travoprost)", apoyo: true, uso: "Asociadas en la fase aguda; latanoprost cada 12 h, bimatoprost y travoprost cada 24 h (además, latanoprosteno bunod — especialidad extranjera Vyzulta). Presentaciones humanas: Xalatan (latanoprost al 0,005%), Lumigan (bimatoprost al 0,01 y 0,03%), Travatan (travoprost al 0,004%)." },
+      { nombre: "Mióticos y otras opciones si no se tolera o no se controla con lo anterior", apoyo: true, uso: "Pilocarpina (colirio al 1% cada 6 h; Colircusi Pilocarpina al 2%), parasimpaticomiméticos (bromuro de demecario 0,125-0,25% — especialidad extranjera Humorsol) y simpaticomiméticos (dipivefrina). Medir la presión intraocular cada 24 h hasta normalizar, luego cada 72 h; retirar el betabloqueante y la prostaglandina si hay normotensión." },
+      { id: "atropina", uso: "Uveítis: cicloplégico para prevenir sinequias. Presentación humana: Colirfota Atropina (0,5 y 1%)." }
     ]
   },
   {
@@ -8355,18 +8362,17 @@ PAT_MAS("oft-qcs-conjuntivitis", [
   PA("Conjuntivitis", "Antibióticos o antivirales tópicos según la causa, retirar costras, antibióticos sistémicos en casos intensos, glucocorticoides tópicos/sistémicos en alérgicas, collar isabelino; blefaritis: tratar la causa (ver dermatología).")
 ]);
 PAT_MAS("oft-glaucoma", [
-  PA("Glaucoma crónico", "Inhibidores de la anhidrasa carbónica tópicos (dorzolamida, brinzolamida), betabloqueantes (betaxolol, timolol), parasimpaticomiméticos (bromuro de demecario 0,125-0,25%, Humorsol), simpaticomiméticos (dipivefrina) y prostaglandinas (latanoprost, bimatoprost, travoprost, latanoprosteno bunod). Medir la presión cada 24 h hasta normalizar, luego cada 72 h; retirar betabloqueante y prostaglandina si hay normotensión."),
   PA("Antiinflamatorios", "Corticoides tópicos (prednisolona, betametasona, dexametasona) si hay inflamación intraocular.")
 ]);
 PAT_MAS("oft-retinitis-inmunomediada", [ PA("Respuesta", "Las recaídas revierten en 1-2 días al volver a subir la dosis de esteroides; puede ser necesario tratamiento a largo plazo.") ]);
 PATOLOGIAS.push({
   id: "oft-uveitis", nombre: "Uveítis", especie: "ambas", capitulo: "Oftalmología",
   farmacos: [
-    { id: "atropina", uso: "Cicloplégico: previene la formación de sinequias." },
-    PA("Tratamiento etiológico", "Infecciones (perro: virus, hongos, bacterias, parásitos; gato: FIV, FeLV, PIF, herpes, toxoplasma, Cryptosporidium), úlceras, inmunomediadas, traumáticas."),
-    PA("Corticoides tópicos y sistémicos", "Si no hay úlcera corneal."),
-    PA("AINE tópicos y sistémicos", "Control de la inflamación crónica o uveítis asociada a úlceras."),
-    PA("Antibióticos tópicos y sistémicos", "Para controlar o prevenir infección por el aumento de permeabilidad.")
+    { id: "atropina", uso: "Cicloplégico: previene la formación de sinequias. Presentación humana: Colirfota Atropina (0,5 y 1%)." },
+    { nombre: "Tratamiento etiológico", apoyo: true, uso: "Infecciones (perro: virus, hongos, bacterias, parásitos; gato: FIV, FeLV, PIF, herpes, toxoplasma, Cryptosporidium), úlceras, inmunomediadas, traumáticas." },
+    { nombre: "Corticoides tópicos y sistémicos", apoyo: true, uso: "Si no hay úlcera corneal. Tópicos (humanos): Isopto Flucon, Maxidex, Pred Forte, colirios; Oftalmolosa Cusi Hidrocortisona, pomada (ver más opciones, incluidas combinadas con antibiótico, en Queratitis)." },
+    { nombre: "AINE tópicos y sistémicos", apoyo: true, uso: "Control de la inflamación crónica o uveítis asociada a úlceras. Tópicos (humanos): Acular, Nevanac, Voltaren Colirio; aplicar 2 gotas cada 6-8 h." },
+    { nombre: "Antibióticos tópicos y sistémicos", apoyo: true, uso: "Para controlar o prevenir infección por el aumento de permeabilidad (ver las opciones con marca comercial en Queratitis: Duomyxin/Oftalmowell, Ophtocycline, Isathal, Soligental, Cetraflux/Oftacilox, Tobrex, Fucithalmic, etc.)." }
   ]
 });
 
@@ -8465,28 +8471,7 @@ PATOLOGIAS.push(
 
 // ---- Oftalmología: colirios y tópicos con pauta concreta ----
 PAT_MAS("oft-queratitis", [
-  { id: "atropina", uso: "Colirio 0,5-1,0%: 2-3 veces al día durante 2-3 días y luego 1-2 veces al día (dolor/ciclopléjico)." },
-  PA("Ciclopentolato (colirio)", "En queratoconjuntivitis seca, misma pauta que la atropina."),
-  PA("Tropicamida (colirio)", "Alternativa cicloplégica: 3-4 veces al día."),
-  { id: "neomicina-polimixina-oftalmica", uso: "Colirio poliantibiótico (neomicina, polimixina B, gramicidina) o fluoroquinolona tópica, elegidos según antibiograma; no usar gentamicina como primera opción." },
-  { id: "clortetraciclina-oftalmica", uso: "Anticolagenasa: colirio de clortetraciclina cada 6-8 h hasta que cure la úlcera." },
-  { id: "acetilcisteina-oftalmica", uso: "Anticolagenasa: colirio al 2,5% cada 6-8 h hasta que cure la úlcera." },
-  PA("Colirio antiviral", "En queratitis de origen vírico (herpesvirus felino), según el caso."),
-  PA("Ciclosporina A 0,2% / tacrolimús 0,03%", "Queratoconjuntivitis superficial crónica del pastor alemán: tratamiento tópico junto a glucocorticoides de por vida.")
-]);
-PAT_MAS("oft-qcs-conjuntivitis", [
-  { id: "acetilcisteina-oftalmica", uso: "Colirio de acetilcisteína: fluidifica el exceso de bridas mucosas." },
-  PA("Lágrimas artificiales / mucinas sintéticas", "Sustituyen la película precorneal (según Schirmer)."),
-  PA("Pilocarpina 1%", "Estimulante de la producción de lágrimas: colirio cada 8 h, o VO 2-5 gotas cada 8 h (suele ser poco eficaz)."),
-  PA("Ciclosporina A 0,2%", "Inhibe la autoinmunidad; efecto en 3-4 semanas. Alternativas dermatológicas: tacrolimús 0,03% y pimecrolimús 1% (solo en QCS que no responde a ciclosporina)."),
-  PA("Antibióticos tópicos", "Control de la infección secundaria en QCS y conjuntivitis bacterianas (estafilococos, clamidias).")
-]);
-PAT_MAS("oft-glaucoma", [
-  PA("Manitol 20% (glaucoma agudo)", "1,0-1,5 g/kg IV en 15-20 min para bajar la presión intraocular a <20 mmHg lo antes posible (ver ficha de manitol)."),
-  PA("Dorzolamida / brinzolamida (colirio)", "Inhibidores de la anhidrasa carbónica tópicos: se inicia con uno de ellos + betabloqueante + prostaglandina."),
-  PA("Betaxolol / timolol (colirio)", "Betabloqueantes adrenérgicos."),
-  PA("Latanoprost / bimatoprost / travoprost / latanoprosteno bunod", "Prostaglandinas tópicas (latanoprosteno bunod, especialidad extranjera Vyzulta)."),
-  PA("Bromuro de demecario 0,125-0,25%", "Parasimpaticomimético (especialidad extranjera Humorsol) y dipivefrina (simpaticomimético) si no se toleran o no se controla con lo anterior.")
+  PA("Colirio o pomada antiviral", "En queratitis de origen vírico (herpesvirus felino). Presentaciones humanas: Virgan, Xorox (gel o pomada); aplicar 2 gotas de colirio cada 4-6 h o una fina capa de pomada cada 6 h.")
 ]);
 
 // ---- Gingivoestomatitis crónica felina (FCGS): protocolo de buenas prácticas de AniCura ----
