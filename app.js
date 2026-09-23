@@ -4438,7 +4438,19 @@ function abrirFormulario(farmaco) {
         filas.push(Object.assign({ especie }, entrada));
       }
     }
-    if (filas.length) filas.forEach((f) => cfPatologiasLista.appendChild(crearFilaPatologia(f)));
+    // Si una misma patología/dosis está guardada igual en perro y en gato, se muestra como
+    // una sola fila "Perro y gato" en vez de dos filas idénticas (más cómodo para editar).
+    const mismaEntrada = (a, b) => a.patologia === b.patologia && a.dosisMin === b.dosisMin && a.dosisMax === b.dosisMax &&
+      a.unidad === b.unidad && a.via === b.via && a.frecuencia === b.frecuencia && (a.notas || "") === (b.notas || "");
+    const filasFusionadas = [];
+    const usadas = new Set();
+    filas.forEach((f, i) => {
+      if (usadas.has(i)) return;
+      const j = filas.findIndex((g, k) => k > i && !usadas.has(k) && g.especie !== f.especie && mismaEntrada(f, g));
+      if (j !== -1) { usadas.add(j); filasFusionadas.push(Object.assign({}, f, { especie: "ambas" })); }
+      else filasFusionadas.push(f);
+    });
+    if (filasFusionadas.length) filasFusionadas.forEach((f) => cfPatologiasLista.appendChild(crearFilaPatologia(f)));
     else cfPatologiasLista.appendChild(crearFilaPatologia());
   } else {
     cfPatologiasLista.appendChild(crearFilaPatologia());
@@ -4460,7 +4472,7 @@ function crearFilaPatologia(datos) {
     <div class="fila">
       <div class="campo"><label>Patología / indicación</label><input type="text" class="pf-patologia" placeholder="Ej. Sedación" /></div>
       <div class="campo"><label>Especie</label>
-        <select class="pf-especie"><option value="perro">Perro</option><option value="gato">Gato</option></select>
+        <select class="pf-especie"><option value="perro">Perro</option><option value="gato">Gato</option><option value="ambas">Perro y gato</option></select>
       </div>
     </div>
     <div class="fila">
@@ -4515,8 +4527,7 @@ cfGuardar.addEventListener("click", async () => {
     // general como un probiótico), se guarda igual con la etiqueta genérica "General" en vez
     // de descartar la fila entera y perder silenciosamente las notas ya escritas.
     if (!patologia && !tieneDosis && !notas) continue;
-    if (!especies[especie]) especies[especie] = [];
-    especies[especie].push({
+    const entrada = {
       patologia: patologia || "General",
       dosisMin: tieneDosis ? minRaw : null,
       dosisMax: tieneDosis ? maxRaw : null,
@@ -4524,7 +4535,14 @@ cfGuardar.addEventListener("click", async () => {
       via: fila.querySelector(".pf-via").value.trim() || "-",
       frecuencia: fila.querySelector(".pf-frecuencia").value.trim() || "-",
       notas
-    });
+    };
+    // "Perro y gato": la misma dosis se guarda igual en las dos especies, para no tener que
+    // rellenar la fila dos veces cuando la pauta no cambia entre ambas.
+    const especiesDestino = especie === "ambas" ? ["perro", "gato"] : [especie];
+    for (const esp of especiesDestino) {
+      if (!especies[esp]) especies[esp] = [];
+      especies[esp].push(Object.assign({}, entrada));
+    }
   }
   // No es obligatorio indicar ya una dosis: se puede guardar el fármaco solo con el
   // principio activo (y composición, nombres comerciales...) y volver más tarde a
